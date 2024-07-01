@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
@@ -38,5 +39,8 @@ class RolesAndPermissionsSeeder extends Seeder
         Role::create(['name' => 'user']);
         Role::create(['name' => 'trainer']);
         Role::create(['name' => 'stadium worker']);
+
+        $user = User::query()->find(1);
+        $user->assignRole('admin');
     }
 }
