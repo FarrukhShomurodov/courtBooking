@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('second_name');
-            $table->string('position');
-            $table->string('role');
             $table->string('login')->unique();
             $table->string('password');
             $table->rememberToken();
