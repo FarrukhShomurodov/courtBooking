@@ -14,14 +14,18 @@ class SportTypeService
 
     public function store(array $validated): Model|Builder
     {
-        $validated['photos'] = $this->storePhotos($validated, 'sport_type_photos');
+        if (isset($validated['photos'])) {
+            $validated['photos'] = $this->storePhotos('sport_type_photos');
+        }
 
         return SportType::query()->create($validated);
     }
 
     public function update(SportType $sportType, array $validated): SportType
     {
-        $validated['photos'] = $this->updatePhotoPaths($validated['photos'], 'sport_type_photos', $sportType);
+        if (isset($validated['photos'])) {
+            $validated['photos'] = $this->updatePhotoPaths($validated['photos'], 'sport_type_photos', $sportType);
+        }
 
         $sportType->update($validated);
 

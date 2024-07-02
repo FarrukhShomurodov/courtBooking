@@ -20,6 +20,7 @@ class Stadium extends Model
         'address',
         'map_link',
         'photos',
+        'is_active',
         'coach_id',
         'owner_id',
     ];

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('map_link');
             $table->json('photos')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->foreignId('coach_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();

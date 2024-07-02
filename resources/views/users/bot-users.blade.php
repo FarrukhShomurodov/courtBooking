@@ -30,7 +30,7 @@
                         <td>{{ $user->typed_name }}</td>
                         <td>{{ $user->phone }}</td>
                         <td>{{ $user->sms_code }}</td>
-                        <td>{{  $user->step}}</td>
+                        <td>{{ $user->step}}</td>
                         <td>
                             <label class="switch">
                                 <input type="checkbox" class="switch-input" data-user-id="{{ $user->id }}" @if($user->isactive) checked @endif>
@@ -52,8 +52,8 @@
     <script>
         $(document).ready(function() {
             $('.switch-input').on('change', function() {
-                var userId = $(this).data('user-id');
-                var isActive = $(this).is(':checked') ? 1 : 0;
+                let  userId = $(this).data('user-id');
+                let  isActive = $(this).is(':checked') ? 1 : 0;
 
                 $.ajax({
                     url: `/api/bot-users/${userId}/is-active`,

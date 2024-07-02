@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\BotUser;
 use App\Models\Stadium;
 use App\Traits\PhotoTrait;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class StadiumController extends Controller
 {
@@ -27,5 +29,16 @@ class StadiumController extends Controller
         } else {
             return response()->json(['message' => 'Photo not found'], 404);
         }
+    }
+
+    public function isActive(Request $request, Stadium $stadium): JsonResponse
+    {
+        $validated = $request->validate([
+            'is_active' => 'required|boolean',
+        ]);
+
+        $stadium->update(['is_active' => $validated['is_active']]);
+
+        return response()->json([], 200);
     }
 }

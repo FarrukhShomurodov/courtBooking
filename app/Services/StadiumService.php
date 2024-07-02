@@ -14,7 +14,9 @@ class StadiumService
 
     public function store(array $validated): Builder|Model
     {
-        $validated['photos'] = $this->storePhotos($validated, 'stadium_photos');
+        if (isset($validated['photos'])) {
+            $validated['photos'] = $this->storePhotos('stadium_photos');
+        }
 
         $stadium = Stadium::query()->create($validated);
 
@@ -27,8 +29,9 @@ class StadiumService
 
     public function update(Stadium $stadium, array $validated): Stadium
     {
-        $validated['photos'] = $this->updatePhotoPaths($validated['photos'], 'stadium_photos', $stadium);
-
+        if (isset($validated['photos'])) {
+            $validated['photos'] = $this->updatePhotoPaths($validated['photos'], 'stadium_photos', $stadium);
+        }
         $stadium->update($validated);
 
         $stadium->owner()->first()->syncRoles('owner stadium');

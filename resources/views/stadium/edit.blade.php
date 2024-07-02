@@ -4,6 +4,14 @@
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Редактировать стадион</h5>
+            <label class="switch" style="margin-right: 40px">
+                <input type="checkbox" class="switch-input" data-user-id="{{ $stadium->id }}"
+                       @if($stadium->is_active) checked @endif>
+                <span class="switch-toggle-slider">
+                                    <span class="switch-on"></span>
+                                    <span class="switch-off"></span>
+                                </span>
+            </label>
         </div>
         @if ($errors->any())
             <div class="alert alert-solid-danger" role="alert">
@@ -17,6 +25,10 @@
                   enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
+
+                {{--is active--}}
+                <input type="number" class="is_active" name="is_active" hidden="">
+
                 <div class="mb-3">
                     <label class="form-label" for="stadium-name">Название</label>
                     <input type="text" name="name" class="form-control" id="stadium-name"
@@ -124,6 +136,11 @@
 @section('scripts')
     <script>
         $(document).ready(function () {
+            $('.switch-input').on('change', function () {
+                let isActive = $(this).is(':checked') ? 1 : 0;
+                $('.is_active').val(isActive);
+            });
+
             const dropdowns = [
                 {dropdown: $('#ownerDropdown'), input: $('#ownerInput')},
                 {dropdown: $('#coachDropdown'), input: $('#coachInput')}

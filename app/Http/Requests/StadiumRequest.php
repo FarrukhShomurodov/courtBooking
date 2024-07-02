@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\NotAdmin;
 
 class StadiumRequest extends FormRequest
 {
@@ -31,8 +32,9 @@ class StadiumRequest extends FormRequest
             'sport_types.*' => 'required|integer|exists:sport_types,id',
             'photos' => 'sometimes|array',
             'photos.*' => 'image|mimes:jpg,png',
+            'is_active' => 'nullable|boolean',
             'owner_id' => 'required|exists:users,id',
-            'coach_id' => 'nullable|exists:users,id|different:owner_id',
+            'coach_id' => ['nullable', 'exists:users,id', 'different:owner_id', new NotAdmin],
         ];
     }
 }

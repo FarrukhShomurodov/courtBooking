@@ -26,6 +26,7 @@
                     <th>Тренер</th>
                     <th>Владелец</th>
                     <th>Вид спорта</th>
+                    <th>Is Active</th>
                     <th>Фото</th>
                     <th></th>
                 </tr>
@@ -45,6 +46,16 @@
                             @foreach($stadium->sportTypes as $sportType)
                                 <span>{{$sportType->name}} {{ count($stadium->sportTypes) > 1 ? ',' : '' }}</span><br>
                             @endforeach
+                        </td>
+                        <td>
+                            <label class="switch">
+                                <input type="checkbox" class="switch-input" data-user-id="{{ $stadium->id }}"
+                                       @if($stadium->is_active) checked @endif>
+                                <span class="switch-toggle-slider">
+                                    <span class="switch-on"></span>
+                                    <span class="switch-off"></span>
+                                </span>
+                            </label>
                         </td>
                         <td>
                             <div class="main__td">
@@ -84,13 +95,31 @@
     <script>
         $(document).ready(function () {
             $('.popup-img').on('click', function () {
-                var src = $(this).attr('src');
-                var popup = `
+                let src = $(this).attr('src');
+                let  popup = `
                 <div class="popup-overlay" onclick="$(this).remove()">
                     <img src="${src}" class="popup-img-expanded">
                 </div>
             `;
                 $('body').append(popup);
+            });
+
+            $('.switch-input').on('change', function () {
+                let  userId = $(this).data('user-id');
+                let  isActive = $(this).is(':checked') ? 1 : 0;
+
+                $.ajax({
+                    url: `/api/stadium/${userId}/is-active`,
+                    method: 'put',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        is_active: isActive
+                    },
+                    success: function (res) {
+                    },
+                    error: function (error) {
+                    }
+                });
             });
         });
     </script>
