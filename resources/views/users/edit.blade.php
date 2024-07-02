@@ -42,7 +42,7 @@
                                        data-value="{{ $role->id }}">{{ $role->name }}</a></li>
                             @endforeach
                         </ul>
-                        <input type="hidden" name="role_id" id="roleInput">
+                        <input type="hidden" name="role_id" id="roleInput" value="{{$user->roles[0]->id}}">
                     </div>
                 </div>
                 <div class="mb-3">

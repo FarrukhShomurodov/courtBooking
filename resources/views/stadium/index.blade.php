@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="card-header">Виды спорта</h5>
+            <h5 class="card-header">Стадион</h5>
             <a href="{{ route('stadiums.create') }}" class="btn btn-primary" style="margin-right: 22px;">Создать</a>
         </div>
         @if ($errors->any())
