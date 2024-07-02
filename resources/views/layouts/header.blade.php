@@ -61,14 +61,6 @@
 
 
             <ul class="navbar-nav flex-row align-items-center ms-auto">
-                <!-- Search -->
-                <li class="nav-item navbar-search-wrapper me-2 me-xl-0">
-                    <a class="nav-item nav-link search-toggler" href="javascript:void(0);">
-                        <i class="bx bx-search bx-sm"></i>
-                    </a>
-                </li>
-                <!-- /Search -->
-
 
                 <!-- Style Switcher -->
                 <li class="nav-item me-2 me-xl-0">

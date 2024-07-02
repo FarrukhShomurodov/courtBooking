@@ -3,8 +3,8 @@
 @section('content')
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="card-header">Квартиры</h5>
-            <a href="{{ route('apartments.create') }}" class="btn btn-primary" style="margin-right: 22px;">Создать</a>
+            <h5 class="card-header">Виды спорта</h5>
+            <a href="{{ route('sport-types.create') }}" class="btn btn-primary" style="margin-right: 22px;">Создать</a>
         </div>
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -23,28 +23,23 @@
                     <th>Id</th>
                     <th>Название</th>
                     <th>Описание</th>
-                    <th>Дом</th>
-                    <th>Этаж</th>
-                    <th></th>
-                    <th></th>
+                    <th>Фото</th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
 
-                @foreach($apartments as $apartment)
+                @foreach($spotTypes as $spotType)
                     <tr>
-                        <td>{{ $apartment->id }}</td>
-                        <td>{{ $apartment->name }}</td>
-                        <td>{{ $apartment->description }}</td>
-                        <td>{{ $apartment->house->name }}</td>
-                        <td>{{ $apartment->floor->number }}</td>
+                        <td>{{ $spotType->id }}</td>
+                        <td>{{ $spotType->name }}</td>
+                        <td>{{ $spotType->description }}</td>
                         <td>
                             <div class="main__td">
-                                @if($apartment->photos_url)
-                                    @foreach(json_decode($apartment->photos_url) as $photo_url)
+                                @if($spotType->photos)
+                                    @foreach(json_decode($spotType->photos) as $photo)
                                         <div class="td__img">
-                                            <img src="storage/{{ $photo_url }}" alt="House Photo" class="popup-img"
+                                            <img src="storage/{{ $photo }}" alt="Sport type photo" class="popup-img"
                                                  width="100px"/>
                                         </div>
                                     @endforeach
@@ -52,16 +47,18 @@
                             </div>
                         </td>
                         <td>
-                            <a href="{{ route('apartments.edit', $apartment->id) }}" class="btn btn-warning"
-                               style="margin-right: 22px;">Редактировать</a>
-                        </td>
-                        <td>
-                            <form action="{{ route('apartments.destroy', $apartment->id) }}" method="POST"
-                                  style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-danger" style="margin-left: -40px !important;">Удалить</button>
-                            </form>
+                            <div class="d-inline-block text-nowrap">
+                                <button class="btn btn-sm btn-icon"
+                                        onclick="location.href='{{ route('sport-types.edit', $spotType->id) }}'"><i
+                                        class="bx bx-edit"></i></button>
+                                <form action="{{ route('sport-types.destroy', $spotType->id) }}" method="POST"
+                                      style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-icon delete-record"><i class="bx bx-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

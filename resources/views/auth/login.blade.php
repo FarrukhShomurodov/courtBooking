@@ -142,7 +142,7 @@
                         <div class="mb-3">
                             <label for="login" class="form-label">Login</label>
                             <input type="text" class="form-control" id="login" name="login"
-                                   placeholder="Enter your email or username" autofocus>
+                                   placeholder="Enter your Login" autofocus>
                         </div>
                         <div class="mb-3 form-password-toggle">
                             <div class="d-flex justify-content-between">

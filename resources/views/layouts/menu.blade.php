@@ -3,32 +3,31 @@
 
         <ul class="menu-inner">
 
-            <!-- Dashboards -->
             <li class="menu-item {{ Request::is('/') ? 'active' : '' }}">
-                <a href="{{route('users')}}" class="menu-link">
+                <a href="{{route('dashboard')}}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                    <div data-i18n="Dashboard">Dashboard</div>
+                </a>
+            </li>
+
+            <li class="menu-item {{ Request::is('users') ? 'active' : '' }}">
+                <a href="{{route('users.index')}}" class="menu-link">
                     <i class="user-icon tf-icons bx bx-user"></i>
                     <div data-i18n="Пользователи">Пользователи</div>
                 </a>
             </li>
 
-            <li class="menu-item {{ Route::is('houses.index') ? 'active' : '' }}">
-                <a href="{{ route('houses.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-building-house"></i>
-                    <div data-i18n="Дома">Дома</div>
+            <li class="menu-item {{ Request::is('bot-users') ? 'active' : '' }}">
+                <a href="{{route('bot-users.index')}}" class="menu-link">
+                    <i class="user-icon tf-icons bx bx-user"></i>
+                    <div data-i18n="Пользователи бота">Пользователи бота</div>
                 </a>
             </li>
 
-            <li class="menu-item {{ Route::is('floors.index') ? 'active' : '' }}">
-                <a href="{{ route('floors.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-layer"></i>
-                    <div data-i18n="Этажи">Этажи</div>
-                </a>
-            </li>
-
-            <li class="menu-item {{ Route::is('apartments.index') ? 'active' : '' }}">
-                <a href="{{ route('apartments.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-home-alt"></i>
-                    <div data-i18n="Квартиры">Квартиры </div>
+            <li class="menu-item {{ Request::is('sport-types') ? 'active' : '' }}">
+                <a href="{{route('sport-types.index')}}" class="menu-link">
+                    <i class="user-icon tf-icons bx bx-user"></i>
+                    <div data-i18n="Виды спорта">Виды спорта</div>
                 </a>
             </li>
         </ul>

@@ -12,6 +12,8 @@ class Stadium extends Model
 {
     use HasFactory;
 
+    protected $table = 'stadiums';
+
     public function courts(): HasMany
     {
         return $this->hasMany(Court::class);
