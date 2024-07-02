@@ -3,7 +3,7 @@
 
 
         <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
-            <a href="/" class="app-brand-link gap-2">
+            <a href="#" class="app-brand-link gap-2">
           <span class="app-brand-logo demo">
 <svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -61,14 +61,6 @@
 
 
             <ul class="navbar-nav flex-row align-items-center ms-auto">
-                <!-- Search -->
-                <li class="nav-item navbar-search-wrapper me-2 me-xl-0">
-                    <a class="nav-item nav-link search-toggler" href="javascript:void(0);">
-                        <i class="bx bx-search bx-sm"></i>
-                    </a>
-                </li>
-                <!-- /Search -->
-
 
                 <!-- Style Switcher -->
                 <li class="nav-item me-2 me-xl-0">
@@ -84,7 +76,7 @@
                     <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                        data-bs-toggle="dropdown">
                         <div class="avatar avatar-online">
-                            <img src="{{ asset('/img/avatars/1.png') }}" alt class="rounded-circle">
+                            <span class="avatar-initial rounded-circle bg-success">{{ auth()->user()->name[0] }}</span>
                         </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
@@ -93,13 +85,14 @@
                                 <div class="d-flex">
                                     <div class="flex-shrink-0 me-3">
                                         <div class="avatar avatar-online">
-                                            <img src="{{ asset('/img/avatars/1.png') }}" alt
-                                                 class="rounded-circle">
+                                            <span
+                                                class="avatar-initial rounded-circle bg-success">{{ auth()->user()->name[0] }}</span>
                                         </div>
                                     </div>
                                     <div class="flex-grow-1">
-                                        <span class="fw-semibold d-block lh-1">John Doe</span>
-                                        <small>Admin</small>
+                                        <span
+                                            class="fw-semibold d-block lh-1">{{ auth()->user()->name }} {{auth()->user()->second_name}}</span>
+                                        <small>{{ auth()->user()->roles->pluck('name')[0] }}</small>
                                     </div>
                                 </div>
                             </a>

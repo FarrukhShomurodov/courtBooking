@@ -166,6 +166,7 @@
 .td__img {
     padding: 5px;
     height: 90px;
+    margin-bottom: 5px;
 }
 
 .td__img > img {

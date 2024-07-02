@@ -2,35 +2,43 @@
     <div class="container-xxl d-flex h-100">
 
         <ul class="menu-inner">
+            @role('admin')
+                <li class="menu-item {{ Request::is('/') ? 'active' : '' }}">
+                    <a href="{{route('dashboard')}}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                        <div data-i18n="Dashboard">Dashboard</div>
+                    </a>
+                </li>
 
-            <!-- Dashboards -->
-            <li class="menu-item {{ Request::is('/') ? 'active' : '' }}">
-                <a href="{{route('users')}}" class="menu-link">
-                    <i class="user-icon tf-icons bx bx-user"></i>
-                    <div data-i18n="Пользователи">Пользователи</div>
-                </a>
-            </li>
+                <li class="menu-item {{ Request::is('users') ? 'active' : '' }}">
+                    <a href="{{route('users.index')}}" class="menu-link">
+                        <i class="user-icon tf-icons bx bx-user"></i>
+                        <div data-i18n="Пользователи">Пользователи</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::is('bot-users') ? 'active' : '' }}">
+                    <a href="{{route('bot-users.index')}}" class="menu-link">
+                        <i class="user-icon tf-icons bx bx-user"></i>
+                        <div data-i18n="Пользователи бота">Пользователи бота</div>
+                    </a>
+                </li>
 
-            <li class="menu-item {{ Route::is('houses.index') ? 'active' : '' }}">
-                <a href="{{ route('houses.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-building-house"></i>
-                    <div data-i18n="Дома">Дома</div>
-                </a>
-            </li>
+                <li class="menu-item {{ Request::is('sport-types') ? 'active' : '' }}">
+                    <a href="{{route('sport-types.index')}}" class="menu-link">
+                        <i class="fa-solid fa-person-skating"></i>
+                        <div data-i18n="Виды спорта" class="ms-1">Виды спорта</div>
+                    </a>
+                </li>
+            @endrole
 
-            <li class="menu-item {{ Route::is('floors.index') ? 'active' : '' }}">
-                <a href="{{ route('floors.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-layer"></i>
-                    <div data-i18n="Этажи">Этажи</div>
-                </a>
-            </li>
-
-            <li class="menu-item {{ Route::is('apartments.index') ? 'active' : '' }}">
-                <a href="{{ route('apartments.index') }}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-home-alt"></i>
-                    <div data-i18n="Квартиры">Квартиры </div>
-                </a>
-            </li>
+            @if(auth()->user()->hasRole('owner stadium') || auth()->user()->hasRole('admin'))
+                <li class="menu-item {{ Request::is('stadiums') ? 'active' : '' }}">
+                    <a href="{{route('stadiums.index')}}" class="menu-link">
+                        <i class="fa-solid fa-futbol"></i>
+                        <div data-i18n="Стадион" class="ms-1">Стадион</div>
+                    </a>
+                </li>
+            @endif
         </ul>
 
     </div>

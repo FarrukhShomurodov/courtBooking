@@ -23,7 +23,7 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($request->only('login', 'password'))) {
-            return redirect()->intended('/');
+            return $this->redirectBasedOnRole();
         }
 
         return back()->withErrors(['login' => 'Invalid login details']);
@@ -33,5 +33,18 @@ class AuthController extends Controller
     {
         Auth::logout();
         return redirect()->route('login');
+    }
+
+    protected function redirectBasedOnRole(): RedirectResponse
+    {
+        $user = Auth::user();
+
+        if ($user->hasRole('admin')) {
+            return redirect()->route('dashboard');
+        } elseif ($user->hasRole('owner stadium')) {
+            return redirect()->route('stadiums.index');
+        }
+
+        return redirect('/');
     }
 }

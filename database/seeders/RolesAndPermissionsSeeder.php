@@ -30,8 +30,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'manage users'
         ]);
 
-        $coachRole = Role::create(['name' => 'coach']);
-        $coachRole->givePermissionTo([
+        $ownerRole = Role::create(['name' => 'owner stadium']);
+        $ownerRole->givePermissionTo([
             'manage stadiums',
             'manage courts'
         ]);
@@ -40,7 +40,7 @@ class RolesAndPermissionsSeeder extends Seeder
         Role::create(['name' => 'trainer']);
         Role::create(['name' => 'stadium worker']);
 
-        $user = User::query()->find(1);
+        $user = User::query()->find(1)->first();
         $user->assignRole('admin');
     }
 }
