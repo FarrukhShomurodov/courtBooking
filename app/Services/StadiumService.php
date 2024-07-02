@@ -3,22 +3,18 @@
 namespace App\Services;
 
 use App\Models\Stadium;
+use App\Traits\PhotoTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class StadiumService
 {
+    use PhotoTrait;
+
     public function store(array $validated): Builder|Model
     {
-        if (isset($validated['photos'])) {
-
-            $photos = array_map(function ($file) {
-                return $file->store('stadium_photos', 'public');
-            }, request()->file('photos'));
-
-            $validated['photos'] = json_encode($photos);
-        }
+        $validated['photos'] = $this->storePhotos($validated, 'stadium_photos');
 
         $stadium = Stadium::query()->create($validated);
 
@@ -31,19 +27,7 @@ class StadiumService
 
     public function update(Stadium $stadium, array $validated): Stadium
     {
-        if (isset($validated['photos'])) {
-            $photos = $validated['photos'];
-            $uploadedPhotos = [];
-
-            foreach ($photos as $photo) {
-                $path = $photo->store('stadium_photos', 'public');
-                $uploadedPhotos[] = $path;
-            }
-
-            $existingPhotos = json_decode($stadium->photos) ?: [];
-            $allPhotos = array_merge($existingPhotos, $uploadedPhotos);
-            $validated['photos'] = json_encode($allPhotos);
-        }
+        $validated['photos'] = $this->updatePhotoPaths($validated['photos'], 'stadium_photos', $stadium);
 
         $stadium->update($validated);
 

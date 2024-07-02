@@ -3,42 +3,25 @@
 namespace App\Services;
 
 use App\Models\SportType;
+use App\Traits\PhotoTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class SportTypeService
 {
+    use PhotoTrait;
+
     public function store(array $validated): Model|Builder
     {
-        if (isset($validated['photos'])) {
-
-            $photos = array_map(function ($file) {
-                return $file->store('sport_type_photos', 'public');
-            }, request()->file('photos'));
-
-            $validated['photos'] = json_encode($photos);
-        }
+        $validated['photos'] = $this->storePhotos($validated, 'sport_type_photos');
 
         return SportType::query()->create($validated);
     }
 
     public function update(SportType $sportType, array $validated): SportType
     {
-        if (isset($validated['photos'])) {
-            $photos = $validated['photos'];
-            $uploadedPhotos = [];
-
-            foreach ($photos as $photo) {
-                $path = $photo->store('sport_type_photos', 'public');
-                $uploadedPhotos[] = $path;
-            }
-
-            $existingPhotos = json_decode($sportType->photos) ?: [];
-            $allPhotos = array_merge($existingPhotos, $uploadedPhotos);
-            $validated['photos'] = json_encode($allPhotos);
-        }
-
+        $validated['photos'] = $this->updatePhotoPaths($validated['photos'], 'sport_type_photos', $sportType);
 
         $sportType->update($validated);
 

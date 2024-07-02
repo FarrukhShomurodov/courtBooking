@@ -107,10 +107,10 @@
                 </div>
                 <div id="imagePreview" class="mb-3 main__td">
                     @foreach(json_decode($stadium->photos) as $photo)
-                        <div class="image-container td__img">
+                        <div class="image-container td__img" data-photo-path="{{ $photo }}">
                             <img src="{{ asset('storage/' . $photo) }}" alt="Фото стадиона" class="uploaded-image">
                             <button type="button" class="btn btn-danger btn-sm delete-image"
-                                    data-photo-id="{{ $photo }}">Удалить
+                                    data-photo-path="{{ $photo }}">Удалить
                             </button>
                         </div>
                     @endforeach

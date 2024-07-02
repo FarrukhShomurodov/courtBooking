@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Stadium;
+use App\Traits\PhotoTrait;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
 
 class StadiumController extends Controller
 {
+    use PhotoTrait;
+
     public function deletePhoto($photoPath, $id): JsonResponse
     {
         $stadium = Stadium::query()->findOrFail($id);
@@ -19,12 +21,7 @@ class StadiumController extends Controller
 
         if ($urlId !== false) {
             unset($photosUrl[$urlId]);
-
-            $updatedPhotosUrl = json_encode(array_values($photosUrl));
-
-            $stadium->update(['photos' => $updatedPhotosUrl]);
-
-            Storage::disk('public')->delete('stadium_photos/' . $photoPath);
+            $this->delete($stadium, $photosUrl, $photoPath, 'stadium_photos/');
 
             return response()->json(['message' => 'Photo deleted successfully'], 200);
         } else {

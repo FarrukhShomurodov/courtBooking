@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\SportType;
+use App\Traits\PhotoTrait;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
 
 class SportTypeController extends Controller
 {
+    use PhotoTrait;
+
     public function deletePhoto($photoPath, $id): JsonResponse
     {
         $sportType = SportType::query()->findOrFail($id);
@@ -19,12 +21,7 @@ class SportTypeController extends Controller
 
         if ($urlId !== false) {
             unset($photosUrl[$urlId]);
-
-            $updatedPhotosUrl = json_encode(array_values($photosUrl));
-
-            $sportType->update(['photos' => $updatedPhotosUrl]);
-
-            Storage::disk('public')->delete('sport_type_photos/' . $photoPath);
+            $this->delete($sportType, $photosUrl, $photoPath, 'sport_type_photos/');
 
             return response()->json(['message' => 'Photo deleted successfully'], 200);
         } else {
