@@ -14,6 +14,7 @@
                     <th>Имя</th>
                     <th>Фамилия</th>
                     <th>Login</th>
+                    <th>Роль</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -24,6 +25,7 @@
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->second_name }}</td>
                         <td>{{ $user->login }}</td>
+                        <td>{{ $user->roles->pluck('name')[0] ?? '' }}</td>
                         <td>
                             <div class="d-inline-block text-nowrap">
                                 <button class="btn btn-sm btn-icon" onclick="location.href='{{ route('users.edit', $user->id) }}'"><i class="bx bx-edit"></i></button>

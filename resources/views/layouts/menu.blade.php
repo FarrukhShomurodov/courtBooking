@@ -26,8 +26,15 @@
 
             <li class="menu-item {{ Request::is('sport-types') ? 'active' : '' }}">
                 <a href="{{route('sport-types.index')}}" class="menu-link">
-                    <i class="user-icon tf-icons bx bx-user"></i>
-                    <div data-i18n="Виды спорта">Виды спорта</div>
+                    <i class="fa-solid fa-person-skating"></i>
+                    <div data-i18n="Виды спорта" class="ms-1">Виды спорта</div>
+                </a>
+            </li>
+
+            <li class="menu-item {{ Request::is('stadiums') ? 'active' : '' }}">
+                <a href="{{route('stadiums.index')}}" class="menu-link">
+                    <i class="fa-solid fa-futbol"></i>
+                    <div data-i18n="Стадион" class="ms-1">Стадион</div>
                 </a>
             </li>
         </ul>

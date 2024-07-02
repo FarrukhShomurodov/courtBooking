@@ -7,12 +7,10 @@
             <a href="{{ route('sport-types.create') }}" class="btn btn-primary" style="margin-right: 22px;">Создать</a>
         </div>
         @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+            <div class="alert alert-solid-danger" role="alert">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
             </div>
         @endif
 

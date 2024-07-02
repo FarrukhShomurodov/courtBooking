@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Dashboard\BotUserController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\SportTypeController;
+use App\Http\Controllers\Dashboard\StadiumController;
 use App\Http\Controllers\Dashboard\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +20,5 @@ Route::group(['middleware' => 'auth', 'admin'], function () {
     Route::resource('/users', UserController::class);
     Route::resource('/bot-users', BotUserController::class);
     Route::resource('/sport-types', SportTypeController::class);
+    Route::resource('/stadiums', StadiumController::class);
 });

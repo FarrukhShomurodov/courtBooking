@@ -62,7 +62,7 @@
     <link rel="stylesheet" href="{{ asset('vendor/libs/bootstrap-select/bootstrap-select.css') }}"/>
     <link rel="stylesheet" href="{{ asset('vendor/libs/tagify/tagify.css') }}"/>
     <link rel="stylesheet" href="{{ asset('vendor/libs/dropzone/dropzone.css') }}"/>
-
+    <link rel="stylesheet" href="{{asset('vendor/libs/select2/select2.css')}}"/>
 
     <!-- Page CSS -->
 
@@ -71,7 +71,7 @@
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
-    <script src="{{ asset('vendor/js/template-customizer.js') }}"></script>
+{{--    <script src="{{ asset('vendor/js/template-customizer.js') }}"></script>--}}
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{ asset('js/config.js') }}"></script>
 </head>
@@ -125,11 +125,14 @@
 
 <!-- Vendors JS -->
 <script src="{{ asset('vendor/libs/apex-charts/apexcharts.js') }}"></script>
+<script src="{{asset('vendor/libs/select2/select2.js')}}"></script>
 
 <!-- Main JS -->
 <script src="{{ asset('js/main.js') }}"></script>
 <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 
+
+<script src="{{asset('js/forms-selects.js')}}"></script>
 @yield('scripts')
 
 </body>

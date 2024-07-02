@@ -14,6 +14,16 @@ class Stadium extends Model
 
     protected $table = 'stadiums';
 
+    protected $fillable = [
+        'name',
+        'description',
+        'address',
+        'map_link',
+        'photos',
+        'coach_id',
+        'owner_id',
+    ];
+
     public function courts(): HasMany
     {
         return $this->hasMany(Court::class);
@@ -27,5 +37,10 @@ class Stadium extends Model
     public function coach(): BelongsTo
     {
         return $this->belongsTo(User::class, 'coach_id');
+    }
+
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id');
     }
 }

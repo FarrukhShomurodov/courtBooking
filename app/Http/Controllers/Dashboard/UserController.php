@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -27,7 +28,8 @@ class UserController extends Controller
 
     public function create(): View
     {
-        return view('users.create');
+        $roles = Role::all();
+        return view('users.create', compact('roles'));
     }
 
     public function store(StoreRequest $request): RedirectResponse
@@ -38,7 +40,8 @@ class UserController extends Controller
 
     public function edit(User $user): View
     {
-        return view('users.edit', compact('user'));
+        $roles = Role::all();
+        return view('users.edit', compact('user', 'roles'));
     }
 
     public function update(UpdateRequest $request, User $user): RedirectResponse

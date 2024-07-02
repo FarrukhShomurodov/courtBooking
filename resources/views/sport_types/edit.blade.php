@@ -3,7 +3,7 @@
 @section('content')
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Редактировать квартиру</h5>
+            <h5 class="mb-0">Редактировать тип спорта</h5>
         </div>
         <div class="card-body">
             <form id="apartmentForm" action="{{ route('sport-types.update', $sportType->id) }}" method="POST"
