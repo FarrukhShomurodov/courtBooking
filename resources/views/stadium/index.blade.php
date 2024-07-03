@@ -69,6 +69,7 @@
                                 @endif
                             </div>
                         </td>
+
                         <td>
                             <div class="d-inline-block text-nowrap">
                                 <button class="btn btn-sm btn-icon"
@@ -96,7 +97,7 @@
         $(document).ready(function () {
             $('.popup-img').on('click', function () {
                 let src = $(this).attr('src');
-                let  popup = `
+                let popup = `
                 <div class="popup-overlay" onclick="$(this).remove()">
                     <img src="${src}" class="popup-img-expanded">
                 </div>
@@ -105,8 +106,8 @@
             });
 
             $('.switch-input').on('change', function () {
-                let  userId = $(this).data('user-id');
-                let  isActive = $(this).is(':checked') ? 1 : 0;
+                let userId = $(this).data('user-id');
+                let isActive = $(this).is(':checked') ? 1 : 0;
 
                 $.ajax({
                     url: `/api/stadium/${userId}/is-active`,
