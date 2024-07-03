@@ -26,14 +26,17 @@
                     <input type="file" name="photos[]" id="imageInput" class="form-control" multiple>
                 </div>
                 <div id="imagePreview" class="mb-3 main__td">
-                    @foreach(json_decode($sportType->photos) as $photo)
-                        <div class="image-container td__img" data-photo-path="{{ $photo }}">
-                            <img src="{{ asset('storage/' . $photo) }}" alt="Apartment Image" class="uploaded-image">
-                            <button type="button" class="btn btn-danger btn-sm delete-image"
-                                    data-photo-path="{{ $photo }}">Удалить
-                            </button>
-                        </div>
-                    @endforeach
+                    @if($sportType->photos)
+                        @foreach(json_decode($sportType->photos) as $photo)
+                            <div class="image-container td__img" data-photo-path="{{ $photo }}">
+                                <img src="{{ asset('storage/' . $photo) }}" alt="Apartment Image"
+                                     class="uploaded-image">
+                                <button type="button" class="btn btn-danger btn-sm delete-image"
+                                        data-photo-path="{{ $photo }}">Удалить
+                                </button>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
                 <button type="submit" class="btn btn-primary">Редактировать</button>
             </form>

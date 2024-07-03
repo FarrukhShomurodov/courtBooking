@@ -32,6 +32,6 @@ class User extends Authenticatable
 
     public function stadiums(): HasMany
     {
-        return $this->hasMany(Stadium::class, 'coach_id');
+        return $this->hasMany(Stadium::class, 'owner_id');
     }
 }

@@ -14,7 +14,8 @@ class Court extends Model
         'name',
         'description',
         'photos',
-        'is_active'
+        'is_active',
+        'stadium_id'
     ];
 
     public function stadium(): BelongsTo

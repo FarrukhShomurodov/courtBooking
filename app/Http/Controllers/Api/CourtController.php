@@ -3,26 +3,26 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Stadium;
+use App\Models\Court;
 use App\Traits\PhotoTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class StadiumController extends Controller
+class CourtController extends Controller
 {
     use PhotoTrait;
 
     public function deletePhoto($photoPath, $id): JsonResponse
     {
-        $stadium = Stadium::query()->findOrFail($id);
+        $court = Court::query()->findOrFail($id);
 
-        $photosUrl = json_decode($stadium->photos);
+        $photosUrl = json_decode($court->photos);
 
-        $urlId = array_search('stadium_photos/' . $photoPath, $photosUrl);
+        $urlId = array_search('court_photos/' . $photoPath, $photosUrl);
 
         if ($urlId !== false) {
             unset($photosUrl[$urlId]);
-            $this->delete($stadium, $photosUrl, $photoPath, 'stadium_photos/');
+            $this->delete($court, $photosUrl, $photoPath, 'court_photos/');
 
             return response()->json(['message' => 'Photo deleted successfully'], 200);
         } else {
@@ -30,13 +30,13 @@ class StadiumController extends Controller
         }
     }
 
-    public function isActive(Request $request, Stadium $stadium): JsonResponse
+    public function isActive(Request $request, Court $court): JsonResponse
     {
         $validated = $request->validate([
             'is_active' => 'required|boolean',
         ]);
 
-        $stadium->update(['is_active' => $validated['is_active']]);
+        $court->update(['is_active' => $validated['is_active']]);
 
         return response()->json([], 200);
     }

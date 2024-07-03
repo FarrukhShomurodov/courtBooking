@@ -44,9 +44,11 @@ class StadiumService
     public function destroy(Stadium $stadium): void
     {
 
-        foreach (json_decode($stadium->photos) as $photo) {
-            if (Storage::disk('public')->exists($photo)) {
-                Storage::disk('public')->delete($photo);
+        if ($stadium->photos) {
+            foreach (json_decode($stadium->photos) as $photo) {
+                if (Storage::disk('public')->exists($photo)) {
+                    Storage::disk('public')->delete($photo);
+                }
             }
         }
 

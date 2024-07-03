@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Dashboard\BotUserController;
+use App\Http\Controllers\Dashboard\CourtController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\SportTypeController;
 use App\Http\Controllers\Dashboard\StadiumController;
@@ -26,5 +27,6 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['middleware' => 'role:owner stadium|admin'], function () {
         Route::resource('/stadiums', StadiumController::class);
+        Route::resource('/courts', CourtController::class);
     });
 });

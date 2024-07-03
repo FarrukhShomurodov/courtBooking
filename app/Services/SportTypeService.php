@@ -35,10 +35,11 @@ class SportTypeService
 
     public function destroy(SportType $sportType): void
     {
-
-        foreach (json_decode($sportType->photos) as $photo) {
-            if (Storage::disk('public')->exists($photo)) {
-                Storage::disk('public')->delete($photo);
+        if ($sportType->photos) {
+            foreach (json_decode($sportType->photos) as $photo) {
+                if (Storage::disk('public')->exists($photo)) {
+                    Storage::disk('public')->delete($photo);
+                }
             }
         }
 
