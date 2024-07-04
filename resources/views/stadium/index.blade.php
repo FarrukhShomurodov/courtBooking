@@ -40,7 +40,7 @@
                         <td>{{ $stadium->description }}</td>
                         <td>{{ $stadium->address }}</td>
                         <td>{{ $stadium->map_link }}</td>
-                        <td>{{ $stadium->coach->name }}</td>
+                        <td>{{ $stadium->coach->name ?? '' }}</td>
                         <td>{{ $stadium->owner->name }}</td>
                         <td>
                             @foreach($stadium->sportTypes as $sportType)

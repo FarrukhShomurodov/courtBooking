@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('days', function (Blueprint $table) {
             $table->id();
             $table->date('date');
+            $table->foreignId('court_id')->constrained('courts')->onDelete('cascade');;
             $table->timestamps();
         });
     }

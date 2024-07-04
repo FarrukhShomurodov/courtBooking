@@ -38,7 +38,7 @@
                         @endforeach
                     @endif
                 </div>
-                <button type="submit" class="btn btn-primary">Редактировать</button>
+                <button type="submit" class="btn btn-warning ">Редактировать</button>
             </form>
         </div>
     </div>

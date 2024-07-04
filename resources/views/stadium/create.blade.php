@@ -5,7 +5,7 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Создать стадион</h5>
             <label class="switch" style="margin-right: 40px">
-                <input type="checkbox" class="switch-input" name="is_active">
+                <input type="checkbox" class="switch-input" name="is_active" checked>
                 <span class="switch-toggle-slider">
                     <span class="switch-on"></span>
                     <span class="switch-off"></span>

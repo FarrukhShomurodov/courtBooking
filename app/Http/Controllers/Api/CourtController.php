@@ -12,6 +12,18 @@ class CourtController extends Controller
 {
     use PhotoTrait;
 
+    public function show(Court $court): JsonResponse
+    {
+        $days = $court->days()->get()->load('hours');
+
+        $res = [
+            'court' => $court,
+            'days' => $days,
+        ];
+
+        return response()->json($res);
+    }
+
     public function deletePhoto($photoPath, $id): JsonResponse
     {
         $court = Court::query()->findOrFail($id);
