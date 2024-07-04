@@ -50,7 +50,7 @@
                     <input class="form-control house-photo" type="password" name="password" id="formFile"
                            placeholder="Пароль">
                 </div>
-                <button type="submit" class="btn btn-primary">Редактировать</button>
+                <button type="submit" class="btn btn-warning ">Редактировать</button>
             </form>
         </div>
     </div>

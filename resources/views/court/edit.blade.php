@@ -3,14 +3,13 @@
 @section('content')
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Редактировать стадион</h5>
+            <h5 class="mb-0">Редактировать корт</h5>
             <label class="switch" style="margin-right: 40px">
-                <input type="checkbox" class="switch-input" data-user-id="{{ $stadium->id }}"
-                       @if($stadium->is_active) checked @endif>
+                <input type="checkbox" class="switch-input" name="is_active" @if($court->is_active) checked @endif>
                 <span class="switch-toggle-slider">
-                                    <span class="switch-on"></span>
-                                    <span class="switch-off"></span>
-                                </span>
+                    <span class="switch-on"></span>
+                    <span class="switch-off"></span>
+                </span>
             </label>
         </div>
         @if ($errors->any())
@@ -21,115 +20,63 @@
             </div>
         @endif
         <div class="card-body">
-            <form id="stadiumForm" action="{{ route('stadiums.update', $stadium->id) }}" method="POST"
+            <form id="courtForm" action="{{ route('courts.update', $court->id) }}" method="POST"
                   enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-
-                {{--is active--}}
-                <input type="number" class="is_active" name="is_active" hidden="">
+                <input type="number" class="is_active" name="is_active" hidden="" value="{{ $court->is_active }}">
 
                 <div class="mb-3">
-                    <label class="form-label" for="stadium-name">Название</label>
-                    <input type="text" name="name" class="form-control" id="stadium-name"
-                           placeholder="Название" value="{{ $stadium->name }}"
-                           required>
+                    <label class="form-label" for="basic-default-fullname">Название</label>
+                    <input type="text" name="name" class="form-control" id="basic-default-fullname"
+                           placeholder="Название" value="{{ $court->name }}" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="stadium-description">Описание</label>
-                    <textarea id="stadium-description" name="description" class="form-control"
-                              placeholder="Описание" required>{{ $stadium->description }}</textarea>
+                    <label class="form-label" for="basic-default-message">Описание</label>
+                    <textarea id="basic-default-message" name="description" class="form-control" placeholder="Описание"
+                              required>{{ $court->description }}</textarea>
                 </div>
+                @role('admin')
                 <div class="mb-3">
-                    <label class="form-label" for="stadium-address">Адрес</label>
-                    <input type="text" name="address" class="form-control" id="stadium-address"
-                           placeholder="Адрес"
-                           required value="{{ $stadium->address }}">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="stadium-map-link">Ссылка на карту</label>
-                    <input type="text" name="map_link" class="form-control" id="stadium-map-link"
-                           placeholder="Ссылка на карту"
-                           required value="{{ $stadium->map_link }}">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="sport-types">Виды спорта</label>
-                    <div class="select2-primary" data-select2-id="45">
-                        <div class="position-relative" data-select2-id="44">
-                            <select id="select2Primary"
-                                    class="select2 form-select select2-hidden-accessible"
-                                    name="sport_types[]"
-                                    multiple=""
-                                    data-select2-id="select2Primary"
-                                    tabindex="-1" aria-hidden="true">
-
-                                @foreach($sportTypes as $sportType)
-                                    <option
-                                        value="{{ $sportType->id }}" @selected($stadium->sportTypes->contains('id', $sportType->id))>{{ $sportType->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="ownerDropdown" class="form-label">Владелец</label>
+                    <label for="stadiumDropdown" class="form-label">Стадион</label>
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-toggle w-100 d-flex justify-content-between"
-                                type="button" id="ownerDropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                                style="border: 1px solid #d4d8dd; padding: .535rem 1.375rem .535рем .75рем;">
-                            @if($stadium->owner)
-                                {{ $stadium->owner->name }}
+                                type="button" id="stadiumDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                style="border: 1px solid #d4d8dd; padding: .535rem 1.375rem .535rem .75rem;">
+                            @if($court->stadium)
+                                {{ $court->stadium->name }}
                             @else
-                                Выбрать владельца
+                                Выбрать Стадион
                             @endif
                         </button>
-                        <ul class="dropdown-menu w-100" aria-labelledby="ownerDropdown">
-                            @foreach($users as $user)
+                        <ul class="dropdown-menu w-100" aria-labelledby="stadiumDropdown">
+                            @foreach($stadiums as $stadium)
                                 <li><a class="dropdown-item" href="#"
-                                       data-value="{{ $user->id }}">{{ $user->name }}</a></li>
+                                       data-value="{{ $stadium->id }}">{{ $stadium->name }}</a></li>
                             @endforeach
                         </ul>
-                        <input type="hidden" name="owner_id" id="ownerInput" value="{{ $stadium->owner_id }}">
+                        <input type="hidden" name="stadium_id" id="stadiumInput" value="{{ $court->stadium_id }}">
                     </div>
                 </div>
+                @endrole
                 <div class="mb-3">
-                    <label for="coachDropdown" class="form-label">Тренер</label>
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle w-100 d-flex justify-content-between"
-                                type="button" id="coachDropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                                style="border: 1px solid #d4d8dd; padding: .535рем 1.375рем .535рем .75рем;">
-                            @if($stadium->coach)
-                                {{ $stadium->coach->name }}
-                            @else
-                                Выбрать тренера
-                            @endif
-                        </button>
-                        <ul class="dropdown-menu w-100" aria-labelledby="coachDropdown">
-                            @foreach($users as $user)
-                                <li><a class="dropdown-item" href="#"
-                                       data-value="{{ $user->id }}">{{ $user->name }}</a></li>
-                            @endforeach
-                        </ul>
-                        <input type="hidden" name="coach_id" id="coachInput" value="{{ $stadium->coach_id }}">
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="imageInput" class="form-label">Загрузить изображения</label>
+                    <label for="imageInput" class="form-label">Загрузить изображение</label>
                     <input type="file" name="photos[]" id="imageInput" class="form-control" multiple>
                 </div>
                 <div id="imagePreview" class="mb-3 main__td">
-                    @if($stadium->photos)
-                        @foreach(json_decode($stadium->photos) as $photo)
+                    @if($court->photos)
+                        @foreach(json_decode($court->photos) as $photo)
                             <div class="image-container td__img" data-photo-path="{{ $photo }}">
-                                <img src="{{ asset('storage/' . $photo) }}" alt="Фото стадиона" class="uploaded-image">
+                                <img src="{{ asset('storage/' . $photo) }}" alt="Court Image" class="uploaded-image">
                                 <button type="button" class="btn btn-danger btn-sm delete-image"
                                         data-photo-path="{{ $photo }}">Удалить
                                 </button>
                             </div>
                         @endforeach
                     @endif
+
                 </div>
-                <button type="submit" class="btn btn-warning ">Редактировать</button>
+                <button type="submit" class="btn btn-warning">Редактировать</button>
             </form>
         </div>
     </div>
@@ -144,8 +91,7 @@
             });
 
             const dropdowns = [
-                {dropdown: $('#ownerDropdown'), input: $('#ownerInput')},
-                {dropdown: $('#coachDropdown'), input: $('#coachInput')}
+                {dropdown: $('#stadiumDropdown'), input: $('#stadiumInput')}
             ];
             const originalBorderColor = '#d4d8dd';
 
@@ -240,7 +186,7 @@
                 const path = $(this).data('photo-path');
                 if (path) {
                     $.ajax({
-                        url: `/api/delete/${path}/{{ $stadium->id }}`,
+                        url: `/api/delete/${path}/{{ $court->id }}`,
                         method: 'DELETE',
                         data: {
                             _token: '{{ csrf_token() }}'
@@ -255,7 +201,6 @@
                     });
                 }
             });
-
         });
     </script>
 @endsection

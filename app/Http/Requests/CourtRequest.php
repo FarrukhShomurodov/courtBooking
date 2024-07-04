@@ -4,11 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\NotAdmin;
-use App\Rules\UniqueOwner;
-use App\Rules\UniqueCoach;
+use Illuminate\Support\Facades\Auth;
 
-class StadiumRequest extends FormRequest
+class CourtRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,6 +14,16 @@ class StadiumRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+    }
+
+    public function prepareForValidation(): void
+    {
+        $userStadium = Auth::user()->stadiums()->first();
+        if (isset($userStadium)) {
+            $this->merge([
+                'stadium_id' => $userStadium->id,
+            ]);
+        }
     }
 
     /**
@@ -28,15 +36,10 @@ class StadiumRequest extends FormRequest
         return [
             'name' => 'required|string|max:200',
             'description' => 'required|string',
-            'address' => 'required|string',
-            'map_link' => 'required|string',
-            'sport_types' => 'required|array',
-            'sport_types.*' => 'required|integer|exists:sport_types,id',
             'photos' => 'sometimes|array',
             'photos.*' => 'image|mimes:jpg,png',
             'is_active' => 'nullable|boolean',
-            'owner_id' => ['required', 'exists:users,id', new UniqueOwner],
-            'coach_id' => ['nullable', 'exists:users,id', 'different:owner_id', new NotAdmin ,new UniqueCoach],
+            'stadium_id' => 'required|exists:stadiums,id'
         ];
     }
 }

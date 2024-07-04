@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Day extends Model
+class Booking extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'court_id',
-        'date',
+        'user_id',
+        'day_id',
+        'hour_id',
     ];
 
     public function court(): BelongsTo
@@ -21,8 +22,19 @@ class Day extends Model
         return $this->belongsTo(Court::class);
     }
 
-    public function hours(): HasMany
+    public function user(): BelongsTo
     {
-        return $this->hasMany(Hour::class);
+        return $this->belongsTo(User::class);
     }
+
+    public function day(): BelongsTo
+    {
+        return $this->belongsTo(Day::class);
+    }
+
+    public function hour(): BelongsTo
+    {
+        return $this->belongsTo(Hour::class);
+    }
+
 }

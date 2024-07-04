@@ -29,7 +29,9 @@ class StadiumController extends Controller
     public function create(): View
     {
         $sportTypes = SportType::all();
-        $users = User::all();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'admin');
+        })->get();
         return view('stadium.create', compact('sportTypes', 'users'));
 
     }
@@ -43,7 +45,9 @@ class StadiumController extends Controller
     public function edit(Stadium $stadium): View
     {
         $sportTypes = SportType::all();
-        $users = User::all();
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'admin');
+        })->get();
         return view('stadium.edit', compact('stadium', 'sportTypes', 'users'));
     }
 

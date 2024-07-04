@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('name');
             $table->text('description');
             $table->json('photos')->nullable();
-            $table->boolean('active')->default(true);
+            $table->boolean('is_active')->default(true);
             $table->foreignId('stadium_id')->constrained('stadiums')->onDelete('cascade');
             $table->timestamps();
         });
