@@ -24,7 +24,7 @@ class ScheduleRequest extends FormRequest
     {
         return [
             'court_id' => 'required|integer|exists:courts,id',
-            'date' => 'required|date',
+            'date' => 'required|date|after_or_equal:today',
             'hours' => 'required|array',
             'hours.*.start_time' => 'required|date_format:H:i',
             'hours.*.end_time' => 'required|date_format:H:i|after:hours.*.start_time'

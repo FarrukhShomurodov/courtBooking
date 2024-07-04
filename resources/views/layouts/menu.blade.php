@@ -46,12 +46,14 @@
                     </a>
                 </li>
 
-                <li class="menu-item {{ Request::is('schedule*') ? 'active' : '' }}">
-                    <a href="{{route('schedule.index')}}" class="menu-link">
-                        <i class="fa-solid fa-calendar-days"></i>
-                        <div data-i18n="Расписания" class="ms-1">Расписания</div>
-                    </a>
-                </li>
+                @role('owner stadium')
+                    <li class="menu-item {{ Request::is('schedule*') ? 'active' : '' }}">
+                        <a href="{{route('schedule.index')}}" class="menu-link">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            <div data-i18n="Расписания" class="ms-1">Расписания</div>
+                        </a>
+                    </li>
+                @endrole
             @endif
 
         </ul>

@@ -30,17 +30,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('/stadiums', StadiumController::class);
         Route::resource('/courts', CourtController::class);
 
-        Route::resource('/schedule', ScheduleController::class)->parameter('schedule', 'day');
+        Route::resource('/schedule', ScheduleController::class)->parameter('schedule', 'day')->middleware('role:owner stadium');
     });
 });
-
-//Route::get('/schedule', [ScheduleController::class, 'index'])->name('schedule.index');
-//Route::prefix('courts/{court}')->group(function () {
-//    Route::get('schedule/create', [ScheduleController::class, 'create'])->name('schedule.create');
-//    Route::post('schedule', [ScheduleController::class, 'store'])->name('schedule.store');
-//});
-//
-//Route::prefix('days/{day}')->group(function () {
-//    Route::get('schedule/edit', [ScheduleController::class, 'edit'])->name('schedule.edit');
-//    Route::put('schedule', [ScheduleController::class, 'update'])->name('schedule.update');
-//});

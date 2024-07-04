@@ -23,7 +23,7 @@ class DayRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => 'required|date',
+            'date' => 'required|date|after_or_equal:today',
             'hours' => 'required|array',
             'hours.*.start_time' => 'required_without:hours.*.delete',
             'hours.*.end_time' => 'required_without:hours.*.delete|after:hours.*.start_time',
