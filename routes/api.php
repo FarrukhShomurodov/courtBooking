@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\BotUserController;
 use App\Http\Controllers\Api\CourtController;
 use App\Http\Controllers\Api\SportTypeController;
@@ -15,3 +16,7 @@ Route::get('courts/{court}', [CourtController::class, 'show']);
 Route::delete('/delete/sport_type_photos/{photoPath}/{sportType}', [SportTypeController::class, 'deletePhoto']);
 Route::delete('/delete/stadium_photos/{photoPath}/{sportType}', [StadiumController::class, 'deletePhoto']);
 Route::delete('/delete/court_photos/{photoPath}/{sportType}', [CourtController::class, 'deletePhoto']);
+
+
+Route::get('days-by-court/{court}', [BookingController::class, 'getDaysByCourt'])->name('bookings.days-by-court');
+Route::get('hours-by-day/{day}', [BookingController::class, 'getHoursByDay'])->name('bookings.hours-by-day');

@@ -56,6 +56,13 @@
                 @endrole
             @endif
 
+            <li class="menu-item {{ Request::is('bookings*') ? 'active' : '' }}">
+                <a href="{{route('bookings.index')}}" class="menu-link">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <div data-i18n="Бронирования" class="ms-1">Бронирования</div>
+                </a>
+            </li>
+
         </ul>
 
     </div>

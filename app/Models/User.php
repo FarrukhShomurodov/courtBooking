@@ -34,4 +34,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Stadium::class, 'owner_id');
     }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

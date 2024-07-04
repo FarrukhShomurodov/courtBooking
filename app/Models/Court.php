@@ -28,4 +28,9 @@ class Court extends Model
     {
         return $this->hasMany(Day::class);
     }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
 }

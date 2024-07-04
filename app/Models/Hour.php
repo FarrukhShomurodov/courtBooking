@@ -13,7 +13,8 @@ class Hour extends Model
     protected $fillable = [
         'start_time',
         'end_time',
-        'day_id'
+        'day_id',
+        'is_booked'
     ];
 
     public function day(): BelongsTo

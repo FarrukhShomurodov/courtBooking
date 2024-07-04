@@ -100,28 +100,30 @@
             function allCourts() {
                 return `
                      @foreach($courts as $court)
-                        <h5>{{ $court->name }}</h5>
-                        <div class="mb-3">
-                            <ul class="list-group">
-                            @foreach($court->days as $day)
-                                <li class="list-group-item">
-                                    <strong>{{ $day->date }}</strong>
-                                    @foreach($day->hours as $hour)
-                                        <ul>
-                                            <li>{{ $hour->start_time }} - {{ $hour->end_time }}</li>
-                                        </ul>
-                                    @endforeach
-                                    <button class="btn btn-warning mt-2" onclick="location.href='{{route('schedule.edit', $day->id )}}'">Редактировать</button>
-                                    <form action="{{ route('schedule.destroy', $day->id) }}" method="POST"
-                                      style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger mt-2">Удалить</button>
-                                    </form>
-                                </li>
-                            @endforeach
-                            </ul>
-                        </div>
+                         @if($court->days->count() >= 1)
+                            <h5>{{ $court->name }}</h5>
+                            <div class="mb-3">
+                                <ul class="list-group">
+                                @foreach($court->days as $day)
+                                        <li class="list-group-item">
+                                        <strong>{{ $day->date }}</strong>
+                                            @foreach($day->hours as $hour)
+                                            <ul>
+                                                <li>{{ $hour->start_time }} - {{ $hour->end_time }} <span class="text-danger"><b>{{ $hour->is_booked ? 'booked' : ''}}</b></span></li>
+                                            </ul>
+                                            @endforeach
+                                        <button class="btn btn-warning mt-2" onclick="location.href='{{route('schedule.edit', $day->id )}}'">Редактировать</button>
+                                        <form action="{{ route('schedule.destroy', $day->id) }}" method="POST"
+                                          style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger mt-2">Удалить</button>
+                                        </form>
+                                        </li>
+                                @endforeach
+                                </ul>
+                            </div>
+                         @endif
                     @endforeach
                         `
             }
@@ -151,7 +153,7 @@
                                 let hoursHtml = '';
 
                                 for (let i = 0; i < hours.length; i++) {
-                                    hoursHtml += ` <li>${hours[i].start_time} - ${hours[i].end_time}</li>`
+                                    hoursHtml += ` <li>${hours[i].start_time} - ${hours[i].end_time}  <span class="text-danger"><b>${hours[i].is_booked ? 'booked' : ''}</b></span></li>`
                                 }
 
                                 schedules += `
@@ -163,11 +165,15 @@
                                                     ${hoursHtml}
                                                 </ul>
                                                 <button class="btn btn-warning mt-2" onclick="location.href='schedule/edit/${days[i].id}'">Редактировать</button>
-                                                <button class="btn btn-danger mt-2" onclick="location.href='schedule/edit/${days[i].id}'">Удалить</button>
-                                        </li>
-                                    </ul>
-                                </div>
-                                `
+                                                <form action="schedule/destroy/${days[i].id}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-danger mt-2">Удалить</button>
+                                                </form>
+                            </li>
+                        </ul>
+                    </div>
+`
                             }
 
                             $('.schedule').append(schedules);

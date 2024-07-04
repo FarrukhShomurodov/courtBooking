@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Dashboard\BookingController;
 use App\Http\Controllers\Dashboard\BotUserController;
 use App\Http\Controllers\Dashboard\CourtController;
 use App\Http\Controllers\Dashboard\DashboardController;
@@ -32,4 +33,6 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::resource('/schedule', ScheduleController::class)->parameter('schedule', 'day')->middleware('role:owner stadium');
     });
+
+    Route::resource('bookings', BookingController::class);
 });
