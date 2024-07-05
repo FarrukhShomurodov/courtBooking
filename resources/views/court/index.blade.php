@@ -6,6 +6,8 @@
             <h5 class="card-header">Корты</h5>
             <a href="{{ route('courts.create') }}" class="btn btn-primary" style="margin-right: 22px;">Создать</a>
         </div>
+
+        <div class="res_error"></div>
         @if ($errors->any())
             <div class="alert alert-solid-danger" role="alert">
                 @foreach ($errors->all() as $error)
@@ -22,7 +24,9 @@
                     <th>Название</th>
                     <th>Описание</th>
                     <th>Is Active</th>
-                    <th>Стадион</th>
+                    @role('admin')
+                        <th>Стадион</th>
+                    @endrole
                     <th>Фото</th>
                     <th></th>
                 </tr>
@@ -44,7 +48,9 @@
                                 </span>
                             </label>
                         </td>
-                        <td>{{ $court->stadium->name }}</td>
+                        @role('admin')
+                            <td>{{ $court->stadium->name }}</td>
+                        @endrole
                         <td>
                             <div class="main__td">
                                 @if($court->photos)
@@ -84,6 +90,7 @@
         $(document).ready(function () {
 
             $('.switch-input').on('change', function () {
+                let switchInput = $(this);
                 let userId = $(this).data('user-id');
                 let isActive = $(this).is(':checked') ? 1 : 0;
 
@@ -97,6 +104,17 @@
                     success: function (res) {
                     },
                     error: function (error) {
+                        let errors = error.responseJSON.error;
+                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
+                        $('.res_error').append(errorHtml);
+
+
+                        switchInput.prop('checked', !isActive);
+
+
+                        setTimeout(function () {
+                            $('.res_error').html('');
+                        }, 3000);
                     }
                 });
             });

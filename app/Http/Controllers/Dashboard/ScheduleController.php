@@ -67,8 +67,8 @@ class ScheduleController extends Controller
 
     public function destroy(Day $day): RedirectResponse
     {
-        $dataNow = date('Y-m-d');
-        if ($day->date >= $dataNow) {
+        $currentDate = date('Y-m-d');
+        if ($day->date >= $currentDate) {
             return redirect()->route('schedule.index')->withErrors('Невозможно удалить будущий или текущий день.');
         } else {
             $this->scheduleService->destroy($day);
