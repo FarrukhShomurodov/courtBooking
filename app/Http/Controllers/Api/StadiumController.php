@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Stadium;
+use App\Traits\BookingTrait;
 use App\Traits\PhotoTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 class StadiumController extends Controller
 {
     use PhotoTrait;
+    use BookingTrait;
 
     public function deletePhoto($photoPath, $id): JsonResponse
     {
@@ -35,6 +37,10 @@ class StadiumController extends Controller
         $validated = $request->validate([
             'is_active' => 'required|boolean',
         ]);
+
+        if ($validated['is_active'] == 0 && $this->stadiumHasBookings($stadium)) {
+            return response()->json(['error' => 'Невозможно деактивировать стадион, так как у кортов есть активные бронирования.'], 422);
+        }
 
         $stadium->update(['is_active' => $validated['is_active']]);
 

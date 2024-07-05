@@ -18,7 +18,7 @@ class CourtRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-        $userStadium = Auth::user()->stadiums()->first();
+        $userStadium = Auth::user()->stadiumOwner()->first();
         if (isset($userStadium)) {
             $this->merge([
                 'stadium_id' => $userStadium->id,

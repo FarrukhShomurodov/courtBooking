@@ -7,11 +7,14 @@ use App\Http\Requests\CourtRequest;
 use App\Models\Court;
 use App\Models\Stadium;
 use App\Services\CourtService;
+use App\Traits\BookingTrait;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class CourtController extends Controller
 {
+    use BookingTrait;
+
     protected CourtService $courtService;
 
     public function __construct(CourtService $courtService)
@@ -47,12 +50,21 @@ class CourtController extends Controller
 
     public function update(CourtRequest $request, Court $court): RedirectResponse
     {
-        $this->courtService->update($court, $request->validated());
+        $validated = $request->validated();
+
+        if ($validated['is_active'] == 0 && $this->courtHasBookings($court)) {
+            return redirect()->route('courts.create')->withErrors('Невозможно деактивировать корт, так как имеются активные бронирования.');
+        }
+
+        $this->courtService->update($court, $validated);
         return redirect()->route('courts.index');
     }
 
     public function destroy(Court $court): RedirectResponse
     {
+        if ($this->courtHasBookings($court)) {
+            return redirect()->route('courts.index')->withErrors('Невозможно удалить корт, так как имеются активные бронирования.');
+        }
         $this->courtService->destroy($court);
         return redirect()->route('courts.index');
     }

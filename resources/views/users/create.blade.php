@@ -5,6 +5,13 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Создать пользователя</h5>
         </div>
+        @if ($errors->any())
+            <div class="alert alert-solid-danger" role="alert">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </div>
+        @endif
         <div class="card-body">
             <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf

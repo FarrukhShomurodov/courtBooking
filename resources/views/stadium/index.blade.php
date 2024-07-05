@@ -4,10 +4,12 @@
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-header">Стадион</h5>
-            @can('admin')
+            @can('manage stadiums')
                 <a href="{{ route('stadiums.create') }}" class="btn btn-primary" style="margin-right: 22px;">Создать</a>
             @endcan
         </div>
+
+        <div class="res_error"></div>
         @if ($errors->any())
             <div class="alert alert-solid-danger" role="alert">
                 @foreach ($errors->all() as $error)
@@ -71,7 +73,7 @@
                                 @endif
                             </div>
                         </td>
-                        @can('admin')
+                        @can('manage stadiums')
                             <td>
                                 <div class="d-inline-block text-nowrap">
                                     <button class="btn btn-sm btn-icon"
@@ -109,6 +111,7 @@
             });
 
             $('.switch-input').on('change', function () {
+                let switchInput = $(this);
                 let userId = $(this).data('user-id');
                 let isActive = $(this).is(':checked') ? 1 : 0;
 
@@ -120,8 +123,20 @@
                         is_active: isActive
                     },
                     success: function (res) {
+                        $('.res_error').html('');
                     },
                     error: function (error) {
+                        let errors = error.responseJSON.error;
+                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
+                        $('.res_error').append(errorHtml);
+
+
+                        switchInput.prop('checked', !isActive);
+
+
+                        setTimeout(function () {
+                            $('.res_error').html('');
+                        }, 3000);
                     }
                 });
             });

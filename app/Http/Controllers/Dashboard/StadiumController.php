@@ -8,11 +8,14 @@ use App\Models\SportType;
 use App\Models\Stadium;
 use App\Models\User;
 use App\Services\StadiumService;
+use App\Traits\BookingTrait;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class StadiumController extends Controller
 {
+    use BookingTrait;
+
     protected StadiumService $stadiumService;
 
     public function __construct(StadiumService $stadiumService)
@@ -53,12 +56,21 @@ class StadiumController extends Controller
 
     public function update(StadiumRequest $request, Stadium $stadium): RedirectResponse
     {
-        $this->stadiumService->update($stadium, $request->validated());
+        $validated = $request->validated();
+
+        if ($validated['is_active'] == 0 && $this->stadiumHasBookings($stadium)) {
+            return redirect()->route('stadiums.create')->withErrors('Невозможно деактивировать стадион, так как у кортов есть активные бронирования.');
+        }
+
+        $this->stadiumService->update($stadium, $validated);
         return redirect()->route('stadiums.index');
     }
 
     public function destroy(Stadium $stadium): RedirectResponse
     {
+        if ($this->stadiumHasBookings($stadium)) {
+            return redirect()->route('stadiums.index')->withErrors('Невозможно удалить стадион, так как у кортов есть активные бронирования.');
+        }
         $this->stadiumService->destroy($stadium);
         return redirect()->route('stadiums.index');
     }

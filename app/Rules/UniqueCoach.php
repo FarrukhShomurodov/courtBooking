@@ -7,13 +7,26 @@ use Illuminate\Contracts\Validation\Rule;
 
 class UniqueCoach implements Rule
 {
-    public function passes($attribute, $value)
+    protected $stadiumId;
+
+    public function __construct($stadiumId = null)
     {
-        return !Stadium::query()->where('coach_id', $value)->exists();
+        $this->stadiumId = $stadiumId;
     }
 
-    public function message()
+    public function passes($attribute, $value): bool
     {
-        return 'У тренера уже есть стадион.';
+        $query = Stadium::query()->where('coach_id', $value);
+
+        if ($this->stadiumId) {
+            $query->where('id', '!=', $this->stadiumId);
+        }
+
+        return !$query->exists();
+    }
+
+    public function message(): string
+    {
+        return 'У этого тренера уже есть стадион.';
     }
 }

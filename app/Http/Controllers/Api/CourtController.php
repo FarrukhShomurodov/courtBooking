@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Court;
+use App\Traits\BookingTrait;
 use App\Traits\PhotoTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 class CourtController extends Controller
 {
     use PhotoTrait;
+    use BookingTrait;
 
     public function show(Court $court): JsonResponse
     {
@@ -47,6 +49,10 @@ class CourtController extends Controller
         $validated = $request->validate([
             'is_active' => 'required|boolean',
         ]);
+
+        if ($validated['is_active'] == 0 && $this->courtHasBookings($court)) {
+            return response()->json(['error' => 'Невозможно деактивировать корт, так как имеются активные бронирования.'], 422);
+        }
 
         $court->update(['is_active' => $validated['is_active']]);
 

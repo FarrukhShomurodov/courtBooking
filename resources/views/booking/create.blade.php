@@ -32,23 +32,25 @@
                         <input type="hidden" name="court_id" id="courtInput">
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label for="userDropdown" class="form-label">Пользователь</label>
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle w-100 d-flex justify-content-between"
-                                type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                                style="border: 1px solid #d4d8dd; padding: .535rem 1.375rem .535rem .75rem;">
-                            Выберите пользователя
-                        </button>
-                        <ul class="dropdown-menu w-100" aria-labelledby="userDropdown">
-                            @foreach($users as $user)
-                                <li><a class="dropdown-item" href="#"
-                                       data-value="{{ $user->id }}">{{ $user->name }}</a></li>
-                            @endforeach
-                        </ul>
-                        <input type="hidden" name="user_id" id="userInput">
+                @if(Auth::user()->roles()->first()->name == 'admin' || Auth::user()->roles()->first()->name == 'owner stadium')
+                    <div class="mb-3">
+                        <label for="userDropdown" class="form-label">Пользователь</label>
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle w-100 d-flex justify-content-between"
+                                    type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                    style="border: 1px solid #d4d8dd; padding: .535rem 1.375rem .535rem .75rem;">
+                                Выберите пользователя
+                            </button>
+                            <ul class="dropdown-menu w-100" aria-labelledby="userDropdown">
+                                @foreach($users as $user)
+                                    <li><a class="dropdown-item" href="#"
+                                           data-value="{{ $user->id }}">{{ $user->name }}</a></li>
+                                @endforeach
+                            </ul>
+                            <input type="hidden" name="user_id" id="userInput">
+                        </div>
                     </div>
-                </div>
+                @endif
                 <div class="mb-3">
                     <label for="dayDropdown" class="form-label">День</label>
                     <div class="dropdown">

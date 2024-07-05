@@ -30,9 +30,14 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function stadiums(): HasMany
+    public function stadiumOwner(): HasMany
     {
         return $this->hasMany(Stadium::class, 'owner_id');
+    }
+
+    public function stadiumTrainer(): HasMany
+    {
+        return $this->hasMany(Stadium::class, 'coach_id');
     }
 
     public function bookings(): HasMany
