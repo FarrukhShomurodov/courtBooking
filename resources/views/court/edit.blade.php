@@ -85,6 +85,12 @@
 @section('scripts')
     <script>
         $(document).ready(function () {
+            @if($stadium->is_active)
+            $('.is_active').val(1);
+            @else
+            $('.is_active').val(1);
+            @endif
+
             $('.switch-input').on('change', function () {
                 let isActive = $(this).is(':checked') ? 1 : 0;
                 $('.is_active').val(isActive);

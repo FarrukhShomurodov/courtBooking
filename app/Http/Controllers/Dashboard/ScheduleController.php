@@ -22,13 +22,13 @@ class ScheduleController extends Controller
 
     public function index(): View
     {
-        $courts = Auth::user()->stadiums()->first()->courts()->get();
+        $courts = Auth::user()->stadiumOwner()->first()->courts()->get();
         return view('schedule.index', compact('courts'));
     }
 
     public function create(): View
     {
-        $courts = Auth::user()->stadiums()->first()->courts()->where('is_active', true)->get();
+        $courts = Auth::user()->stadiumOwner()->first()->courts()->where('is_active', true)->get();
         return view('schedule.create', compact('courts'));
     }
 
@@ -41,7 +41,7 @@ class ScheduleController extends Controller
 
     public function edit(Day $day): View
     {
-        $courts = Auth::user()->stadiums()->first()->courts()->where('is_active', true)->get();
+        $courts = Auth::user()->stadiumOwner()->first()->courts()->where('is_active', true)->get();
         return view('schedule.edit', compact('day', 'courts'));
     }
 

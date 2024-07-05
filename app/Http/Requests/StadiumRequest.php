@@ -25,6 +25,8 @@ class StadiumRequest extends FormRequest
      */
     public function rules(): array
     {
+        $stadiumId = isset($this->route()->parameters['stadium']) ? $this->route()->parameters['stadium']->id : null;
+
         return [
             'name' => 'required|string|max:200',
             'description' => 'required|string',
@@ -35,8 +37,18 @@ class StadiumRequest extends FormRequest
             'photos' => 'sometimes|array',
             'photos.*' => 'image|mimes:jpg,png',
             'is_active' => 'nullable|boolean',
-            'owner_id' => ['required', 'exists:users,id', new UniqueOwner],
-            'coach_id' => ['nullable', 'exists:users,id', 'different:owner_id', new NotAdmin ,new UniqueCoach],
+            'owner_id' => [
+                'required',
+                'exists:users,id',
+                new UniqueOwner($stadiumId)
+            ],
+            'coach_id' => [
+                'nullable',
+                'exists:users,id',
+                'different:owner_id',
+                new NotAdmin,
+                new UniqueCoach($stadiumId)
+            ],
         ];
     }
 }

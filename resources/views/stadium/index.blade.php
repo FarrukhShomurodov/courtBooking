@@ -4,7 +4,7 @@
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-header">Стадион</h5>
-            @can('admin')
+            @can('manage stadiums')
                 <a href="{{ route('stadiums.create') }}" class="btn btn-primary" style="margin-right: 22px;">Создать</a>
             @endcan
         </div>
@@ -71,7 +71,7 @@
                                 @endif
                             </div>
                         </td>
-                        @can('admin')
+                        @can('manage stadiums')
                             <td>
                                 <div class="d-inline-block text-nowrap">
                                     <button class="btn btn-sm btn-icon"
