@@ -9,6 +9,7 @@ use App\Models\Court;
 use App\Models\User;
 use App\Services\BookingService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class BookingController extends Controller
@@ -22,7 +23,13 @@ class BookingController extends Controller
 
     public function index(): View
     {
-        $bookings = Booking::with(['court', 'user', 'day', 'hour'])->get();
+        $role = Auth::user()->roles()->first()->name;
+
+        if ( $role !== 'admin' && $role !== 'owner stadium') {
+            $bookings = Auth::user()->bookings()->get();
+        } else {
+            $bookings = Booking::with(['court', 'user', 'day', 'hour'])->get();
+        }
         return view('booking.index', compact('bookings'));
     }
 

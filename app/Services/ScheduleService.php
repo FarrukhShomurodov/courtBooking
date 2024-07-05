@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\Day;
 use App\Models\Hour;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use function Laravel\Prompts\error;
 
 class ScheduleService
 {
@@ -52,4 +54,5 @@ class ScheduleService
     {
         $day->delete();
     }
+
 }
