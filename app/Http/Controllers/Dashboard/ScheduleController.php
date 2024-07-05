@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DayRequest;
 use App\Http\Requests\ScheduleRequest;
+use App\Models\Court;
 use App\Models\Day;
 use App\Services\ScheduleService;
 use Illuminate\Http\RedirectResponse;
@@ -22,13 +23,21 @@ class ScheduleController extends Controller
 
     public function index(): View
     {
-        $courts = Auth::user()->stadiumOwner()->first()->courts()->get();
+        if (Auth::user()->roles()->first()->name !== 'admin') {
+            $courts = Auth::user()->stadiumOwner()->first()->courts()->get();
+        } else {
+            $courts = Court::all();
+        }
         return view('schedule.index', compact('courts'));
     }
 
     public function create(): View
     {
-        $courts = Auth::user()->stadiumOwner()->first()->courts()->where('is_active', true)->get();
+        if (Auth::user()->roles()->first()->name !== 'admin') {
+            $courts = Auth::user()->stadiumOwner()->first()->courts()->where('is_active', true)->get();
+        } else {
+            $courts = Court::query()->where('is_active', true)->get();
+        }
         return view('schedule.create', compact('courts'));
     }
 
@@ -41,7 +50,11 @@ class ScheduleController extends Controller
 
     public function edit(Day $day): View
     {
-        $courts = Auth::user()->stadiumOwner()->first()->courts()->where('is_active', true)->get();
+        if (Auth::user()->roles()->first()->name !== 'admin') {
+            $courts = Auth::user()->stadiumOwner()->first()->courts()->where('is_active', true)->get();
+        } else {
+            $courts = Court::query()->where('is_active', true)->get();
+        }
         return view('schedule.edit', compact('day', 'courts'));
     }
 

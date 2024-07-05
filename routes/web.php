@@ -31,7 +31,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('/stadiums', StadiumController::class)->names('stadiums');
         Route::resource('/courts', CourtController::class);
 
-        Route::resource('/schedule', ScheduleController::class)->parameter('schedule', 'day')->middleware('role:owner stadium');
+        Route::resource('/schedule', ScheduleController::class)->parameter('schedule', 'day');
     });
 
     Route::resource('bookings', BookingController::class);
