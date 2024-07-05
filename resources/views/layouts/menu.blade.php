@@ -18,7 +18,7 @@
             </li>
             <li class="menu-item {{ Request::is('bot-users*') ? 'active' : '' }}">
                 <a href="{{route('bot-users.index')}}" class="menu-link">
-                    <i class="user-icon tf-icons bx bx-user"></i>
+                    <i class='bx bx-bot' ></i>
                     <div data-i18n="Пользователи бота">Пользователи бота</div>
                 </a>
             </li>
@@ -41,14 +41,14 @@
 
                 <li class="menu-item {{ Request::is('courts*') ? 'active' : '' }}">
                     <a href="{{route('courts.index')}}" class="menu-link">
-                        <i class="fa-solid fa-futbol"></i>
+                        <i class="fa-regular fa-court-sport"></i>
                         <div data-i18n="Корт" class="ms-1">Корт</div>
                     </a>
                 </li>
 
                     <li class="menu-item {{ Request::is('schedule*') ? 'active' : '' }}">
                         <a href="{{route('schedule.index')}}" class="menu-link">
-                            <i class="fa-solid fa-calendar-days"></i>
+                            <i class='bx bx-spreadsheet'></i>
                             <div data-i18n="Расписания" class="ms-1">Расписания</div>
                         </a>
                     </li>
