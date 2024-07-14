@@ -23,32 +23,18 @@ class BookingController extends Controller
 
     public function index(): View
     {
-        $role = Auth::user()->roles()->first()->name;
-
-        if ( $role !== 'admin' && $role !== 'owner stadium') {
-            $bookings = Auth::user()->bookings()->get();
+        if (Auth::user()->roles()->first()->name !== 'admin') {
+            $courts = Auth::user()->stadiumOwner()->first()->courts()->where('is_active', true)->get()->load('schedules');
         } else {
-            $bookings = Booking::with(['court', 'user', 'day', 'hour'])->get();
+            $courts = Court::query()->where('is_active', true)->get()->load('schedules');
         }
-        return view('booking.index', compact('bookings'));
-    }
-
-    public function create(): View
-    {
-        $courts = Court::query()->where('is_active', true)->get();
         $users = User::all();
-        return view('booking.create', compact('courts', 'users'));
+        return view('booking.index', compact('courts', 'users'));
     }
 
     public function store(BookingRequest $request): RedirectResponse
     {
         $this->bookingService->store($request->validated());
-        return redirect()->route('bookings.index');
-    }
-
-    public function destroy(Booking $booking): RedirectResponse
-    {
-        $this->bookingService->destroy($booking);
         return redirect()->route('bookings.index');
     }
 }

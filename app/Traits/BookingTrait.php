@@ -13,8 +13,8 @@ trait BookingTrait
         $currentDate = Carbon::now()->format('Y-m-d');
 
         foreach ($stadium->courts as $court) {
-            foreach ($court->days as $day) {
-                if ($day->date >= $currentDate && $day->hours()->where('is_booked', true)->exists()) {
+            foreach ($court->bookings as $booking) {
+                if ($booking->date >= $currentDate) {
                     return true;
                 }
             }
@@ -26,8 +26,8 @@ trait BookingTrait
     {
         $currentDate = Carbon::now()->format('Y-m-d');
 
-        foreach ($court->days as $day) {
-            if ($day->date >= $currentDate && $day->hours()->where('is_booked', true)->exists()) {
+        foreach ($court->bookings as $booking) {
+            if ($booking->date >= $currentDate) {
                 return true;
             }
         }

@@ -16,15 +16,16 @@ class CourtController extends Controller
 
     public function show(Court $court): JsonResponse
     {
-        $days = $court->days()->get()->load('hours');
+        $schedules = $court->schedules()->where('is_booked', false);
 
-        $res = [
-            'court' => $court,
-            'days' => $days,
-        ];
+        if (!$schedules->exists()) {
+            return response()->json(['error' => 'Невозможно выбрать корт, так как не имеются расписание.'], 422);
+        } else {
+            return response()->json($schedules->get());
+        }
 
-        return response()->json($res);
     }
+
 
     public function deletePhoto($photoPath, $id): JsonResponse
     {

@@ -13,8 +13,11 @@ class Booking extends Model
     protected $fillable = [
         'court_id',
         'user_id',
-        'day_id',
-        'hour_id',
+        'full_name',
+        'phone_number',
+        'date',
+        'start_time',
+        'end_time',
     ];
 
     public function court(): BelongsTo
@@ -26,15 +29,4 @@ class Booking extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public function day(): BelongsTo
-    {
-        return $this->belongsTo(Day::class);
-    }
-
-    public function hour(): BelongsTo
-    {
-        return $this->belongsTo(Hour::class);
-    }
-
 }
