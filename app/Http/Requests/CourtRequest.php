@@ -39,7 +39,12 @@ class CourtRequest extends FormRequest
             'photos' => 'sometimes|array',
             'photos.*' => 'image|mimes:jpg,png',
             'is_active' => 'nullable|boolean',
-            'stadium_id' => 'required|exists:stadiums,id'
+            'stadium_id' => 'required|exists:stadiums,id',
+            'schedule' => 'required|array',
+            'schedule.*' => 'required|array',
+            'schedule.*.cost' => 'required|numeric',
+            'schedule.*.start_time' => 'required|date_format:H:i',
+            'schedule.*.end_time' => 'required|date_format:H:i|after:hours.*.start_time',
         ];
     }
 }

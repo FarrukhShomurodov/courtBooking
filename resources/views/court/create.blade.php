@@ -20,36 +20,29 @@
             </div>
         @endif
         <div class="card-body">
-            <form id="apartmentForm" action="{{ route('courts.store') }}" method="POST"
-                  enctype="multipart/form-data">
+            <form id="courtForm" action="{{ route('courts.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 {{--is active--}}
                 <input type="number" class="is_active" name="is_active" hidden="">
 
                 <div class="mb-3">
                     <label class="form-label" for="basic-default-fullname">Название</label>
-                    <input type="text" name="name" class="form-control" id="basic-default-fullname"
-                           placeholder="Название"
-                           required>
+                    <input type="text" name="name" class="form-control" id="basic-default-fullname" placeholder="Название" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="basic-default-message">Описание</label>
-                    <textarea id="basic-default-message" name="description" class="form-control"
-                              placeholder="Описание" required></textarea>
+                    <textarea id="basic-default-message" name="description" class="form-control" placeholder="Описание" required></textarea>
                 </div>
                 @role('admin')
                 <div class="mb-3">
                     <label for="stadiumDropdown" class="form-label">Стадион</label>
                     <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle w-100 d-flex justify-content-between"
-                                type="button" id="stadiumDropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                                style="border: 1px solid #d4d8dd; padding: .535rem 1.375rem .535rem .75rem;">
+                        <button class="btn btn-default dropdown-toggle w-100 d-flex justify-content-between" type="button" id="stadiumDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="border: 1px solid #d4d8dd; padding: .535rem 1.375rem .535rem .75rem;">
                             Выбрать Стадион
                         </button>
                         <ul class="dropdown-menu w-100" aria-labelledby="stadiumDropdown">
                             @foreach($stadiums as $stadium)
-                                <li><a class="dropdown-item" href="#"
-                                       data-value="{{ $stadium->id }}">{{ $stadium->name }}</a></li>
+                                <li><a class="dropdown-item" href="#" data-value="{{ $stadium->id }}">{{ $stadium->name }}</a></li>
                             @endforeach
                         </ul>
                         <input type="hidden" name="stadium_id" id="stadiumInput">
@@ -61,6 +54,30 @@
                     <input type="file" name="photos[]" id="imageInput" class="form-control" multiple>
                 </div>
                 <div id="imagePreview" class="mb-3 main__td"></div>
+
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Расписание</h5>
+                </div>
+                <div class="mb-3">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Время</th>
+                            <th>Стоимость</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @for ($i = 0; $i < 24; $i++)
+                            <tr>
+                                <td>{{ sprintf('%02d:00 - %02d:00', $i, ($i + 1) % 24) }}</td>
+                                <td><input type="number" name="schedule[{{ $i }}][cost]" class="form-control" placeholder="Стоимость" value="0"></td>
+                                <input type="hidden" name="schedule[{{ $i }}][start_time]" value="{{ sprintf('%02d:00', $i) }}">
+                                <input type="hidden" name="schedule[{{ $i }}][end_time]" value="{{ sprintf('%02d:00', ($i + 1) % 24) }}">
+                            </tr>
+                        @endfor
+                        </tbody>
+                    </table>
+                </div>
                 <button type="submit" class="btn btn-primary">Сохранить</button>
             </form>
         </div>
@@ -70,6 +87,7 @@
 @section('scripts')
     <script>
         $(document).ready(function () {
+            $('.is_active').val(1);
             $('.switch-input').on('change', function () {
                 let isActive = $(this).is(':checked') ? 1 : 0;
                 $('.is_active').val(isActive);

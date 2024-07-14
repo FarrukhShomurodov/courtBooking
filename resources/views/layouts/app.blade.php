@@ -56,22 +56,27 @@
     <link rel="stylesheet" href="{{ asset('css/demo.css') }}"/>
 
     <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{{asset('vendor/libs/fullcalendar/fullcalendar.css')}}" />
     <link rel="stylesheet" href="{{ asset('vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}"/>
     <link rel="stylesheet" href="{{ asset('vendor/libs/typeahead-js/typeahead.css') }}"/>
     <link rel="stylesheet" href="{{ asset('vendor/libs/apex-charts/apex-charts.css') }}"/>
     <link rel="stylesheet" href="{{ asset('vendor/libs/bootstrap-select/bootstrap-select.css') }}"/>
     <link rel="stylesheet" href="{{ asset('vendor/libs/tagify/tagify.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('vendor/libs/flatpickr/flatpickr.css') }}" />
     <link rel="stylesheet" href="{{ asset('vendor/libs/dropzone/dropzone.css') }}"/>
     <link rel="stylesheet" href="{{asset('vendor/libs/select2/select2.css')}}"/>
+    <link rel="stylesheet" href="{{asset('vendor/libs/quill/editor.css')}}" />
+    <link rel="stylesheet" href="{{asset('vendor/libs/formvalidation/dist/css/formValidation.min.css')}}" />
 
     <!-- Page CSS -->
+    <link rel="stylesheet" href="{{asset('vendor/css/pages/app-calendar.css')}}" />
 
     <!-- Helpers -->
     <script src="{{ asset('vendor/js/helpers.js') }}"></script>
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
-{{--    <script src="{{ asset('vendor/js/template-customizer.js') }}"></script>--}}
+{{--        <script src="{{ asset('vendor/js/template-customizer.js') }}"></script>--}}
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{ asset('js/config.js') }}"></script>
 </head>
@@ -127,12 +132,28 @@
 <script src="{{ asset('vendor/libs/apex-charts/apexcharts.js') }}"></script>
 <script src="{{asset('vendor/libs/select2/select2.js')}}"></script>
 
+
+<!-- Vendors JS -->
+<script src="{{{asset('vendor/libs/fullcalendar/fullcalendar.js')}}}"></script>
+<script src="{{asset('vendor/libs/formvalidation/dist/js/FormValidation.min.js')}}"></script>
+<script src="{{asset('vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js')}}"></script>
+<script src="{{asset('vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js')}}"></script>
+<script src="{{asset('vendor/libs/flatpickr/flatpickr.js')}}"></script>
+<script src="{{asset('vendor/libs/moment/moment.js')}}"></script>
+
+
 <!-- Main JS -->
 <script src="{{ asset('js/main.js') }}"></script>
 <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 
 
 <script src="{{asset('js/forms-selects.js')}}"></script>
+<script src="{{asset('js/app-calendar-events.js')}}"></script>
+<script src="{{asset('js/app-calendar.js')}}"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+<script>
+    flatpickr.localize(flatpickr.l10ns.ru);
+</script>
 @yield('scripts')
 
 </body>

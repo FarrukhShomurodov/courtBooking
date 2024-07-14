@@ -5,7 +5,6 @@ use App\Http\Controllers\Dashboard\BookingController;
 use App\Http\Controllers\Dashboard\BotUserController;
 use App\Http\Controllers\Dashboard\CourtController;
 use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Dashboard\ScheduleController;
 use App\Http\Controllers\Dashboard\SportTypeController;
 use App\Http\Controllers\Dashboard\StadiumController;
 use App\Http\Controllers\Dashboard\UserController;
@@ -16,7 +15,7 @@ Route::get('/login', [AuthController::class, 'showLoginForm']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::group(['middleware' => 'role:admin'], function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -30,9 +29,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'role:owner stadium|admin'], function () {
         Route::resource('/stadiums', StadiumController::class)->names('stadiums');
         Route::resource('/courts', CourtController::class);
-
-        Route::resource('/schedule', ScheduleController::class)->parameter('schedule', 'day');
     });
 
-    Route::resource('bookings', BookingController::class);
+    Route::resource('/bookings', BookingController::class);
 });
+

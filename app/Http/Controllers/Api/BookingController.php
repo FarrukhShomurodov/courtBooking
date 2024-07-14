@@ -3,22 +3,26 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Court;
-use App\Models\Day;
-use App\Models\Hour;
+use App\Models\Booking;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
-    public function getDaysByCourt(Court $court): JsonResponse
+    public function show(Booking $booking): JsonResponse
     {
-        $days = Day::query()->where('court_id', $court->id)->get();
-        return response()->json($days);
+        return response()->json($booking);
     }
 
-    public function getHoursByDay(Day $day): JsonResponse
+    public function showByDate(Request $request): JsonResponse
     {
-        $hours = Hour::query()->where('day_id', $day->id)->where('is_booked', false)->get();
-        return response()->json($hours);
+        $validated = $request->validate([
+            'date' => 'required|date'
+        ]);
+
+        $booking = Booking::query()->where('date', $validated['date'])->get();
+
+        return response()->json($booking);
+
     }
 }

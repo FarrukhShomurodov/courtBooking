@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('court_id')->constrained('courts')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('day_id')->constrained('days')->onDelete('cascade');
-            $table->foreignId('hour_id')->constrained('hours')->onDelete('cascade');
+            $table->string('full_name');
+            $table->string('phone_number');
+            $table->date('date');
+            $table->time('start_time');
+            $table->time('end_time');
             $table->timestamps();
         });
     }

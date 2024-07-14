@@ -24,9 +24,9 @@ class Court extends Model
         return $this->belongsTo(Stadium::class);
     }
 
-    public function days(): HasMany
+    public function schedules(): HasMany
     {
-        return $this->hasMany(Day::class);
+        return $this->hasMany(Schedule::class);
     }
 
     public function bookings(): HasMany

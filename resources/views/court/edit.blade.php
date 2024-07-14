@@ -74,7 +74,33 @@
                             </div>
                         @endforeach
                     @endif
+                </div>
 
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Расписание</h5>
+                </div>
+                <div class="mb-3">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Время</th>
+                            <th>Стоимость</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @for ($i = 0; $i < 24; $i++)
+                            @php
+                                $schedule = $court->schedules()->firstWhere('start_time', sprintf('%02d:00', $i));
+                            @endphp
+                            <tr>
+                                <td>{{ sprintf('%02d:00 - %02d:00', $i, ($i + 1) % 24) }}</td>
+                                <td><input type="number" name="schedule[{{ $i }}][cost]" class="form-control" placeholder="Стоимость" value="{{ $schedule ? $schedule->cost : '0' }}"></td>
+                                <input type="hidden" name="schedule[{{ $i }}][start_time]" value="{{ sprintf('%02d:00', $i) }}">
+                                <input type="hidden" name="schedule[{{ $i }}][end_time]" value="{{ sprintf('%02d:00', ($i + 1) % 24) }}">
+                            </tr>
+                        @endfor
+                        </tbody>
+                    </table>
                 </div>
                 <button type="submit" class="btn btn-warning">Редактировать</button>
             </form>

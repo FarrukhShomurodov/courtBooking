@@ -6,19 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Hour extends Model
+class Schedule extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'court_id',
         'start_time',
         'end_time',
-        'day_id',
-        'is_booked'
+        'is_booked',
+        'cost',
     ];
 
-    public function day(): BelongsTo
+    public function court(): BelongsTo
     {
-        return $this->belongsTo(Day::class);
+        return $this->belongsTo(Court::class);
     }
 }

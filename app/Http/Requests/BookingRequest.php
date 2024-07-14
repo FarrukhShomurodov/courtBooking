@@ -35,8 +35,11 @@ class BookingRequest extends FormRequest
         return [
             'court_id' => 'required|exists:courts,id',
             'user_id' => 'required|exists:users,id',
-            'day_id' => 'required|exists:days,id',
-            'hour_id' => 'required|exists:hours,id',
+            'full_name' => 'required|string:max:500',
+            'phone_number' => 'required|string:max:500',
+            'date' => 'required|date|after_or_equal:today',
+            'start_time' => 'required|date_format:H:i:s',
+            'end_time' => 'required|date_format:H:i:s|after:start_time',
         ];
     }
 }
