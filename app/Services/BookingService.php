@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Booking;
+use App\Models\Court;
 use App\Models\Schedule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -14,11 +15,11 @@ class BookingService
         $courtId = $validated['court_id'];
         $startTime = Carbon::parse($validated['start_time']);
         $endTime = Carbon::parse($validated['end_time']);
+        $date = $validated['date'];
+        $isAvailable = $this->checkCourtAvailability($courtId, $startTime, $endTime, $date);
 
-        $isAvailable = $this->checkCourtAvailability($courtId, $startTime, $endTime);
-
-        if ($isAvailable === 0) {
-            return back()->withErrors('The court is not available at the specified time.');
+        if ($isAvailable) {
+            return back()->withErrors('В указанное время корт недоступен.');
         }
 
         return DB::transaction(function () use ($validated, $startTime, $endTime, $courtId) {
@@ -38,10 +39,11 @@ class BookingService
         });
     }
 
-    protected function checkCourtAvailability($courtId, $startTime, $endTime): int
+    protected function checkCourtAvailability($courtId, $startTime, $endTime, $date): int
     {
-        return Schedule::query()
-            ->where('court_id', $courtId)
+        return Court::find($courtId)
+            ->bookings()
+            ->where('date', $date)
             ->where(function ($query) use ($startTime, $endTime) {
                 $query->whereBetween('start_time', [$startTime, $endTime])
                     ->orWhereBetween('end_time', [$startTime, $endTime])
@@ -50,7 +52,7 @@ class BookingService
                             ->where('end_time', '>', $endTime);
                     });
             })
-            ->count();
+            ->exists();
     }
 
 

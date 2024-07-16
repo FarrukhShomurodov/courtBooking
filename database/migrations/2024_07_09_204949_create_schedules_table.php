@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('court_id')->constrained('courts')->onDelete('cascade');
             $table->time('start_time');
             $table->time('end_time');
-            $table->boolean('is_booked')->default(false);
             $table->integer('cost')->nullable();
             $table->timestamps();
         });

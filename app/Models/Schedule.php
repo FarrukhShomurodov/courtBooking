@@ -14,7 +14,6 @@ class Schedule extends Model
         'court_id',
         'start_time',
         'end_time',
-        'is_booked',
         'cost',
     ];
 

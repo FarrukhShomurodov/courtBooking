@@ -66,7 +66,7 @@
                                                     }
                                                 @endphp
                                                 <td style="padding: 0px !important;" data-court-id="{{$court->id}}">
-                                                    <div class="booking-cell" data-booking-id="{{$bookingId}}"
+                                                    <div class=" @if($hasBooking) booking-cell @endif" data-booking-id="{{$bookingId}}"
                                                          style="width: 100%; height: 43.5px; @if($hasBooking) background-color: #ff294d; @endif"></div>
                                                 </td>
                                             @endforeach
@@ -174,7 +174,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="bookingModalLabel">Booking Details</h5>
+                            <h5 class="modal-title" id="bookingModalLabel">Детали бронирование</h5>
                         </div>
                         <div class="modal-body">
                             <p><strong>ID:</strong> <span id="bookingId"></span></p>
@@ -245,30 +245,35 @@
                 $('.cost').val(0);
 
                 $.ajax({
-                    url: `/api/courts/${courtId}`,
-                    method: 'GET',
+                    url: `/api/fetch-schedule-by-date`,
+                    data: {
+                        'court_id': courtId,
+                        'date': $('input[name=date]').val()
+                    },
+                    method: 'POST',
                     success: function (res) {
-                        console.log(res)
-
                         let fromOptions = '';
                         let toOptions = '';
 
-                        for (let i = 0; i < res.length; i++) {
-                            let startTime = res[i].start_time.substring(0, 5);
-                            let endTime = res[i].end_time.substring(0, 5);
+                        Object.values(res).forEach(function(schedule) {
+                            let startTime = schedule.start_time.substring(0, 5);
+                            let endTime = schedule.end_time.substring(0, 5);
 
                             fromOptions += `<option value="${startTime}">${startTime}</option>`;
                             toOptions += `<option value="${endTime}">${endTime}</option>`;
-                        }
+                        });
 
                         $('#from').append(fromOptions);
                         $('#to').append(toOptions);
                         $('.selectpicker').selectpicker('refresh');
 
-                        updatePrices()
+                        updatePrices();
                     },
+
                     error: function (error) {
-                        let errors = error.responseJSON.error;
+                        console.log(error)
+                        let errors = error.responseJSON.message;
+
                         let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
                         $('.res_error').append(errorHtml);
 
@@ -284,7 +289,7 @@
                 });
             }
 
-            $('.flatpickr-input').change( function () {
+            $('.flatpickr-input').change(function () {
                 fetchBookingsForDate($(this).val());
             })
 
@@ -390,8 +395,15 @@
                 });
             }
 
-            $('#hours-container').on('change', '#from, #to', function () {
+            $('#hours-container').on('change', '#from, #to',  function () {
                 updatePrices();
+            });
+
+            $('#eventStartDate').on('change',  function () {
+                const courtId = courtInput.val();
+                if (courtId) {
+                    fetchSchedule(courtId);
+                }
             });
 
             $(document).on('click', '.booking-cell', function () {
