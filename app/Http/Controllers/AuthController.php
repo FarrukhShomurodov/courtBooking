@@ -45,6 +45,6 @@ class AuthController extends Controller
             return redirect()->route('stadiums.index');
         }
 
-        return redirect('/');
+        return redirect('/bookings');
     }
 }

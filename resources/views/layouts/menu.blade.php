@@ -45,14 +45,13 @@
                         <div data-i18n="Корт" class="ms-1">Корт</div>
                     </a>
                 </li>
-
-                    <li class="menu-item {{ Request::is('schedule*') ? 'active' : '' }}">
-                        <a href="{{route('bookings.index')}}" class="menu-link">
-                            <i class='bx bx-spreadsheet'></i>
-                            <div data-i18n="Бронирования" class="ms-1">Бронирования</div>
-                        </a>
-                    </li>
             @endif
+            <li class="menu-item {{ Request::is('schedule*') ? 'active' : '' }}">
+                <a href="{{route('bookings.index')}}" class="menu-link">
+                    <i class='bx bx-spreadsheet'></i>
+                    <div data-i18n="Бронирования" class="ms-1">Бронирования</div>
+                </a>
+            </li>
         </ul>
 
     </div>

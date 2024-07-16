@@ -13,8 +13,8 @@ Route::put('/bot-users/{botUser}/is-active', [BotUserController::class, 'isActiv
 Route::put('/stadium/{stadium}/is-active', [StadiumController::class, 'isActive']);
 Route::put('/courts/{court}/is-active', [CourtController::class, 'isActive']);
 
-// Court
-Route::get('/courts/{court}', [CourtController::class, 'show']);
+// schedule
+Route::post('/fetch-schedule-by-date', [ScheduleController::class, 'fetchByDate']);
 
 // Delete image
 Route::delete('/delete/sport_type_photos/{photoPath}/{sportType}', [SportTypeController::class, 'deletePhoto']);

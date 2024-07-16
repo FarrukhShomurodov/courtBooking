@@ -111,7 +111,7 @@
 @section('scripts')
     <script>
         $(document).ready(function () {
-            @if($stadium->is_active)
+            @if($court->is_active)
             $('.is_active').val(1);
             @else
             $('.is_active').val(1);

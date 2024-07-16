@@ -23,7 +23,7 @@ class BookingController extends Controller
 
     public function index(): View
     {
-        if (Auth::user()->roles()->first()->name !== 'admin') {
+        if (Auth::user()->roles()->first()->name == 'owner stadium') {
             $courts = Auth::user()->stadiumOwner()->first()->courts()->where('is_active', true)->get()->load('schedules');
         } else {
             $courts = Court::query()->where('is_active', true)->get()->load('schedules');
