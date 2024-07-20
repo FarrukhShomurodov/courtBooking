@@ -17,7 +17,12 @@
                 <div class="col app-calendar-sidebar" id="app-calendar-sidebar">
                     <div class="border-bottom p-4 my-sm-0 mb-3">
                         <div class="d-grid">
-                            <button class="btn btn-primary btn-toggle-sidebar" data-bs-toggle="offcanvas"
+                            @role('admin')
+                            <a href="{{ route('all-bookings') }}" class="btn btn-primary btn-toggle-sidebar" style="color: white">
+                                <span class="align-middle">Все брони</span>
+                            </a>
+                            @endrole
+                            <button class="btn btn-primary btn-toggle-sidebar mt-1" data-bs-toggle="offcanvas"
                                     data-bs-target="#addEventSidebar" aria-controls="addEventSidebar">
                                 <i class="bx bx-plus me-1"></i>
                                 <span class="align-middle">Добавить бронь</span>
@@ -150,7 +155,7 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="cost">Цена</label>
-                                                    <input id="cost" class="cost form-control" value="0"
+                                                    <input id="cost" name="price" class="cost form-control" value="0"
                                                            style="height: 29.59px" readonly>
                                                 </div>
                                             </div>

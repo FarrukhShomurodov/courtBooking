@@ -24,6 +24,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('/bot-users', BotUserController::class);
         Route::resource('/sport-types', SportTypeController::class);
 
+        Route::get('/all-bookings', [BookingController::class, 'fetchAllBooking'])->name('all-bookings');
     });
 
     Route::group(['middleware' => 'role:owner stadium|admin'], function () {

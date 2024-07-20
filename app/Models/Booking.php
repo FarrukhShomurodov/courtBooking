@@ -16,6 +16,7 @@ class Booking extends Model
         'full_name',
         'phone_number',
         'date',
+        'price',
         'start_time',
         'end_time',
     ];

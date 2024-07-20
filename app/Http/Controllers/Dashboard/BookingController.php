@@ -32,6 +32,12 @@ class BookingController extends Controller
         return view('booking.index', compact('courts', 'users'));
     }
 
+    public function fetchAllBooking():  View
+    {
+        $bookings = Booking::query()->get()->load('court');
+        return view('booking.all', compact('bookings'));
+    }
+
     public function store(BookingRequest $request): RedirectResponse
     {
         $this->bookingService->store($request->validated());

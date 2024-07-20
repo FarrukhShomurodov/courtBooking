@@ -29,6 +29,7 @@ class BookingService
                 'full_name' => $validated['full_name'],
                 'phone_number' => $validated['phone_number'],
                 'date' => $validated['date'],
+                'price' => $validated['price'],
                 'start_time' => $startTime->toTimeString(),
                 'end_time' => $endTime->toTimeString(),
             ]);

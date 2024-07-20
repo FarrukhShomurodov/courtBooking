@@ -77,10 +77,11 @@
                 <div class="card-body text-center">
                     <span class="d-block text-nowrap">Cамый загруженный временной интервал</span>
                     @if(!isset($statistics['most_booked_time_slot']))
+                        <h2 class="mb-0">{{ $statistics['most_booked_time_slot'] }}</h2>
+
+                    @else
                         <h2 class="mb-0">{{ $statistics['most_booked_time_slot']->start_time }}
                             - {{ $statistics['most_booked_time_slot']->end_time }}</h2>
-                    @else
-                        <h2 class="mb-0">{{ $statistics['most_booked_time_slot'] }}</h2>
                     @endif
                 </div>
             </div>
