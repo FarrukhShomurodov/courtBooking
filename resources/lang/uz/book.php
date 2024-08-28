@@ -22,4 +22,5 @@ return [
     'sum' => 'Summa',
     'stadium' => 'Stadion',
     'source' => 'Manba',
+    'status' => 'Status'
 ];

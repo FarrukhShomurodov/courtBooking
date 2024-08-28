@@ -17,7 +17,8 @@
                 <div class="col app-calendar-sidebar" id="app-calendar-sidebar">
                     <div class="border-bottom p-4 my-sm-0 mb-3">
                         <div class="d-grid">
-                            <a href="{{ route('all-bookings') }}" class="btn btn-primary btn-toggle-sidebar" style="color: white">
+                            <a href="{{ route('all-bookings') }}" class="btn btn-primary btn-toggle-sidebar"
+                               style="color: white">
                                 <span class="align-middle">{{ __('book.all_book') }}</span>
                             </a>
                             <button class="btn btn-primary btn-toggle-sidebar mt-1" data-bs-toggle="offcanvas"
@@ -69,7 +70,8 @@
                                                     }
                                                 @endphp
                                                 <td style="padding: 0px !important;" data-court-id="{{$court->id}}">
-                                                    <div class=" @if($hasBooking) booking-cell @endif" data-booking-id="{{$bookingId}}"
+                                                    <div class=" @if($hasBooking) booking-cell @endif"
+                                                         data-booking-id="{{$bookingId}}"
                                                          style="width: 100%; height: 43.5px; @if($hasBooking) background-color: #ff294d; @endif"></div>
                                                 </td>
                                             @endforeach
@@ -188,9 +190,11 @@
                             <p><strong>{{ __('book.start_time') }}:</strong> <span id="bookingStartTime"></span></p>
                             <p><strong>{{ __('book.end_time') }}:</strong> <span id="bookingEndTime"></span></p>
                             <p><strong>{{ __('book.source') }}:</strong> <span id="bookingSource"></span></p>
+                            <p><strong>{{__('book.status')}}:</strong> <span id="bookingStatus"></span></p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('book.close') }}</button>
+                            <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">{{ __('book.close') }}</button>
                         </div>
                     </div>
                 </div>
@@ -260,7 +264,7 @@
                         let fromOptions = '';
                         let toOptions = '';
 
-                        Object.values(res).forEach(function(schedule) {
+                        Object.values(res).forEach(function (schedule) {
                             let startTime = schedule.start_time.substring(0, 5);
                             let endTime = schedule.end_time.substring(0, 5);
 
@@ -400,11 +404,11 @@
                 });
             }
 
-            $('#hours-container').on('change', '#from, #to',  function () {
+            $('#hours-container').on('change', '#from, #to', function () {
                 updatePrices();
             });
 
-            $('#eventStartDate').on('change',  function () {
+            $('#eventStartDate').on('change', function () {
                 const courtId = courtInput.val();
                 if (courtId) {
                     fetchSchedule(courtId);
@@ -425,6 +429,7 @@
                         $('#bookingStartTime').text(response.start_time);
                         $('#bookingEndTime').text(response.end_time);
                         $('#bookingSource').text(response.source == 'manual' ? 'Manual' : 'Findz');
+                        $('#bookingStatus').text(response.status);
 
                         $('#bookingModal').modal('show');
                     },

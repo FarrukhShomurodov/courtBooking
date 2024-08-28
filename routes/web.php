@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\Web\StatisticsController;
 use App\Http\Controllers\Admin\Web\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Telegram\FindzController;
+use App\Http\Controllers\Telegram\PaycomController;
 use App\Http\Controllers\Telegram\TelegramController;
 use Illuminate\Support\Facades\Route;
 
@@ -53,11 +54,11 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 Route::prefix('telegram')->group(function () {
-//    Route::get('/webhook', function () {
-//        $telegram = new \Telegram\Bot\Api(config('telegram.bot_token'));
-//        $hook = $telegram->setWebhook(['url' => env('TELEGRAM_WEBHOOK_URL')]);
-//        return dd($hook);
-//    });
+    Route::get('/webhook', function () {
+        $telegram = new \Telegram\Bot\Api(config('telegram.bot_token'));
+        $hook = $telegram->setWebhook(['url' => env('TELEGRAM_WEBHOOK_URL')]);
+        return dd($hook);
+    });
 
     Route::post('/webhook', [TelegramController::class, 'handleWebhook']);
 
@@ -76,3 +77,6 @@ Route::prefix('telegram')->group(function () {
     Route::get('/book/edit/{booking}', [FindzController::class, 'bookUpdate'])->name('book.edit');
     Route::get('/mybookings', [FindzController::class, 'myBookings'])->name('findz.mybookings');
 });
+
+
+Route::post('/paycom', [PaycomController::class, 'handleRequest']);
