@@ -118,7 +118,7 @@
         <div class="booking-rules mt-30">
             <p>{{ __('findz/book.Правила брони') }}</p>
             <ul>
-{{--                <li>{{ __('findz/book.Резервация может быть отменена с возвратом средств, если до ее начала остается более чем 24 часа. В противном случае, средства не возвращаются') }}</li>--}}
+                {{--                <li>{{ __('findz/book.Резервация может быть отменена с возвратом средств, если до ее начала остается более чем 24 часа. В противном случае, средства не возвращаются') }}</li>--}}
                 <li>{{ __('findz/book.Рекомендуется быть на месте за 15 минут до начала') }}</li>
             </ul>
         </div>
@@ -137,7 +137,6 @@
     <footer class="w-100 d-flex justify-content-around row">
         <button id="close-btn"
                 class="nav_active btn footer_btn book">{{$isUpdate ? 'Готово' : __('findz/book.Оплатить через PayMe') }}</button>
-
     </footer>
 @endsection
 
@@ -243,8 +242,8 @@
                         let hasBooking = false
 
                         @if($isUpdate)
-                            let oldSelectedSlot = (court.id === {{$userBook->court_id}} && schedule.start_time >= `{{$userBook->start_time}}` && schedule.start_time <= `{{$userBook->end_time}}`);
-                            hasBooking = false;
+                        let oldSelectedSlot = (court.id === {{$userBook->court_id}} && schedule.start_time >= `{{$userBook->start_time}}` && schedule.start_time <= `{{$userBook->end_time}}`);
+                        hasBooking = false;
                         @else
                             hasBooking = data.bookings.some(booking => {
                             let bookingDate = new Date(booking.date).toISOString().slice(0, 10);
@@ -253,15 +252,15 @@
                         @endif
 
 
-                        @if($isUpdate)
+                            @if($isUpdate)
                             selected = oldSelectedSlot ? 'selected' : '';
                         @else
-                            let selected = (court.id == {{ request('court') }} && (schedule.start_time.slice(0, 5) == `{{ $selectedStartTime }}` || schedule.start_time.slice(0, 5) == `{{ $selectedEndTime }}`));
+                        let selected = (court.id == {{ request('court') }} && (schedule.start_time.slice(0, 5) == `{{ $selectedStartTime }}` || schedule.start_time.slice(0, 5) == `{{ $selectedEndTime }}`));
                         @endif
 
                         let selectedClass = selected ? 'selected' : '';
 
-                        let slotClass = hasBooking? 'slot_booked' : '';
+                        let slotClass = hasBooking ? 'slot_booked' : '';
 
                         row += `
                             <div class="slot ${slotClass} ${selectedClass}"
@@ -559,7 +558,11 @@
                                 method: 'POST',
                                 data: bookingData,
                                 success: function (response) {
-                                    window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
+                                    if ({{$isUpdate}}) {
+                                        initiatePaycomPayment(response.booking_id, bookingData.price);
+                                    } else {
+                                        window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
+                                    }
                                 },
                                 error: function (err) {
                                     let errors = err.responseJSON.message;
@@ -581,6 +584,22 @@
                         console.log('Ошибка при получении данных пользователя', error);
                     }
                 });
+
+                function initiatePaycomPayment(bookingId, amount) {
+                    // Здесь создаем и отправляем форму на Paycom
+                    let paycomForm = `
+                        <form id="form-payme" method="POST" action="https://checkout.paycom.uz/">
+                            <input type="hidden" name="merchant" value="66cdfb052f8d5ff4746f8435">
+                            <input type="hidden" name="account[book_id]" value="${bookingId}">
+                            <input type="hidden" name="amount" value="${amount}">
+                            <input type="hidden" name="lang" value="{{app()->getLocale()}}">
+                            <input type="hidden" name="button" data-type="svg" value="colored">
+                        </form>
+                    `;
+
+                    $('body').append(paycomForm);
+                    $('#form-payme').submit();
+                }
 
                 $('#error_modal img').click(function () {
                     $('.error_modal').hide();

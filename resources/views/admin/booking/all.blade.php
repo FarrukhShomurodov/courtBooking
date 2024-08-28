@@ -25,6 +25,7 @@
                     <th>{{__('book.duration')}}</th>
                     <th>{{__('book.sum')}}</th>
                     <th>{{__('book.source')}}</th>
+                    <th>{{__('book.status')}}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -45,6 +46,7 @@
                         <td>{{ $diff->h }} ч</td>
                         <td>{{ $booking->price }}</td>
                         <td>{{ $booking->source == 'manual' ? 'Manual' : 'Findz' }}</td>
+                        <td>{{ $booking->status }}</td>
                     </tr>
                 @endforeach
                 </tbody>
