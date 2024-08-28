@@ -16,8 +16,10 @@ class Booking extends Model
         'full_name',
         'phone_number',
         'date',
+        'price',
         'start_time',
         'end_time',
+        'source',
     ];
 
     public function court(): BelongsTo
@@ -28,5 +30,10 @@ class Booking extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+    
+    public function getHours()
+    {
+        return (strtotime($this->end_time) - strtotime($this->start_time)) / 3600;
     }
 }

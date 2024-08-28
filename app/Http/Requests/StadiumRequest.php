@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\NotAdmin;
 use App\Rules\UniqueOwner;
 use App\Rules\UniqueCoach;
+use App\Rules\CoachHasSportType;
 
 class StadiumRequest extends FormRequest
 {
@@ -26,6 +25,7 @@ class StadiumRequest extends FormRequest
     public function rules(): array
     {
         $stadiumId = isset($this->route()->parameters['stadium']) ? $this->route()->parameters['stadium']->id : null;
+        $sportTypeIds = $this->input('sport_types');
 
         return [
             'name' => 'required|string|max:200',
@@ -45,9 +45,8 @@ class StadiumRequest extends FormRequest
             'coach_id' => [
                 'nullable',
                 'exists:users,id',
-                'different:owner_id',
-                new NotAdmin,
-                new UniqueCoach($stadiumId)
+                new UniqueCoach($stadiumId),
+                new CoachHasSportType($sportTypeIds),
             ],
         ];
     }

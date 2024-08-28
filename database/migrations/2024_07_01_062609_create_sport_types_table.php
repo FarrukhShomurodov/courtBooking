@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sport_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->json('photos')->nullable();
             $table->timestamps();
         });

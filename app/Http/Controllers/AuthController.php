@@ -12,7 +12,7 @@ class AuthController extends Controller
 
     public function showLoginForm(): View
     {
-        return view('auth.login');
+        return view('admin.auth.login');
     }
 
     public function login(Request $request): RedirectResponse
@@ -29,6 +29,30 @@ class AuthController extends Controller
         return back()->withErrors(['login' => 'Invalid login details']);
     }
 
+    public function OwnerConfirmation(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'login' => 'required|string',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($request->only('login', 'password'))) {
+            $user = Auth::user();
+
+            if ($user->hasRole('owner stadium')) {
+                session(['isOwner' => true]);
+                return redirect()->route('dashboard');
+            }
+
+            session(['isOwner' => false]);
+            return redirect()->route('dashboard');
+        }
+
+        return back()->withErrors([
+            'login' => 'Неверный логин или пароль.',
+        ]);
+    }
+
     public function logout(): RedirectResponse
     {
         Auth::logout();
@@ -42,7 +66,7 @@ class AuthController extends Controller
         if ($user->hasRole('admin')) {
             return redirect()->route('dashboard');
         } elseif ($user->hasRole('owner stadium')) {
-            return redirect()->route('stadiums.index');
+            return redirect()->route('dashboard');
         }
 
         return redirect('/bookings');

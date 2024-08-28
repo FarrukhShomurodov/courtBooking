@@ -20,7 +20,7 @@ class HasStadium implements Rule
         $role = Role::findById($value);
         $user = User::query()->find($this->userId);
 
-        if ($user && ($user->stadiumOwner()->exists() || $user->stadiumTrainer()->exists())) {
+        if ($user && ($user->stadiumOwner()->exists() || $user->coach()->exists())) {
             if ($role->name == 'owner stadium' || $role->name == 'trainer') {
                 return true;
             } else {

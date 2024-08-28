@@ -17,9 +17,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('full_name');
             $table->string('phone_number');
+            $table->double('price');
             $table->date('date');
             $table->time('start_time');
             $table->time('end_time');
+            $table->string('source');
             $table->timestamps();
         });
     }

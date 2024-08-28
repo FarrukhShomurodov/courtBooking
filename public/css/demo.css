@@ -217,3 +217,7 @@
     border-radius: .25rem;
     box-shadow: 0 0 0 !important;
 }
+
+.price_for_coach, .sport_types_for_coach, .coach_desc{
+    display: none;
+}

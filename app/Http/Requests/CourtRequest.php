@@ -40,6 +40,7 @@ class CourtRequest extends FormRequest
             'photos.*' => 'image|mimes:jpg,png',
             'is_active' => 'nullable|boolean',
             'stadium_id' => 'required|exists:stadiums,id',
+            'sport_type_id' => 'required|exists:sport_types,id',
             'schedule' => 'required|array',
             'schedule.*' => 'required|array',
             'schedule.*.cost' => 'required|numeric',

@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->json('photos')->nullable();
             $table->boolean('is_active')->default(true);
             $table->foreignId('stadium_id')->constrained('stadiums')->onDelete('cascade');
+            $table->foreignId('sport_type_id')->constrained('sport_types');
             $table->timestamps();
         });
     }

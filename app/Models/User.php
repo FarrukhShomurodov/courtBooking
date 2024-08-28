@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -18,6 +18,7 @@ class User extends Authenticatable
         'name',
         'second_name',
         'login',
+        'avatar',
         'password',
     ];
 
@@ -35,13 +36,18 @@ class User extends Authenticatable
         return $this->hasMany(Stadium::class, 'owner_id');
     }
 
-    public function stadiumTrainer(): HasMany
+    public function stadiumTrainer(): HasOne
     {
-        return $this->hasMany(Stadium::class, 'coach_id');
+        return $this->hasOne(Stadium::class, 'coach_id');
     }
 
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function coach(): HasOne
+    {
+        return $this->hasOne(Coach::class);
     }
 }

@@ -37,9 +37,11 @@ class BookingRequest extends FormRequest
             'user_id' => 'required|exists:users,id',
             'full_name' => 'required|string:max:500',
             'phone_number' => 'required|regex:/^\+?[0-9]{10,}$/',
+            'price' => 'required|integer',
             'date' => 'required|date|after_or_equal:today',
             'start_time' => 'required|date_format:H:i:s',
             'end_time' => 'required|date_format:H:i:s|after:start_time',
+            'source' => 'required|string|in:manual',
         ];
     }
 }
