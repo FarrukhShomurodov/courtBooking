@@ -16,7 +16,8 @@ class Court extends Model
         'description',
         'photos',
         'is_active',
-        'stadium_id'
+        'stadium_id',
+        'sport_type_id'
     ];
 
     public function stadium(): BelongsTo
@@ -24,9 +25,19 @@ class Court extends Model
         return $this->belongsTo(Stadium::class);
     }
 
+    public function sportTypes(): BelongsTo
+    {
+        return $this->belongsTo(SportType::class, 'sport_type_id', 'id');
+    }
+
     public function schedules(): HasMany
     {
         return $this->hasMany(Schedule::class);
+    }
+
+    public function getMinimumCost(): ?int
+    {
+        return $this->schedules()->min('cost');
     }
 
     public function bookings(): HasMany

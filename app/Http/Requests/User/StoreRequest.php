@@ -27,7 +27,23 @@ class StoreRequest extends FormRequest
             'second_name' => 'required|string|max:200',
             'login' => 'required|string|unique:users,login',
             'role_id' => 'required|exists:roles,id',
+            'avatar' => 'nullable|image|mimes:jpg,png',
             'password' => 'required',
         ];
+    }
+
+    public function withValidator($validator): void
+    {
+        $validator->sometimes('price_for_coach', 'required|numeric', function ($input) {
+            return $input->role_id == 4;
+        });
+
+        $validator->sometimes('sport_types', 'required|array', function ($input) {
+            return $input->role_id == 4;
+        });
+
+        $validator->sometimes('description', 'required|string|max:5000', function ($input) {
+            return $input->role_id == 4;
+        });
     }
 }

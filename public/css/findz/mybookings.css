@@ -1,0 +1,56 @@
+.book, .favourite {
+    padding-top: 15px;
+    padding-bottom: 5px;
+    width: 167px;
+    text-align: center;
+    font-weight: 600;
+    background-color: #111115;
+}
+
+.book {
+    border-bottom: 3px solid #FFF;
+}
+nav{
+    display: flex;
+    flex-direction: row;
+    width: 343px;
+    gap: 12px;
+    height: 60px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+nav button{
+    width: 50%;
+    padding: 7px 16px;
+    border-radius: 44px;
+    border: 1px solid #31303B;
+}
+.nav_active{
+    background: #B2F888 !important;
+    color: #111115 !important;
+}
+.footer_btn{
+    color: #FFF;
+    background: transparent;
+
+}
+
+.cancel-btn{
+    border: 1px solid #31303B;
+    background-color: transparent;
+    border-radius: 44px;
+    color: #FF9C9C;
+    margin-top: 16px;
+    padding: 7px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+}
+
+.booking_header{
+    width: 343px;
+}
+
+.stadium_desc{
+    line-height: 25.6px;
+}

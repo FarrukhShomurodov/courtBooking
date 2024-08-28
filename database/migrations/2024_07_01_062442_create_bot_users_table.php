@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,13 +13,14 @@ return new class extends Migration
         Schema::create('bot_users', function (Blueprint $table) {
             $table->id();
             $table->string('chat_id');
-            $table->string('first_name');
-            $table->string('second_name');
-            $table->string('uname');
-            $table->string('typed_name');
-            $table->string('phone');
-            $table->integer('sms_code');
-            $table->integer('step');
+            $table->string('first_name')->nullable();
+            $table->string('second_name')->nullable();
+            $table->string('uname')->nullable();
+            $table->string('typed_name')->nullable();
+            $table->string('phone')->nullable();
+            $table->integer('sms_code')->nullable();
+            $table->string('step')->nullable();
+            $table->string('lang')->nullable();
             $table->boolean('isactive')->default(true);
             $table->timestamps();
         });

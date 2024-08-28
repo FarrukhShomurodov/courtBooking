@@ -41,6 +41,7 @@ class BookingRequest extends FormRequest
             'date' => 'required|date|after_or_equal:today',
             'start_time' => 'required|date_format:H:i:s',
             'end_time' => 'required|date_format:H:i:s|after:start_time',
+            'source' => 'required|string|in:manual',
         ];
     }
 }

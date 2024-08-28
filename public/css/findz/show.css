@@ -1,0 +1,49 @@
+.date_time {
+    position: static;
+    transform: translateX(0%);
+}
+
+.date_time .price {
+
+}
+
+.stadiums {
+    margin-top: -50px;
+}
+
+.stadium_desc img {
+    height: 256px !important;
+}
+
+.stadium_desc span {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 25.6px;
+}
+
+.address img {
+    width: 40px !important;
+    height: 40px !important;
+}
+
+/* Copy modal styling */
+.copy-modal,
+.favourite_modal {
+    position: fixed;
+    bottom: 95px;
+    left: 50%;
+    width: 342px;
+    transform: translateX(-50%);
+    background-color: #111115;
+    color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #31303B;
+    display: none;
+    z-index: 1000;
+}
+
+.coach_ava {
+    width: 341px !important;
+    height: 341px !important;
+}

@@ -18,6 +18,7 @@ class BotUser extends Model
         'phone',
         'sms_code',
         'step',
+        'lang',
         'isactive'
     ];
 }
