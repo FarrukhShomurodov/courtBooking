@@ -558,11 +558,11 @@
                                 method: 'POST',
                                 data: bookingData,
                                 success: function (response) {
-                                    if ({{$isUpdate}}) {
+                                    @if (!$isUpdate)
                                         initiatePaycomPayment(response.booking_id, bookingData.price);
-                                    } else {
+                                    @else
                                         window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
-                                    }
+                                    @endif
                                 },
                                 error: function (err) {
                                     let errors = err.responseJSON.message;
@@ -588,7 +588,7 @@
                 function initiatePaycomPayment(bookingId, amount) {
                     // Здесь создаем и отправляем форму на Paycom
                     let paycomForm = `
-                        <form id="form-payme" method="POST" action="https://checkout.paycom.uz/">
+                        <form id="form-payme" method="POST" action="https://test.paycom.uz">
                             <input type="hidden" name="merchant" value="66cdfb052f8d5ff4746f8435">
                             <input type="hidden" name="account[book_id]" value="${bookingId}">
                             <input type="hidden" name="amount" value="${amount}">

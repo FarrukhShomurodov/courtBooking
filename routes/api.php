@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\Api\ScheduleController;
 use App\Http\Controllers\Admin\Api\SportTypeController;
 use App\Http\Controllers\Admin\Api\StadiumController;
 use App\Http\Controllers\Admin\Api\UserController;
+use App\Http\Controllers\Telegram\PaycomController;
 use Illuminate\Support\Facades\Route;
 
 // bot user
@@ -41,3 +42,6 @@ Route::post('/booking-by-date', [BookingController::class, 'showByDate']);
 
 // Sport Type
 Route::get('/stadium-spot-type/{stadium}', [SportTypeController::class, 'byStadium']);
+
+// Paycom
+Route::post('/paycom', [PaycomController::class, 'handleRequest']);
