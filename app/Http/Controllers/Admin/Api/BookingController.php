@@ -48,6 +48,9 @@ class BookingController extends Controller
         $phoneNumber = $validated['phone_number'];
         $slots = $validated['slots'];
 
+
+        $totalSum = 0;
+        $bookingIds = [];
         foreach ($slots as $slot) {
             $isAvailable = $this->checkCourtAvailability($slot['court_id'], $slot['start_time'], $slot['end_time'], $date);
 
@@ -55,7 +58,7 @@ class BookingController extends Controller
                 return response()->json(['message' => 'В указанное время корт недоступен.'], 422);
             }
 
-            Booking::create([
+            $booking = Booking::create([
                 'court_id' => $slot['court_id'],
                 'user_id' => $validated['user_id'],
                 'full_name' => $fullName,
@@ -66,9 +69,16 @@ class BookingController extends Controller
                 'end_time' => $slot['end_time'],
                 'source' => $validated['source'],
             ]);
+            $bookingIds[] = $booking->id;
+            $totalSum += $booking->price;
         }
 
-        return response()->json(['message' => 'Booking successful'], 200);
+
+        return response()->json([
+            'message' => 'Booking successful',
+            'total_sum' => $totalSum,
+            'booking_ids' => $bookingIds
+            ], 200);
     }
 
     public function update(Booking $booking, BookingRequest $request): JsonResponse
