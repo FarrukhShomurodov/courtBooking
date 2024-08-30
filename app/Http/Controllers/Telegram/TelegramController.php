@@ -66,7 +66,7 @@ class TelegramController extends Controller
             if ($text !== __('telegram.resend_phone_number')) {
                 $this->verifyOtp($chatId, $text, $user);
             } else {
-                $this->sendOtp($chatId, $user->phone);
+                $this->sendOtp($chatId, $user->phone, $user);
             }
             return;
         }
