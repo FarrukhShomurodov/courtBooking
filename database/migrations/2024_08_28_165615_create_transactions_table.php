@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->string('paycom_transaction_id', 25)->nullable();
-            $table->string('paycom_time', 13)->nullable();
+            $table->string('paycom_time', 13)->nullable();  // 13 символов для Unix времени с миллисекундами
             $table->string('paycom_time_datetime', 255)->nullable();
             $table->dateTime('create_time')->nullable();
             $table->dateTime('perform_time')->nullable();

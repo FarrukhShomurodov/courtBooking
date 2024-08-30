@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\BotUser;
 use App\Services\OtpService;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Telegram\Bot\Api;
 use Telegram\Bot\Keyboard\Keyboard;
@@ -59,7 +58,7 @@ class TelegramController extends Controller
             $user->phone = $phoneNumber;
             $user->save();
 
-            $this->sendOtp($chatId, $phoneNumber);
+            $this->sendOtp($chatId, $phoneNumber, $user);
             return;
         }
 
@@ -67,7 +66,7 @@ class TelegramController extends Controller
             if ($text !== __('telegram.resend_phone_number')) {
                 $this->verifyOtp($chatId, $text, $user);
             } else {
-                $this->sendOtp($chatId, $user->phone);
+                $this->sendOtp($chatId, $user->phone, $user);
             }
             return;
         }
@@ -297,12 +296,15 @@ class TelegramController extends Controller
         ]);
     }
 
-    protected function sendOtp($chatId, $phoneNumber): void
+    protected function sendOtp($chatId, $phoneNumber, $user): void
     {
         $otp = $this->generateOtp();
-        Cache::put("otp_{$chatId}", $otp, 300); // Cache OTP for 5 minutes
+
         $otpTEXT = 'Код подтверждения для регистрации в Telegram-боте FindzBot: '.$otp;
         $this->otpService->sendMessage(str_replace('+', '', $phoneNumber), $otpTEXT);
+
+        $user->sms_code = $otp;
+        $user->save();
 
         $this->telegram->sendMessage([
             'chat_id' => $chatId,
@@ -329,10 +331,8 @@ class TelegramController extends Controller
 
     protected function verifyOtp($chatId, $otp, $user): void
     {
-        $cachedOtp = Cache::get("otp_{$chatId}");
+        $cachedOtp = $user->sms_code;
         if ($otp == $cachedOtp) {
-            Cache::forget("otp_{$chatId}");
-
             if ($user->step === 'CHANGE_PHONE') {
                 $this->telegram->sendMessage([
                     'chat_id' => $chatId,

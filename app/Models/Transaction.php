@@ -34,6 +34,6 @@ class Transaction extends Model
 
     public function getByTimeRange($from, $to): Collection|array
     {
-        return self::query()->whereBetween('paycom_time', [$from, $to])->get();
+        return self::query()->whereBetween('state', [$from, $to])->get();
     }
 }

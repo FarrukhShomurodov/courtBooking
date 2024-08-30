@@ -12,62 +12,136 @@ class PaycomService
     public function checkPerformTransaction($params): array
     {
         $amount = $params['amount'];
-        $bookingId = $params['account']['booking_id'];
+        $bookingId = $params['account']['book_id'];
 
-        $booking = Booking::query()->find($bookingId);
 
-        if (!$booking || $booking->price != $amount) {
-            return [
+        if (empty($params['account'])) {
+            $response = [
                 'error' => [
                     'code' => -31050,
-                    'message' => 'Invalid amount or booking not found'
+                    'message' => "Недостаточно привилегий для выполнения метода"
                 ]
             ];
+            return $response;
+        } else {
+            $booking = Booking::query()->find($bookingId);
+            if (empty($booking)) {
+                $response = [
+                    'error' => [
+                        'code' => -31050,
+                        'message' => [
+                            "uz" => "Buyurtma topilmadi",
+                            "ru" => "Заказ не найден",
+                            "en" => "Book not found"
+                        ]
+                    ]
+                ];
+                return $response;
+            } else if ($booking->price != $amount) {
+                $response = [
+                    'error' => [
+                        'code' => -31001,
+                        'message' => [
+                            "uz" => "Notogri summa",
+                            "ru" => "Неверная сумма",
+                            "en" => "Incorrect amount"
+                        ]
+                    ]
+                ];
+                return $response;
+            }
         }
-
-        return ['allow' => true];
+        $response = [
+            'result' => [
+                'allow' => true,
+            ]
+        ];
+        return $response;
     }
 
     public function createTransaction($params): array
     {
         $amount = $params['amount'];
-        $bookingId = $params['account']['booking_id'];
+        $bookingId = $params['account']['book_id'];
 
-        $booking = Booking::query()->find($bookingId);
 
-        if (!$booking || $booking->price != $amount) {
-            return [
+        if (empty($params['account'])) {
+            $response = [
                 'error' => [
-                    'code' => -31050,
-                    'message' => 'Invalid amount or booking not found'
+                    'code' => -32504,
+                    'message' => "Недостаточно привилегий для выполнения метода"
                 ]
             ];
-        }
+            return $response;
+        } else {
+            $booking = Booking::query()->find($bookingId);
+            $transaction = Transaction::where('book_id', $bookingId)->where('state', 1)->get();
 
-        try {
-            $transaction = Transaction::create([
-                'paycom_transaction_id' => $params['id'],
-                'paycom_time' => $params['time'],
-                'paycom_time_datetime' => now(),
-                'amount' => $params['amount'],
-                'state' => 1,
-                'booking_id' => $params['account']['booking_id'],
-            ]);
+            if (empty($booking)) {
+                $response = [
+                    'error' => [
+                        'code' => -31050,
+                        'message' => [
+                            "uz" => "Buyurtma topilmadi",
+                            "ru" => "Заказ не найден",
+                            "en" => "Book not found"
+                        ]
+                    ]
+                ];
+                return $response;
+            } else if ($booking->price != $amount) {
+                $response = [
+                    'error' => [
+                        'code' => -31001,
+                        'message' => [
+                            "uz" => "Notogri summa",
+                            "ru" => "Неверная сумма",
+                            "en" => "Incorrect amount"
+                        ]
+                    ]
+                ];
+                return $response;
+            } elseif (count($transaction) == 0) {
 
-            return [
-                'result' => [
-                    'create_time' => $transaction->create_time,
-                    'transaction' => $transaction->paycom_transaction_id,
-                    'state' => $transaction->state
-                ]
-            ];
-        } catch (\Exception $e) {
-            return [
-                'error' => [
-                    'code' => -31008,
-                    'message' => 'Unable to create transaction'
-                ]
-            ];
+                $transaction = new Transaction();
+                $transaction->paycom_transaction_id = $params['id'];
+                $transaction->paycom_time = strval($params['time']);
+                $transaction->paycom_time_datetime = now();
+                $transaction->amount = $amount;
+                $transaction->state = 1;
+                $transaction->book_id = $bookingId;
+                $transaction->save();
+
+                return [
+                    "result" => [
+                        'create_time' => $params['time'],
+                        'transaction' => strval($transaction->id),
+                        'state' => $transaction->state
+                    ]
+                ];
+            } elseif ((count($transaction) == 1) and ($transaction->first()->paycom_time == $params['time']) and ($transaction->first()->paycom_transaction_id == $params['id'])) {
+                $response = [
+                    'result' => [
+                        "create_time" => $params['time'],
+                        "transaction" => "{$transaction[0]->id}",
+                        "state" => intval($transaction[0]->state)
+                    ]
+                ];
+
+                return $response;
+            } else {
+                $response = [
+                    'error' => [
+                        'code' => -31099,
+                        'message' => [
+                            "uz" => "Buyurtma tolovi hozirda amalga oshrilmoqda",
+                            "ru" => "Оплата заказа в данный момент обрабатывается",
+                            "en" => "Book payment is currently being processed"
+                        ]
+                    ]
+                ];
+                return $response;
+            }
         }
     }
 
@@ -75,87 +149,167 @@ class PaycomService
     {
         $transactionId = $param['id'];
         $transaction = Transaction::query()->where('paycom_transaction_id', $transactionId)->first();
+        $ldate = date('Y-m-d H:i:s');
         if (empty($transaction)) {
-            return [
+            $response = [
                 'error' => [
                     'code' => -31003,
-                    'message' => 'Transaction not found'
+                    'message' => "Транзакция не найдена "
                 ]
             ];
-        } else {
-            $currentMil = intval(microtime(true) * 1000);
+            return $response;
+        } else if ($transaction->state == 1) {
+            $currentMillis = intval(microtime(true) * 1000);
+            $transaction = Transaction::where('paycom_transaction_id', $transactionId)->first();
             $transaction->state = 2;
-            $transaction->perform_time = date('Y-m-d H:i:s');
-            $transaction->perform_time_unix = str_replace('.', '', $currentMil);
+            $transaction->perform_time = $ldate;
+            $transaction->perform_time_unix = str_replace('.', '', $currentMillis);
             $transaction->update();
-
-            $booking = Booking::query()->find($transaction->book_id);
-            $booking->status = 'paid';
-
-            return [
-                "result" => [
-                    "transaction" => $transaction->id,
-                    "perform_time" => intval($transaction->perform_time),
-                    "state" => intval($transaction->state)
+            $completed_book = Booking::where('id', $transaction->book_id)->first();
+            $completed_book->status = 'paid';
+            $completed_book->update();
+            $response = [
+                'result' => [
+                    'transaction' => "{$transaction->id}",
+                    'perform_time' => intval($transaction->perform_time_unix),
+                    'state' => intval($transaction->state)
                 ]
             ];
+            return $response;
+        } else if ($transaction->state == 2) {
+            $response = [
+                'result' => [
+                    'transaction' => strval($transaction->id),
+                    'perform_time' => intval($transaction->perform_time_unix),
+                    'state' => intval($transaction->state)
+                ]
+            ];
+            return $response;
         }
     }
 
     public function cancelTransaction($params): array
     {
+        $ldate = date('Y-m-d H:i:s');
         $transaction = Transaction::where('paycom_transaction_id', $params['id'])->first();
-
-        if (!$transaction) {
-            return [
+        if (empty($transaction)) {
+            $response = [
                 'error' => [
-                    'code' => -31003,
-                    'message' => 'Transaction not found'
+                    "code" => -31003,
+                    "message" => "Транзакция не найдена"
                 ]
             ];
+            return $response;
+        } else if ($transaction->state == 1) {
+            $currentMillis = intval(microtime(true) * 1000);
+            $transaction->reason = $params['reason'];
+            $transaction->cancel_time = str_replace('.', '', $currentMillis);
+            $transaction->state = -1;
+            $transaction->update();
+
+            $booking = Booking::query()->find($transaction->book_id);
+            $booking->status = 'canceled';
+            $response = [
+                'result' => [
+                    "state" => intval($transaction->state),
+                    "cancel_time" => intval($transaction->cancel_time),
+                    "transaction" => strval($transaction->id)
+                ]
+            ];
+            return $response;
+        } else if ($transaction->state == 2) {
+            $currentMillis = intval(microtime(true) * 1000);
+            $transaction->reason = $params['reason'];
+            $transaction->cancel_time = str_replace('.', '', $currentMillis);
+            $transaction->state = -2;
+            $transaction->update();
+
+            $booking = Booking::query()->find($transaction->book_id);
+            $booking->status = 'canceled';
+            $response = [
+                'result' => [
+                    "state" => intval($transaction->state),
+                    "cancel_time" => intval($transaction->cancel_time),
+                    "transaction" => strval($transaction->id)
+                ]
+            ];
+            return $response;
+        } elseif (($transaction->state == -1) or ($transaction->state == -2)) {
+            $response = [
+                'result' => [
+                    "state" => intval($transaction->state),
+                    "cancel_time" => intval($transaction->cancel_time),
+                    "transaction" => strval($transaction->id)
+                ]
+            ];
+
+            return $response;
         }
-        $currentMil = intval(microtime(true) * 1000);
-
-        $transaction->update([
-            'state' => -2,
-            'cancel_time' => str_replace('.', '', $currentMil),
-            'reason' => $params['reason'],
-        ]);
-
-        $booking = Booking::query()->find($transaction->book_id);
-        $booking->status = 'canceled';
-
-        return [
-            'result' => [
-                'transaction' => $transaction->paycom_transaction_id,
-                'state' => $transaction->state,
-                'cancel_time' => $transaction->cancel_time
-            ]
-        ];
     }
 
     public function checkTransaction($params): array
     {
         $transaction = Transaction::where('paycom_transaction_id', $params['id'])->first();
 
-        if (!$transaction) {
-            return [
+        $ldate = date('Y-m-d H:i:s');
+
+        if (empty($transaction)) {
+            $response = [
                 'error' => [
                     'code' => -31003,
-                    'message' => 'Transaction not found'
+                    'message' => "Транзакция не найдена."
                 ]
             ];
+            return $response;
+        } else if ($transaction->state == 1) {
+            $response = [
+                "result" => [
+                    'create_time' => intval($transaction->paycom_time),
+                    'perform_time' => intval($transaction->perform_time_unix),
+                    'cancel_time' => 0,
+                    'transaction' => strval($transaction->id),
+                    "state" => (int)$transaction->state,
+                    "reason" =>  (int)$transaction->reason == 0 ? null : (int)$transaction->reason
+                ]
+            ];
+            return $response;
+        } else if ($transaction->state == 2) {
+            $response = [
+                "result" => [
+                    'create_time' => intval($transaction->paycom_time),
+                    'perform_time' => intval($transaction->perform_time_unix),
+                    'cancel_time' => 0,
+                    'transaction' => strval($transaction->id),
+                    "state" => (int)$transaction->state,
+                    "reason" => (int)$transaction->reason == 0 ? null : (int)$transaction->reason
+                ]
+            ];
+            return $response;
+        } else if ($transaction->state == -1) {
+            $response = [
+                "result" => [
+                    'create_time' => intval($transaction->paycom_time),
+                    'perform_time' => intval($transaction->perform_time_unix),
+                    'cancel_time' => intval($transaction->cancel_time),
+                    'transaction' => strval($transaction->id),
+                    "state" => (int)$transaction->state,
+                    "reason" => (int)$transaction->reason == 0 ? null : (int)$transaction->reason
+                ]
+            ];
+            return $response;
+        } else if ($transaction->state == -2) {
+            $response = [
+                "result" => [
+                    'create_time' => intval($transaction->paycom_time),
+                    'perform_time' => intval($transaction->perform_time_unix),
+                    'cancel_time' => intval($transaction->cancel_time),
+                    'transaction' => strval($transaction->id),
+                    "state" => (int)$transaction->state,
+                    "reason" => (int)$transaction->reason == 0 ? null : (int)$transaction->reason
+                ]
+            ];
+            return $response;
         }
-
-        return [
-            'result' => [
-                'create_time' => $transaction->create_time,
-                'perform_time' => $transaction->perform_time,
-                'cancel_time' => $transaction->cancel_time,
-                'transaction' => $transaction->paycom_transaction_id,
-                'state' => $transaction->state
-            ]
-        ];
     }
 
     public function getStatement($param): array
