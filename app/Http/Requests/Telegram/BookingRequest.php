@@ -23,7 +23,7 @@ class BookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:bot_users,id',
+            'bot_user_id' => 'required|exists:bot_users,id',
             'full_name' => 'required|string:max:500',
             'phone_number' => 'required|regex:/^\+?[0-9]{10,}$/',
             'date' => 'required|date|after_or_equal:today',

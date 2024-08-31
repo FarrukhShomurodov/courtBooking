@@ -568,7 +568,7 @@
                                 const user = response.data;
 
                                 const bookingData = {
-                                    user_id: user.id,
+                                    bot_user_id: user.id,
                                     full_name: `${user.first_name} ${user.second_name || ''}`.trim(),
                                     phone_number: user.phone,
                                     slots: selectedSlots,

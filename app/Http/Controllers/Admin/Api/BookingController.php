@@ -64,7 +64,7 @@ class BookingController extends Controller
 
             $booking = Booking::create([
                 'court_id' => $slot['court_id'],
-                'user_id' => $validated['user_id'],
+                'bot_user_id' => $validated['bot_user_id'],
                 'full_name' => $fullName,
                 'phone_number' => $phoneNumber,
                 'price' => $slot['price'],

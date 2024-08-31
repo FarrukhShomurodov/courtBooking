@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Telegram;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\BotUser;
 use App\Models\Coach;
 use App\Models\Court;
 use App\Models\SportType;
@@ -39,6 +40,7 @@ class FindzController extends Controller
                 ->with(['bookings' => function ($query) use ($date, $startTime, $endTime) {
                     if ($date) {
                         $query->where('date', $date);
+                        $query->where('status', 'paid');
                     }
 
                     if ($startTime && $endTime) {
@@ -91,6 +93,7 @@ class FindzController extends Controller
                 ->with(['bookings' => function ($query) use ($date, $startTime, $endTime) {
                     if ($date) {
                         $query->where('date', $date);
+                        $query->where('status', 'paid');
                     }
 
                     if ($startTime && $endTime) {
@@ -143,6 +146,8 @@ class FindzController extends Controller
                         if ($date) {
                             $query->whereHas('bookings', function ($query) use ($date) {
                                 $query->where('date', $date);
+                                $query->where('status', 'paid');
+
                             });
                         }
 
@@ -234,8 +239,15 @@ class FindzController extends Controller
     {
         $stadiums = Stadium::all();
         $currentSportTypeId = $request->input('sportType');
-        $bookings = Booking::all();
+        $botUserId = $request->input('bot_user_id');
+        $botUser = BotUser::query()->where('chat_id', $botUserId)->get();
+
+        // Фильтруем бронирования по bot_user_id
+        $bookings = Booking::where('bot_user_id', $botUser->id)
+            ->where('source', 'bot')
+            ->get();
 
         return view('findz.pages.mybookings', compact('currentSportTypeId', 'stadiums', 'bookings'));
     }
+
 }

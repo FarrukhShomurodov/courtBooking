@@ -12,6 +12,7 @@
         window.addEventListener('DOMContentLoaded', async (event) => {
             let tg = window.Telegram.WebApp;
             let userData = tg.initDataUnsafe;
+            let botUserId = userData.user.id;
 
             // Функция для проверки наличия пользователя на сервере
             async function checkUser() {
@@ -40,8 +41,24 @@
             } else {
                 await checkUser();
             }
+
+            // Обновите ссылку на "Мои брони"
+            let myBookingsLink = document.getElementById('myBookingsLink');
+            if (myBookingsLink) {
+                myBookingsLink.href = `{{ route('findz.mybookings', ['sportType' => $currentSportTypeId, 'bot_user_id' => '']) }}${botUserId}`;
+            }
+
+            // Обновите href изображения, если нужно
+            let myBookingsImg = document.getElementById('myBookingsImg');
+            if (myBookingsImg) {
+                myBookingsImg.onclick = function() {
+                    location.href = `{{ route('findz.mybookings', ['sportType' => $currentSportTypeId, 'bot_user_id' => '']) }}${botUserId}`;
+                };
+            }
         });
     </script>
+
+
     @yield('extra-js')
 </head>
 <body>
@@ -75,19 +92,23 @@
 
             </li>
             <li class="d-flex col align-items-center @if($currentRouteName == 'findz.mybookings') footer_active @endif">
-                <img class="pointer"
-                     onclick="location.href='{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}'"
-                     src="@if( $currentRouteName == 'findz.mybookings') {{  asset('img/findz/icons/bookings_active.svg') }} @else {{ asset('img/findz/icons/booking.svg') }} @endif">
-                <a href="{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}">Мои брони</a>
+                <img id="myBookingsImg" class="pointer"
+                     src="@if($currentRouteName == 'findz.mybookings') {{ asset('img/findz/icons/bookings_active.svg') }} @else {{ asset('img/findz/icons/booking.svg') }} @endif"
+                     alt="footer icon">
+                <a id="myBookingsLink" href="#" class="mybookings">Мои брони</a>
             </li>
+
         </ul>
     </footer>
 @else
     @yield('footer')
 @endif
 
+
 <script src="{{ asset('vendor/libs/jquery/jquery.js') }}"></script>
-{{--<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>--}}
+<script>
+    console.log($('.mybookings'))
+</script>
 <script src="{{ asset('vendor/libs/flatpickr/flatpickr.js') }}"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
 @yield('extra-scripts')
