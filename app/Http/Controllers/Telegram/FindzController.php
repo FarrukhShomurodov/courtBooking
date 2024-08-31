@@ -243,12 +243,14 @@ class FindzController extends Controller
         $stadiums = Stadium::all();
         $currentSportTypeId = $request->input('sportType');
         $botUserId = $request->input('bot_user_id');
-        $botUser = BotUser::query()->where('chat_id', $botUserId)->get();
+        $botUser = BotUser::query()->where('chat_id', $botUserId)->first();
 
-        // Фильтруем бронирования по bot_user_id
-        $bookings = Booking::where('bot_user_id', $botUser->id)
-            ->where('source', 'bot')
-            ->get();
+        if ($botUser) {
+            $bookings = Booking::where('bot_user_id', $botUser->id)->where('source', 'bot')->get();
+        } else {
+            $bookings = collect();
+        }
+
 
         return view('findz.pages.mybookings', compact('currentSportTypeId', 'stadiums', 'bookings'));
     }
