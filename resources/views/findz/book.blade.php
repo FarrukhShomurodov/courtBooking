@@ -630,27 +630,29 @@
                     });
 
                     function initiatePaycomPayment(bookingId, amount) {
-                        let paycomForm = `
-                        <form id="form-payme" method="POST" action="https://checkout.paycom.uz">
-                            <input type="hidden" name="merchant" value="66cdfb052f8d5ff4746f8435">
-                            <input type="hidden" name="account[book_id]" value="${bookingId[0]}">
-                            <input type="hidden" name="amount" value="${amount}">
-                            <input type="hidden" name="lang" value="{{app()->getLocale()}}">
-                            <input type="hidden" name="callback" value="{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}">
-                            <input type="hidden" name="button" data-type="svg" value="colored">
-                        </form>
-                    `;
-                        //
-                        $('body').append(paycomForm);
-                        $('#form-payme').submit();
-                    }
+                        console.log(amount)
+                        // let paycomForm = `
+                    {{--    <form id="form-payme" method="POST" action="https://checkout.paycom.uz">--}}
+                    {{--        <input type="hidden" name="merchant" value="66cdfb052f8d5ff4746f8435">--}}
+                    {{--        <input type="hidden" name="account[book_id]" value="${bookingId[0]}">--}}
+                    {{--        <input type="hidden" name="amount" value="${amount}">--}}
+                    {{--        <input type="hidden" name="lang" value="{{app()->getLocale()}}">--}}
+                    {{--        <input type="hidden" name="callback" value="{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}">--}}
+                    {{--        <input type="hidden" name="button" data-type="svg" value="colored">--}}
+                    {{--    </form>--}}
+                    {{--`;--}}
+                    {{--    //--}}
+                    {{--    $('body').append(paycomForm);--}}
+                    {{--    $('#form-payme').submit();--}}
+                    {{--}--}}
 
-                    $('#error_modal img').click(function () {
-                        $('.error_modal').hide();
-                    });
+                    {{--$('#error_modal img').click(function () {--}}
+                    {{--    $('.error_modal').hide();--}}
+                    {{--});--}}
                 }
             });
         });
 
     </script>
 @endsection
+
