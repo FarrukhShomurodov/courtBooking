@@ -245,12 +245,7 @@ class FindzController extends Controller
         $botUserId = $request->input('bot_user_id');
         $botUser = BotUser::query()->where('chat_id', $botUserId)->first();
 
-        if ($botUser) {
-            $bookings = Booking::where('bot_user_id', $botUser->id)->where('source', 'bot')->where('status', 'paid')->get();
-        } else {
-            $bookings = collect();
-        }
-
+        $bookings = Booking::where('bot_user_id', $botUser->id)->where('source', 'bot')->where('status', 'paid')->get();
 
         return view('findz.pages.mybookings', compact('currentSportTypeId', 'stadiums', 'bookings'));
     }
