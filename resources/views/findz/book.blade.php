@@ -262,7 +262,6 @@
                             let endTime = "{{ $selectedEndTime }}"
                         @endif
 
-                        console.log(selected)
                         let selectedClass = selected ? 'selected' : '';
                         let slotClass = hasBooking ? 'slot_booked' : '';
 
@@ -498,7 +497,6 @@
                     const nextSlot = $(this).siblings(`.slot[data-time="${nextTime}"]`);
 
                     if (nextSlot.length && !nextSlot.hasClass('slot_booked') && !nextSlot.hasClass('selected')) {
-                        console.log("next_clot")
                         nextSlot.toggleClass('next_slot');
                     }
 
@@ -542,24 +540,6 @@
                     });
                 });
 
-                $.ajax({
-                    url: '/api/booking',
-                    method: 'POST',
-                    data: bookingData,
-                    success: function (response) {
-
-                        window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
-
-                    },
-                    error: function (err) {
-                        let errors = err.responseJSON.message;
-                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
-                        $('.res_error').empty();
-                        $('.res_error').append(errorHtml);
-                        $('#error_modal').fadeIn().delay(5000).fadeOut();
-                    }
-                });
-
                 if (selectedSlots.length > 1) {
                     console.log("Пожалуйста, выберите один из доступных кортов.")
                     let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>Пожалуйста, выберите один из доступных кортов.</li></div>`;
@@ -595,22 +575,21 @@
 
                                 @if($isUpdate)
                                     bookingData.date = @json($userBook->date);
-
-                                $.ajax({
-                                    url: '/api/booking/{{$userBook->id}}',
-                                    method: 'PUT',
-                                    data: bookingData,
-                                    success: function (response) {
-                                        window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
-                                    },
-                                    error: function (err) {
-                                        let errors = err.responseJSON.message;
-                                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
-                                        $('.res_error').empty();
-                                        $('.res_error').append(errorHtml);
-                                        $('#error_modal').fadeIn().delay(5000).fadeOut();
-                                    }
-                                });
+                                    $.ajax({
+                                        url: '/api/booking/{{$userBook->id}}',
+                                        method: 'PUT',
+                                        data: bookingData,
+                                        success: function (response) {
+                                            window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
+                                        },
+                                        error: function (err) {
+                                            let errors = err.responseJSON.message;
+                                            let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
+                                            $('.res_error').empty();
+                                            $('.res_error').append(errorHtml);
+                                            $('#error_modal').fadeIn().delay(5000).fadeOut();
+                                        }
+                                    });
                                 @else
                                 $.ajax({
                                     url: '/api/booking',
