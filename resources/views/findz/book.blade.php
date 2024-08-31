@@ -631,7 +631,7 @@
 
                     function initiatePaycomPayment(bookingId, amount) {
                         let formattedAmount = parseFloat(amount).toFixed(2);
-                        console.log(formattedAmount)
+
                         let paycomForm = `
                         <form id="form-payme" method="POST" action="https://checkout.paycom.uz">
                             <input type="hidden" name="merchant" value="66cdfb052f8d5ff4746f8435">
@@ -642,9 +642,9 @@
                             <input type="hidden" name="button" data-type="svg" value="colored">
                         </form>
                     `;
-                        //
-                        // $('body').append(paycomForm);
-                        // $('#form-payme').submit();
+
+                        $('body').append(paycomForm);
+                        $('#form-payme').submit();
                     }
 
                     $('#error_modal img').click(function () {
