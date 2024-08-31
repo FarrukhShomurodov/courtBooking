@@ -22,7 +22,7 @@ class ScheduleController extends Controller
         ]);
 
         $court = Court::find($validated['court_id']);
-        $bookings = $court->bookings()->where('date', $validated['date'])->get();
+        $bookings = $court->bookings()->where('date', $validated['date'])->where('status','paid')->get();
         $schedules = $court->schedules;
 
         if ($schedules->isEmpty()) {

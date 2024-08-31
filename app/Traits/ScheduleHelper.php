@@ -13,6 +13,7 @@ trait ScheduleHelper
         return Court::query()->find($courtId)
             ->bookings()
             ->where('date', $date)
+            ->where('status', 'paid')
             ->where(function ($query) use ($startTime, $endTime) {
                 $query->whereBetween('start_time', [$startTime, $endTime])
                     ->orWhereBetween('end_time', [$startTime, $endTime])
@@ -22,18 +23,6 @@ trait ScheduleHelper
                     });
             })
             ->exists();
-    }
-
-    public function updateCourtSchedule($courtId, $startTime, $endTime): void
-    {
-        $schedules = Schedule::query()->where('court_id', $courtId)
-            ->where('start_time', '>=', $startTime)
-            ->where('end_time', '<=', $endTime)
-            ->get();
-
-        foreach ($schedules as $schedule) {
-            $schedule->update(['is_booked' => true]);
-        }
     }
 
     public function filterAvailableSchedules($schedules, $bookings)

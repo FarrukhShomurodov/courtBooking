@@ -23,7 +23,7 @@ class CourtController extends Controller
         $courts = Court::with(['schedules', 'stadium'])->where('is_active', true)
             ->get();
 
-        $bookings = Booking::whereDate('date', $date)
+        $bookings = Booking::whereDate('date', $date)->where('status', 'paid')
             ->get();
 
         // Prepare the response data
