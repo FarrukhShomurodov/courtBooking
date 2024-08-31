@@ -351,6 +351,7 @@
             function updateSelectedSlots() {
                 const selectedSlots = [];
 
+
                 $('.slot.selected').each(function () {
                     selectedSlots.push({
                         field: $(this).data('field'),
@@ -379,6 +380,7 @@
 
                 $('.selected-slots').empty();
                 let total = 0;
+                $('.total-price').text(`${total} т.с`);
 
                 for (const field in groupedSlots) {
                     const fieldSlots = groupedSlots[field];
@@ -447,6 +449,7 @@
                         `);
 
                         total += result.price;
+
                         $('.selected-slots').append(slotDiv);
                     }
 
