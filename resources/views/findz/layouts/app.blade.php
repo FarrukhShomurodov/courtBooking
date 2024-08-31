@@ -45,8 +45,12 @@
             // Обновите ссылку на "Мои брони"
             let myBookingsLink = document.getElementById('myBookingsLink');
             if (myBookingsLink) {
-                myBookingsLink.href = `{{ route('findz.mybookings', ['sportType' => $currentSportTypeId, 'bot_user_id' => '']) }}${botUserId}`;
+                @if($currentSportTypeId)
+                    myBookingsLink.href = `{{ route('findz.mybookings', ['sportType' => $currentSportTypeId, 'bot_user_id' => '']) }}${botUserId}`;
+                @endif
             }
+
+            @if($currentSportTypeId)
 
             // Обновите href изображения, если нужно
             let myBookingsImg = document.getElementById('myBookingsImg');
@@ -55,6 +59,8 @@
                     location.href = `{{ route('findz.mybookings', ['sportType' => $currentSportTypeId, 'bot_user_id' => '']) }}${botUserId}`;
                 };
             }
+            @endif
+
         });
     </script>
 
