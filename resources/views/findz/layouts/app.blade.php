@@ -36,7 +36,7 @@
             }
 
             if (Object.keys(userData).length === 0 || typeof userData.user === 'undefined') {
-                // window.location.href = 'https://t.me/cuourts_bokking_bot';
+                window.location.href = 'https://t.me/cuourts_bokking_bot';
             } else {
                 await checkUser();
             }
