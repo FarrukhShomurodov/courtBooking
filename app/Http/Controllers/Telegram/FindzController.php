@@ -246,7 +246,7 @@ class FindzController extends Controller
         $botUser = BotUser::query()->where('chat_id', $botUserId)->first();
 
         if ($botUser) {
-            $bookings = Booking::where('bot_user_id', $botUser->id)->where('source', 'bot')->get();
+            $bookings = Booking::where('bot_user_id', $botUser->id)->where('source', 'bot')->where('status', 'paid')->get();
         } else {
             $bookings = collect();
         }
