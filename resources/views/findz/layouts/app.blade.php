@@ -46,7 +46,7 @@
             let myBookingsLink = document.getElementById('myBookingsLink');
             if (myBookingsLink) {
                 @if($currentSportTypeId)
-                    myBookingsLink.href = `{{ route('findz.mybookings', ['sportType' => $currentSportTypeId, 'bot_user_id' => '']) }}${botUserId}`;
+                    myBookingsLink.href = `https://st40.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${botUserId}`;
                 @endif
             }
 
@@ -56,7 +56,7 @@
             let myBookingsImg = document.getElementById('myBookingsImg');
             if (myBookingsImg) {
                 myBookingsImg.onclick = function() {
-                    location.href = `{{ route('findz.mybookings', ['sportType' => $currentSportTypeId, 'bot_user_id' => '']) }}${botUserId}`;
+                    location.href = `https://st40.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${botUserId}`;
                 };
             }
             @endif
