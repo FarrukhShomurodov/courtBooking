@@ -366,7 +366,7 @@
                         field: $(this).data('field'),
                         court_id: $(this).data('court-id'),
                         time: $(this).data('time'),
-                        price: parseFloat($(this).data('price')),
+                        price: 0,
                     });
                 });
 
