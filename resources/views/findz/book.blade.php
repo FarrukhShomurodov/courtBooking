@@ -630,20 +630,21 @@
                     });
 
                     function initiatePaycomPayment(bookingId, amount) {
-                        console.log(amount)
-                    {{--    let paycomForm = `--}}
-                    {{--    <form id="form-payme" method="POST" action="https://checkout.paycom.uz">--}}
-                    {{--        <input type="hidden" name="merchant" value="66cdfb052f8d5ff4746f8435">--}}
-                    {{--        <input type="hidden" name="account[book_id]" value="${bookingId[0]}">--}}
-                    {{--        <input type="hidden" name="amount" value="${amount}">--}}
-                    {{--        <input type="hidden" name="lang" value="{{app()->getLocale()}}">--}}
-                    {{--        <input type="hidden" name="callback" value="{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}">--}}
-                    {{--        <input type="hidden" name="button" data-type="svg" value="colored">--}}
-                    {{--    </form>--}}
-                    {{--`;--}}
-                    {{--    //--}}
-                    {{--    $('body').append(paycomForm);--}}
-                    {{--    $('#form-payme').submit();--}}
+                        let formattedAmount = parseFloat(amount).toFixed(2);
+                        console.log(formattedAmount)
+                        let paycomForm = `
+                        <form id="form-payme" method="POST" action="https://checkout.paycom.uz">
+                            <input type="hidden" name="merchant" value="66cdfb052f8d5ff4746f8435">
+                            <input type="hidden" name="account[book_id]" value="${bookingId[0]}">
+                            <input type="hidden" name="amount" value="${formattedAmount}">
+                            <input type="hidden" name="lang" value="{{app()->getLocale()}}">
+                            <input type="hidden" name="callback" value="{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}">
+                            <input type="hidden" name="button" data-type="svg" value="colored">
+                        </form>
+                    `;
+                        //
+                        // $('body').append(paycomForm);
+                        // $('#form-payme').submit();
                     }
 
                     $('#error_modal img').click(function () {
