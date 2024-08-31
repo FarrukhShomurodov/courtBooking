@@ -208,13 +208,16 @@ class FindzController extends Controller
         foreach ($courts as $court) {
             $minPrice += $court->getMinimumCost();
         }
+        $currentSportTypeId = false;
 
-        return view('findz.pages.show.coach', compact('coach', 'minPrice'));
+        return view('findz.pages.show.coach', compact('coach', 'minPrice', 'currentSportTypeId'));
     }
 
     public function courtShow(Court $court): View
     {
-        return view('findz.pages.show.court', compact('court'));
+        $currentSportTypeId = false;
+
+        return view('findz.pages.show.court', compact('court', 'currentSportTypeId'));
     }
 
 
