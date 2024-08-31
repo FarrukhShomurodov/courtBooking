@@ -631,7 +631,7 @@
 
                     function initiatePaycomPayment(bookingId, amount) {
                         console.log(amount)
-                        // let paycomForm = `
+                    {{--    let paycomForm = `--}}
                     {{--    <form id="form-payme" method="POST" action="https://checkout.paycom.uz">--}}
                     {{--        <input type="hidden" name="merchant" value="66cdfb052f8d5ff4746f8435">--}}
                     {{--        <input type="hidden" name="account[book_id]" value="${bookingId[0]}">--}}
@@ -644,11 +644,11 @@
                     {{--    //--}}
                     {{--    $('body').append(paycomForm);--}}
                     {{--    $('#form-payme').submit();--}}
-                    {{--}--}}
+                    }
 
-                    {{--$('#error_modal img').click(function () {--}}
-                    {{--    $('.error_modal').hide();--}}
-                    {{--});--}}
+                    $('#error_modal img').click(function () {
+                        $('.error_modal').hide();
+                    });
                 }
             });
         });
