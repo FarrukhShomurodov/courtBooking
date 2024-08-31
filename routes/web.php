@@ -13,8 +13,6 @@ use App\Http\Controllers\Telegram\FindzController;
 use App\Http\Controllers\Telegram\TelegramController;
 use Illuminate\Support\Facades\Route;
 
-// Telegram
-
 Route::get('/login', [AuthController::class, 'showLoginForm']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/confirm-owner', [AuthController::class, 'OwnerConfirmation'])->name('owner.confirmation');
@@ -51,7 +49,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/bookings', BookingController::class);
 });
 
-
+// Telegram
 Route::prefix('telegram')->group(function () {
     Route::get('/webhook', function () {
         $telegram = new \Telegram\Bot\Api(config('telegram.bot_token'));

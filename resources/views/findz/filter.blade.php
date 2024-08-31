@@ -2,7 +2,7 @@
 
 @section('extra-css')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="{{secure_asset('css/findz/filter.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/findz/filter.css')}}"/>
 @endsection
 
 @section('header')

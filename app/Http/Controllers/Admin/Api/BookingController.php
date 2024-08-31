@@ -43,6 +43,10 @@ class BookingController extends Controller
     {
         $validated = $request->validated();
 
+        if (count($validated['slots']) > 1) {
+            return response()->json(['message' => 'Пожалуйста, выберите только один слот.'], 422);
+        }
+
         $date = $validated['date'];
         $fullName = $validated['full_name'];
         $phoneNumber = $validated['phone_number'];
@@ -78,39 +82,29 @@ class BookingController extends Controller
             'message' => 'Booking successful',
             'total_sum' => $totalSum,
             'booking_ids' => $bookingIds
-            ], 200);
+        ], 200);
     }
 
-    public function update(Booking $booking, BookingRequest $request): JsonResponse
+    public function update(Booking $booking, UpdateBookingRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
-        $date = $validated['date'];
-        $fullName = $validated['full_name'];
-        $phoneNumber = $validated['phone_number'];
-        $slots = $validated['slots'];
+        if (count($validated['slots']) > 1) {
+            return response()->json(['message' => 'Пожалуйста, выберите только один слот.'], 422);
+        }
 
-        foreach ($slots as $slot) {
-//            $isAvailable = $this->checkCourtAvailability($slot['court_id'], $slot['start_time'], $slot['end_time'], $date);
-//
-//            if ($isAvailable) {
-//                return response()->json(['message' => 'В указанное время корт недоступен.'], 422);
-//            }
-
+        // Проверяем, что время не изменилось
+        foreach ($validated['slots'] as $slot) {
             $booking->update([
-                'court_id' => $slot['court_id'],
-                'user_id' => $validated['user_id'],
-                'full_name' => $fullName,
-                'phone_number' => $phoneNumber,
+                'date' => $validated['date'],
+                'full_name' => $validated['full_name'],
+                'phone_number' => $validated['phone_number'],
                 'price' => $slot['price'],
-                'date' => $date,
-                'start_time' => $slot['start_time'],
-                'end_time' => $slot['end_time'],
                 'source' => $validated['source'],
             ]);
         }
 
-        return response()->json(['message' => 'Booking successful'], 200);
+        return response()->json(['message' => 'Бронирование успешно обновлено.'], 200);
     }
 
 }

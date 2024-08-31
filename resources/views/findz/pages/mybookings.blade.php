@@ -1,7 +1,7 @@
 @extends('findz.layouts.app')
 
 @section('extra-css')
-    <link rel="stylesheet" href="{{secure_asset('css/findz/mybookings.css')}}"/>
+    <link rel="stylesheet" href="{{asset('css/findz/mybookings.css')}}"/>
 @endsection
 
 @section('header')

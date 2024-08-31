@@ -13,7 +13,6 @@
 
 @section('header')
     <header class="d-flex row justify-content-between align-items-center">
-        <img id="lang-icon" src="{{ app()->getLocale() == 'uz' ? asset('img/findz/icons/uz_flag.svg') : asset('img/findz/icons/ru_flag.svg') }}" alt="lang icon">
         <h1 class="findz">FINDZ</h1>
         <a href="{{ route('findz.filter', $currentSportTypeId) }}">
             <img src="{{ asset('img/findz/icons/filter.svg') }}" alt="filter icon">

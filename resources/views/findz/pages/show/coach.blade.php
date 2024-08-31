@@ -1,8 +1,8 @@
 @extends('findz.layouts.app')
 
 @section('extra-css')
-    <link rel="stylesheet" href="{{ secure_asset('css/findz/filter.css') }}"/>
-    <link rel="stylesheet" href="{{ secure_asset('css/findz/show.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('css/findz/filter.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('css/findz/show.css') }}"/>
     <style>
         #close-btn{
             background-color: #333333;

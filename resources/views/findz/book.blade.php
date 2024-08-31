@@ -5,8 +5,8 @@
 @extends('findz.layouts.app')
 
 @section('extra-css')
-    <link rel="stylesheet" href="{{ secure_asset('css/findz/filter.css') }}"/>
-    <link rel="stylesheet" href="{{ secure_asset('/css/findz/book.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('css/findz/filter.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('/css/findz/book.css') }}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 @endsection
 
@@ -237,13 +237,15 @@
                 $('.slots-table tbody tr').empty();
                 data.courts.forEach(court => {
                     let row = `<td style="padding: 0px !important;" data-court-id="${court.id}">`;
-                    court.schedules.forEach(schedule => {
 
-                        let hasBooking = false
+                    court.schedules.forEach(schedule => {
+                        let hasBooking = false;
 
                         @if($isUpdate)
-                        let oldSelectedSlot = (court.id === {{$userBook->court_id}} && schedule.start_time >= `{{$userBook->start_time}}` && schedule.start_time <= `{{$userBook->end_time}}`);
+                        let oldSelectedSlot = (court.id === {{ $userBook->court_id }} && schedule.start_time >= "{{ $userBook->start_time }}" && schedule.start_time <= "{{ $userBook->end_time }}");
                         hasBooking = false;
+                        let endTime = "{{ $userBook->end_time }}"
+                        endTime = endTime.slice(0, 5)
                         @else
                             hasBooking = data.bookings.some(booking => {
                             let bookingDate = new Date(booking.date).toISOString().slice(0, 10);
@@ -251,18 +253,33 @@
                         });
                         @endif
 
+                        let selected = false;
 
-                            @if($isUpdate)
-                            selected = oldSelectedSlot ? 'selected' : '';
+                        @if($isUpdate)
+                            selected = oldSelectedSlot;
                         @else
-                        let selected = (court.id == {{ request('court') }} && (schedule.start_time.slice(0, 5) == `{{ $selectedStartTime }}` || schedule.start_time.slice(0, 5) == `{{ $selectedEndTime }}`));
+                            selected = (court.id == {{ request('court') }} && (schedule.start_time.slice(0, 5) >= "{{ $selectedStartTime }}" && schedule.start_time.slice(0, 5) <= "{{ $selectedEndTime }}"));
+                            let endTime = "{{ $selectedEndTime }}"
                         @endif
 
+                        console.log(selected)
                         let selectedClass = selected ? 'selected' : '';
-
                         let slotClass = hasBooking ? 'slot_booked' : '';
 
-                        row += `
+                        if(schedule.start_time.slice(0, 5) == endTime){
+                            console.log("=-")
+                            row += `
+                            <div class="slot next_slot"
+                                data-time="${schedule.start_time.slice(0, 5)}"
+                                data-field="${court.name}"
+                                data-price="${schedule.cost}"
+                                data-court-id="${court.id}">
+                                ${schedule.start_time.slice(0, 5)}<br>
+                                <span>${schedule.cost} т.с/ч</span>
+                            </div>
+                        `;
+                        }else{
+                            row += `
                             <div class="slot ${slotClass} ${selectedClass}"
                                 data-time="${schedule.start_time.slice(0, 5)}"
                                 data-field="${court.name}"
@@ -272,7 +289,12 @@
                                 <span>${schedule.cost} т.с/ч</span>
                             </div>
                         `;
+                        }
+
+
                     });
+
+
                     row += '</td>';
                     $('.slots-table tbody tr').append(row);
                 });
@@ -289,15 +311,6 @@
                 @endif
             }
 
-
-            function autoSelectNextSlot(currentSlot) {
-                const nextTime = getNextTime(currentSlot.data('time'));
-                const nextSlot = currentSlot.siblings(`.slot[data-time="${nextTime}"]`);
-
-                if (nextSlot.length && !nextSlot.hasClass('slot_booked') && !nextSlot.hasClass('selected')) {
-                    nextSlot.addClass('selected');
-                }
-            }
 
             function getNextTime(time) {
                 const [hour, minute] = time.split(':').map(Number);
@@ -348,6 +361,15 @@
                     });
                 });
 
+                $('.slot.next_slot').each(function () {
+                    selectedSlots.push({
+                        field: $(this).data('field'),
+                        court_id: $(this).data('court-id'),
+                        time: $(this).data('time'),
+                        price: parseFloat($(this).data('price')),
+                    });
+                });
+
                 const groupedSlots = selectedSlots.reduce((groups, slot) => {
                     if (!groups[slot.field]) {
                         groups[slot.field] = [];
@@ -372,18 +394,18 @@
                             currentSlot = {
                                 start: slot.time,
                                 court_id: slot.court_id,
-                                end: isFirstSlot ? getNextTime(slot.time) : slot.time,
+                                end: slot.time,
                                 price: slot.price
                             };
                         } else if (new Date(`1970-01-01T${currentSlot.end}:00Z`) >= new Date(`1970-01-01T${slot.time}:00Z`)) {
-                            currentSlot.end = getNextTime(slot.time);
+                            // currentSlot.end = getNextTime(slot.time);
                             currentSlot.price += slot.price;
                         } else {
                             combinedSlots.push(currentSlot);
                             currentSlot = {
                                 start: slot.time,
                                 court_id: slot.court_id,
-                                end: isFirstSlot ? getNextTime(slot.time) : slot.time,
+                                end: slot.time,
                                 price: slot.price
                             };
                         }
@@ -404,26 +426,26 @@
                         }, {start: null, end: null, price: 0});
 
                         const slotDiv = $(`
-                <div class="selected-slot">
-                    <div>
-                        <h2  data-field="${field}" data-court-id="${result.court_id}">${field}</h2>
-                        <div>
-                            <span>
-                                <span data-start-time="${result.start}"> ${result.start} </span>
-                                -
-                                <span data-end-time="${result.end}"> ${result.end} </span>
-                                </span>
-                            <span class="selected_date">${selectedDate}, ${dayOfWeek}</span>
-                        </div>
-                    </div>
-                    <div class="cost_cancel_section">
-                        <h2>${result.price} т.с</h2>
-                        <button class="delete-btn" data-field="${field}" data-start="${result.start}" data-end="${result.end}">
-                            <img src="../../../img/findz/icons/delete_selected_time.svg" alt="delete selected time icon">
-                        </button>
-                    </div>
-                </div>
-            `);
+                            <div class="selected-slot">
+                                <div>
+                                    <h2  data-field="${field}" data-court-id="${result.court_id}">${field}</h2>
+                                    <div>
+                                        <span>
+                                            <span data-start-time="${result.start}"> ${result.start} </span>
+                                            -
+                                            <span data-end-time="${result.end}"> ${result.end} </span>
+                                            </span>
+                                        <span class="selected_date">${selectedDate}, ${dayOfWeek}</span>
+                                    </div>
+                                </div>
+                                <div class="cost_cancel_section">
+                                    <h2>${result.price} т.с</h2>
+                                    <button class="delete-btn" data-field="${field}" data-start="${result.start}" data-end="${result.end}">
+                                        <img src="../../../img/findz/icons/delete_selected_time.svg" alt="delete selected time icon">
+                                    </button>
+                                </div>
+                            </div>
+                        `);
 
                         total += result.price;
                         $('.selected-slots').append(slotDiv);
@@ -443,6 +465,15 @@
                             }
                         });
 
+                        $('.slot.next_slot').each(function () {
+                            if ($(this).data('field') === field && ($(this).data('time') >= start || $(this).data('time') < end)) {
+                                $(this).removeClass('next_slot');
+                                previousSelectedSlot = null;
+                            }
+                        });
+
+                        $('.total-price').text(`0 т.с`);
+
                         updateSelectedSlots();
                     });
                 }
@@ -458,9 +489,18 @@
                 const isSelected = $(this).hasClass('selected');
                 const isBooked = $(this).hasClass('slot_booked');
                 const isFirstSlot = $(this).siblings('.selected').length === 0;
+                const isNextSlot = $(this).hasClass('.next_slot');
 
                 if (!isBooked) {
                     $(this).toggleClass('selected');
+
+                    const nextTime = getNextTime($(this).data('time'));
+                    const nextSlot = $(this).siblings(`.slot[data-time="${nextTime}"]`);
+
+                    if (nextSlot.length && !nextSlot.hasClass('slot_booked') && !nextSlot.hasClass('selected')) {
+                        console.log("next_clot")
+                        nextSlot.toggleClass('next_slot');
+                    }
 
                     if (!isSelected) {
                         if (previousSelectedSlot && previousSelectedSlot.data('field') === $(this).data('field')) {
@@ -470,11 +510,6 @@
                         }
                     } else {
                         previousSelectedSlot = null;
-                    }
-
-                    // Auto-select next slot if it's the first selected slot
-                    if (!isSelected && isFirstSlot) {
-                        autoSelectNextSlot($(this));
                     }
 
                     updateSelectedSlots();
@@ -507,86 +542,116 @@
                     });
                 });
 
-                let tg = window.Telegram.WebApp;
-                let userData = tg.initDataUnsafe;
-                let chat_id = userData.user.id;
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-
                 $.ajax({
-                    url: `/api/bot-user/${chat_id}`,
-                    method: 'GET',
+                    url: '/api/booking',
+                    method: 'POST',
+                    data: bookingData,
                     success: function (response) {
-                        if (response.success) {
-                            const user = response.data;
 
-                            const bookingData = {
-                                user_id: user.id,
-                                full_name: `${user.first_name} ${user.second_name || ''}`.trim(),
-                                phone_number: user.phone,
-                                slots: selectedSlots,
-                                date: selectedDate,
-                                source: 'bot'
-                            };
+                        window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
 
-                            @if($isUpdate)
-                                bookingData.date = @json($userBook->date);
-
-                            console.log(bookingData)
-                            $.ajax({
-                                url: '/api/booking/{{$userBook->id}}',
-                                method: 'PUT',
-                                data: bookingData,
-                                success: function (response) {
-                                    window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
-                                },
-                                error: function (err) {
-                                    let errors = err.responseJSON.message;
-                                    let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
-                                    $('.res_error').empty();
-                                    $('.res_error').append(errorHtml);
-                                    $('#error_modal').fadeIn().delay(5000).fadeOut();
-                                }
-                            });
-                            @else
-                            $.ajax({
-                                url: '/api/booking',
-                                method: 'POST',
-                                data: bookingData,
-                                success: function (response) {
-                                    @if (!$isUpdate)
-                                        initiatePaycomPayment(response.booking_ids, response.total_sum);
-                                    @else
-                                        window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
-                                    @endif
-                                },
-                                error: function (err) {
-                                    let errors = err.responseJSON.message;
-                                    let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
-                                    $('.res_error').empty();
-                                    $('.res_error').append(errorHtml);
-                                    $('#error_modal').fadeIn().delay(5000).fadeOut();
-                                }
-                            });
-                            @endif
-
-
-
-                        } else {
-                            console.log('Ошибка: пользователь не найден');
-                        }
                     },
-                    error: function (error) {
-                        console.log('Ошибка при получении данных пользователя', error);
+                    error: function (err) {
+                        let errors = err.responseJSON.message;
+                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
+                        $('.res_error').empty();
+                        $('.res_error').append(errorHtml);
+                        $('#error_modal').fadeIn().delay(5000).fadeOut();
                     }
                 });
 
-                function initiatePaycomPayment(bookingId, amount) {
-                    let paycomForm = `
+                if (selectedSlots.length > 1) {
+                    console.log("Пожалуйста, выберите один из доступных кортов.")
+                    let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>Пожалуйста, выберите один из доступных кортов.</li></div>`;
+                    $('.res_error').empty();
+                    $('.res_error').append(errorHtml);
+                    $('#error_modal').fadeIn().delay(5000).fadeOut();
+                } else {
+                    let tg = window.Telegram.WebApp;
+                    let userData = tg.initDataUnsafe;
+                    let chat_id = userData.user.id;
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+                    $.ajax({
+                        url: `/api/bot-user/${chat_id}`,
+                        method: 'GET',
+                        success: function (response) {
+                            if (response.success) {
+                                const user = response.data;
+
+                                const bookingData = {
+                                    user_id: user.id,
+                                    full_name: `${user.first_name} ${user.second_name || ''}`.trim(),
+                                    phone_number: user.phone,
+                                    slots: selectedSlots,
+                                    date: selectedDate,
+                                    source: 'bot'
+                                };
+
+                                @if($isUpdate)
+                                    bookingData.date = @json($userBook->date);
+
+                                $.ajax({
+                                    url: '/api/booking/{{$userBook->id}}',
+                                    method: 'PUT',
+                                    data: bookingData,
+                                    success: function (response) {
+                                        window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
+                                    },
+                                    error: function (err) {
+                                        let errors = err.responseJSON.message;
+                                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
+                                        $('.res_error').empty();
+                                        $('.res_error').append(errorHtml);
+                                        $('#error_modal').fadeIn().delay(5000).fadeOut();
+                                    }
+                                });
+                                @else
+                                $.ajax({
+                                    url: '/api/booking',
+                                    method: 'POST',
+                                    data: bookingData,
+                                    success: function (response) {
+                                        @if (!$isUpdate)
+                                        initiatePaycomPayment(response.booking_ids, response.total_sum);
+                                        @else
+                                            window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
+                                        @endif
+                                    },
+                                    error: function (err) {
+                                        let errors = err.responseJSON.message;
+                                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
+                                        $('.res_error').empty();
+                                        $('.res_error').append(errorHtml);
+                                        $('#error_modal').fadeIn().delay(5000).fadeOut();
+                                    }
+                                });
+                                @endif
+                            } else {
+                                console.log('Ошибка: пользователь не найден');
+                                let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>Ошибка: пользователь не найден</li></div>`;
+                                $('.res_error').empty();
+                                $('.res_error').append(errorHtml);
+                                $('#error_modal').fadeIn().delay(5000).fadeOut();
+                            }
+                        },
+                        error: function (err) {
+                            console.log('Ошибка при получении данных пользователя', err);
+                            let errors = err.responseJSON.message;
+                            let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>Ошибка при получении данных пользователя</li></div>`;
+                            $('.res_error').empty();
+                            $('.res_error').append(errorHtml);
+                            $('#error_modal').fadeIn().delay(5000).fadeOut();
+                        }
+                    });
+
+                    function initiatePaycomPayment(bookingId, amount) {
+                        let paycomForm = `
                         <form id="form-payme" method="POST" action="https://checkout.paycom.uz">
                             <input type="hidden" name="merchant" value="66cdfb052f8d5ff4746f8435">
                             <input type="hidden" name="account[book_id]" value="${bookingId[0]}">
@@ -596,15 +661,15 @@
                             <input type="hidden" name="button" data-type="svg" value="colored">
                         </form>
                     `;
-                    //
-                    $('body').append(paycomForm);
-                    $('#form-payme').submit();
+                        //
+                        $('body').append(paycomForm);
+                        $('#form-payme').submit();
+                    }
+
+                    $('#error_modal img').click(function () {
+                        $('.error_modal').hide();
+                    });
                 }
-
-                $('#error_modal img').click(function () {
-                    $('.error_modal').hide();
-                });
-
             });
         });
 
