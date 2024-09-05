@@ -415,10 +415,12 @@ class TelegramController extends Controller
             'one_time_keyboard' => true
         ]);
 
+        $lang = $user->lang == 'ru' ? 'Русский' : "O'zbekcha";
+
         $this->telegram->sendMessage([
             'chat_id' => $chatId,
             'text' => __('telegram.settings') . PHP_EOL .
-                __('telegram.language') . ': ' . $user->lang . PHP_EOL .
+                __('telegram.language') . ': ' . $lang . PHP_EOL .
                 __('telegram.name') . ': ' . $user->first_name . ' ' . $user->second_name . PHP_EOL .
                 __('telegram.phone') . ': ' . $user->phone,
             'reply_markup' => $reply_markup
