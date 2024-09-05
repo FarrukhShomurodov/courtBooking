@@ -383,7 +383,7 @@ class TelegramController extends Controller
                     'text' => __('telegram.order_btn'),
                 ],
                 __('telegram.my_order_btn')],
-            [__('telegram.settings_in_menu'), __('telegram.support_connect'), 'FAQ']
+            [__('telegram.settings_in_menu')]
         ];
 
         $reply_markup = Keyboard::make([
