@@ -143,6 +143,8 @@ class TelegramController extends Controller
                     'inline_keyboard' => $keyboard
                 ]);
 
+                $this->sendMainMenu($chatId, $user);
+
                 $this->telegram->sendMessage([
                     'chat_id' => $chatId,
                     'text' => __('telegram.order_btn'),
@@ -151,6 +153,8 @@ class TelegramController extends Controller
             default:
                 if ($user->step === 'CHANGE_NAME') {
                     $this->saveNewName($chatId, $text, $user);
+                } else {
+                    $this->sendMainMenu($chatId, $user);
                 }
                 break;
         }
@@ -300,7 +304,7 @@ class TelegramController extends Controller
     {
         $otp = $this->generateOtp();
 
-        $otpTEXT = 'Код подтверждения для регистрации в Telegram-боте FindzBot: '.$otp;
+        $otpTEXT = 'Код подтверждения для регистрации в Telegram-боте FindzBot: ' . $otp;
 //        $this->otpService->sendMessage(str_replace('+', '', $phoneNumber), $otpTEXT);
 
         $user->sms_code = $otp;
@@ -468,7 +472,7 @@ class TelegramController extends Controller
 
     protected function generateOtp(): string
     {
-        return (string) random_int(1000, 9999);
+        return (string)random_int(1000, 9999);
     }
 
     protected function saveNewName($chatId, $newName, $user): void
