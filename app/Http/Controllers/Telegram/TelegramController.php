@@ -143,8 +143,6 @@ class TelegramController extends Controller
                     'inline_keyboard' => $keyboard
                 ]);
 
-                $this->sendMainMenu($chatId, $user);
-
                 $this->telegram->sendMessage([
                     'chat_id' => $chatId,
                     'text' => __('telegram.order_btn'),
