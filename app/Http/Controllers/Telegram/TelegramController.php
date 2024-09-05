@@ -301,7 +301,7 @@ class TelegramController extends Controller
         $otp = $this->generateOtp();
 
         $otpTEXT = 'Код подтверждения для регистрации в Telegram-боте FindzBot: '.$otp;
-        $this->otpService->sendMessage(str_replace('+', '', $phoneNumber), $otpTEXT);
+//        $this->otpService->sendMessage(str_replace('+', '', $phoneNumber), $otpTEXT);
 
         $user->sms_code = $otp;
         $user->save();
