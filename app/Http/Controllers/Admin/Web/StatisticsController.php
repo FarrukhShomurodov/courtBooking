@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Court;
 use App\Models\SportType;
 use App\Models\Stadium;
-use App\Models\Court;
 use App\Models\User;
 use App\Repositories\StatisticsRepositories;
 use Illuminate\Contracts\Foundation\Application;
@@ -48,12 +48,18 @@ class StatisticsController extends Controller
             });
         }
 
+        $date = null;
+
+        if ($request->get('date')) {
+            $date = $request->get('date');
+        }
+
         $statistics = [];
 
         foreach ($stadiums as $stadium) {
             $statistics[] = [
                 'stadium' => $stadium,
-                'statistic' => $this->statisticsRepository->stadiumStatistics($stadium),
+                'statistic' => $this->statisticsRepository->stadiumStatistics($stadium, $date),
             ];
         }
         $sportTypes = SportType::all();
@@ -86,12 +92,18 @@ class StatisticsController extends Controller
             });
         }
 
+        $date = null;
+
+        if ($request->get('date')) {
+            $date = $request->get('date');
+        }
+
         $statistics = [];
 
         foreach ($courts as $court) {
             $statistics[] = [
                 'court' => $court,
-                'statistic' => $this->statisticsRepository->courtStatistics($court),
+                'statistic' => $this->statisticsRepository->courtStatistics($court, $date),
             ];
         }
 
@@ -109,7 +121,7 @@ class StatisticsController extends Controller
 
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
             $sportTypes = Auth::user()->stadiumOwner()->first()->sportTypes()->get();
-            $allSportTypes =  Auth::user()->stadiumOwner()->first()->sportTypes()->get();
+            $allSportTypes = Auth::user()->stadiumOwner()->first()->sportTypes()->get();
         } else {
             $sportTypes = SportType::all();
             $allSportTypes = SportType::all();
@@ -124,12 +136,18 @@ class StatisticsController extends Controller
             $sportTypes = SportType::with('courts.bookings')->where('id', $sportTypeId)->get();
         }
 
+        $date = null;
+
+        if ($request->get('date')) {
+            $date = $request->get('date');
+        }
+
         $statistics = [];
 
         foreach ($sportTypes as $sportType) {
             $statistics[] = [
                 'spotType' => $sportType,
-                'statistic' => $this->statisticsRepository->sportTypeStatistics($sportType),
+                'statistic' => $this->statisticsRepository->sportTypeStatistics($sportType, $date),
             ];
         }
 
@@ -163,8 +181,16 @@ class StatisticsController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
 
         // Set headers
-        $sheet->setCellValue('A1', __('dashboard.metric'));
-        $sheet->setCellValue('B1', __('dashboard.value'));
+        $headers = [
+            __('dashboard.metric'),
+            __('dashboard.value'),
+        ];
+
+        $columnLetters = range('A', 'B');
+        foreach ($columnLetters as $index => $letter) {
+            $sheet->setCellValue($letter . '1', $headers[$index]);
+            $sheet->getStyle($letter . '1')->getFont()->setBold(true); // Make header bold
+        }
 
         // Add data to cells
         $row = 2;
@@ -174,6 +200,11 @@ class StatisticsController extends Controller
             $row++;
         }
 
+
+        // Auto resize columns
+        foreach ($columnLetters as $letter) {
+            $sheet->getColumnDimension($letter)->setAutoSize(true);
+        }
         // Create writer and set the output stream
         $writer = new Xlsx($spreadsheet);
 
@@ -216,13 +247,21 @@ class StatisticsController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
 
         // Set headers
-        $sheet->setCellValue('A1', __('stadium.stadium'));
-        $sheet->setCellValue('B1', __('stadium.bot_hours'));
-        $sheet->setCellValue('C1', __('stadium.manual_hours'));
-        $sheet->setCellValue('D1', __('stadium.total_hours'));
-        $sheet->setCellValue('E1', __('stadium.bot_revenue'));
-        $sheet->setCellValue('F1', __('stadium.manual_revenue'));
-        $sheet->setCellValue('G1', __('stadium.total_revenue'));
+        $headers = [
+            __('stadium.stadium'),
+            __('stadium.bot_hours'),
+            __('stadium.manual_hours'),
+            __('stadium.total_hours'),
+            __('stadium.bot_revenue'),
+            __('stadium.manual_revenue'),
+            __('stadium.total_revenue')
+        ];
+
+        $columnLetters = range('A', 'G');
+        foreach ($columnLetters as $index => $letter) {
+            $sheet->setCellValue($letter . '1', $headers[$index]);
+            $sheet->getStyle($letter . '1')->getFont()->setBold(true); // Make header bold
+        }
 
         // Add data to cells
         $row = 2;
@@ -235,6 +274,11 @@ class StatisticsController extends Controller
             $sheet->setCellValue('F' . $row, $data['manual_revenue']);
             $sheet->setCellValue('G' . $row, $data['total_revenue']);
             $row++;
+        }
+
+        // Auto resize columns
+        foreach ($columnLetters as $letter) {
+            $sheet->getColumnDimension($letter)->setAutoSize(true);
         }
 
         // Create writer and set the output stream
@@ -279,13 +323,22 @@ class StatisticsController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
 
         // Set headers
-        $sheet->setCellValue('A1', __('court.court'));
-        $sheet->setCellValue('B1', __('court.bot_hours'));
-        $sheet->setCellValue('C1', __('court.manual_hours'));
-        $sheet->setCellValue('D1', __('court.total_hours'));
-        $sheet->setCellValue('E1', __('court.bot_revenue'));
-        $sheet->setCellValue('F1', __('court.manual_revenue'));
-        $sheet->setCellValue('G1', __('court.total_revenue'));
+
+        $headers = [
+            __('court.court'),
+            __('court.bot_hours'),
+            __('court.manual_hours'),
+            __('court.total_hours'),
+            __('court.bot_revenue'),
+            __('court.manual_revenue'),
+            __('court.total_revenue'),
+        ];
+
+        $columnLetters = range('A', 'G');
+        foreach ($columnLetters as $index => $letter) {
+            $sheet->setCellValue($letter . '1', $headers[$index]);
+            $sheet->getStyle($letter . '1')->getFont()->setBold(true); // Make header bold
+        }
 
         // Add data to cells
         $row = 2;
@@ -298,6 +351,11 @@ class StatisticsController extends Controller
             $sheet->setCellValue('F' . $row, $data['manual_revenue']);
             $sheet->setCellValue('G' . $row, $data['total_revenue']);
             $row++;
+        }
+
+        // Auto resize columns
+        foreach ($columnLetters as $letter) {
+            $sheet->getColumnDimension($letter)->setAutoSize(true);
         }
 
         // Create writer and set the output stream
@@ -334,7 +392,7 @@ class StatisticsController extends Controller
                 'manual_revenue' => $this->statisticsRepository->sportTypeStatistics($sportType)['manual_revenue'],
                 'bot_revenue' => $this->statisticsRepository->sportTypeStatistics($sportType)['bot_revenue'],
                 'most_booked_date' => $this->statisticsRepository->sportTypeStatistics($sportType)['most_booked_date'] ?? '-',
-                'most_booked_time_slot' => $mostBookedTimeSlot ? $mostBookedTimeSlot['start_time'].' - '.$mostBookedTimeSlot['end_time'] : '-',
+                'most_booked_time_slot' => $mostBookedTimeSlot ? $mostBookedTimeSlot['start_time'] . ' - ' . $mostBookedTimeSlot['end_time'] : '-',
             ];
         }
 
@@ -342,13 +400,21 @@ class StatisticsController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
 
         // Set headers
-        $sheet->setCellValue('A1', __('sportType.name'));
-        $sheet->setCellValue('B1', __('book.all_book'));
-        $sheet->setCellValue('C1', __('court.total_revenue'));
-        $sheet->setCellValue('D1', __('court.manual_revenue'));
-        $sheet->setCellValue('E1', __('court.bot_revenue'));
-        $sheet->setCellValue('F1', __('dashboard.Дата наибольшего бронирования'));
-        $sheet->setCellValue('G1', __('dashboard.Cамый загруженный временной интервал'));
+        $headers = [
+            __('sportType.name'),
+            __('book.all_book'),
+            __('court.total_revenue'),
+            __('court.manual_revenue'),
+            __('court.bot_revenue'),
+            __('dashboard.Дата наибольшего бронирования'),
+            __('dashboard.Cамый загруженный временной интервал'),
+        ];
+
+        $columnLetters = range('A', 'G');
+        foreach ($columnLetters as $index => $letter) {
+            $sheet->setCellValue($letter . '1', $headers[$index]);
+            $sheet->getStyle($letter . '1')->getFont()->setBold(true); // Make header bold
+        }
 
         // Add data to cells
         $row = 2;
@@ -362,6 +428,12 @@ class StatisticsController extends Controller
             $sheet->setCellValue('G' . $row, $data['most_booked_time_slot']);
             $row++;
         }
+
+        // Auto resize columns
+        foreach ($columnLetters as $letter) {
+            $sheet->getColumnDimension($letter)->setAutoSize(true);
+        }
+
 
         // Create writer and set the output stream
         $writer = new Xlsx($spreadsheet);

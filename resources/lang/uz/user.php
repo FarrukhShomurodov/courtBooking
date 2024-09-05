@@ -21,4 +21,6 @@ return [
     'Выбрать роль' => 'Rolni tanlash',
     'Сохранить' => 'Saqlash',
     'Создать пользователя' => 'Foydalanuvchi yaratish',
+    'bot_user' => 'Bot foydalanuvchilari',
+
 ];

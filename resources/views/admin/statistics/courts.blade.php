@@ -1,5 +1,9 @@
 @extends('admin.layouts.app')
 
+@section('title')
+    <title>{{'Frest - '. __('court.statistics') }}</title>
+@endsection
+
 @section('content')
     <div class="row mb-3">
         <h6 class="py-3 breadcrumb-wrapper mb-4">
@@ -16,7 +20,9 @@
             <h5 class="card-header">{{ __('court.statistics') }}</h5>
             <form method="GET" action="{{ route('statistics.courts') }}">
                 <div class="d-flex">
-
+                    <div style="margin-right: 10px">
+                        <input onchange="this.form.submit()" name="date" type="date" class="form-control" value="{{ request('date') }}">
+                    </div>
                     <div class="me-2">
                         <select id="select2"
                                 class="select2 form-select"
@@ -73,9 +79,9 @@
                         <td>{{ $statistic['statistic']['total_book_count'] }}</td>
                         <td>{{ $statistic['statistic']['bot_book_count'] }}</td>
                         <td>{{ $statistic['statistic']['manual_book_count'] }}</td>
-                        <td>{{ $statistic['statistic']['total_revenue'] }}</td>
-                        <td>{{ $statistic['statistic']['bot_revenue'] }}</td>
-                        <td>{{ $statistic['statistic']['manual_revenue'] }}</td>
+                        <td>{{ number_format($statistic['statistic']['total_revenue'], 0) }}</td>
+                        <td>{{ number_format($statistic['statistic']['bot_revenue'], 0) }}</td>
+                        <td>{{ number_format($statistic['statistic']['manual_revenue'], 0) }}</td>
                     </tr>
                 @endforeach
                 </tbody>

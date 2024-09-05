@@ -1,5 +1,9 @@
 @extends('admin.layouts.app')
 
+@section('title')
+    <title>{{'Frest - '. __('court.edit_court') }}</title>
+@endsection
+
 @section('content')
     <h6 class="py-3 breadcrumb-wrapper mb-4">
         <span class="text-muted fw-light"><a class="text-muted"
@@ -37,7 +41,8 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="basic-default-message">{{ __('court.description') }}</label>
-                    <textarea id="basic-default-message" name="description" class="form-control" placeholder="{{ __('court.description') }}"
+                    <textarea id="basic-default-message" name="description" class="form-control"
+                              placeholder="{{ __('court.description') }}"
                               required>{{ $court->description }}</textarea>
                 </div>
                 @role('admin')
@@ -50,7 +55,7 @@
                             @if($court->stadium)
                                 {{ $court->stadium->name }}
                             @else
-                               {{ __('court.select_stadium') }}
+                                {{ __('court.select_stadium') }}
                             @endif
                         </button>
                         <ul class="dropdown-menu w-100" aria-labelledby="stadiumDropdown">
@@ -69,17 +74,19 @@
                         <button class="btn btn-default dropdown-toggle w-100 d-flex justify-content-between"
                                 type="button" id="sportTypeDropdown" data-bs-toggle="dropdown" aria-expanded="false"
                                 style="border: 1px solid #d4d8dd; padding: .535rem 1.375rem .535rem .75rem;">
-                                @if($court->sportTypes)
-                                    {{ $court->sportTypes->name }}
-                                @else
-                                   {{ __('court.select_sport_types') }}
-                                @endif
+                            @if(isset($court->sportTypes))
+                                {{ $court->sportTypes->name }}
+                            @else
+                                {{ __('court.select_sport_types') }}
+                            @endif
                         </button>
                         <ul class="dropdown-menu w-100" aria-labelledby="sportTypeDropdown">
                             <li><a class="dropdown-item" href="#"
-                                   data-value="{{$stadium->sportTypes()->get()->first()->id }}">{{ $stadium->sportTypes()->get()->first()->name }}</a></li>
+                                   data-value="{{$stadium->sportTypes()->get()->first()->id }}">{{ $stadium->sportTypes()->get()->first()->name }}</a>
+                            </li>
                         </ul>
-                        <input type="hidden" name="sport_type_id" id="sportTypeInput" value="{{ $court->sportTypes->id }}">
+                        <input type="hidden" name="sport_type_id" id="sportTypeInput"
+                               value="{{ $court->sportTypes->id }}">
                     </div>
                 </div>
                 <div class="mb-3">
@@ -203,10 +210,14 @@
                     success: function (response) {
                         let options = '';
                         response.forEach(function (sportType) {
-                            options += `<li><a class="dropdown-item" href="#" data-value="${sportType.id}">${sportType.name}</a></li>`;
+                            if (sportType.id !== {{ $court->sportTypes->id }}) {
+                                options += `<li><a class="dropdown-item" href="#" data-value="${sportType.id}">${sportType.name}</a></li>`;
+                            }
                         });
-                        $('#sportTypeDropdown').next('.dropdown-menu').html(options);
-                        $('#sportTypeDropdown').text('Выбрать Тип Спорта');
+                        $('#sportTypeDropdown').next('.dropdown-menu').append(options);
+                        if (sportType.id !== {{ $court->sportTypes->id }}) {
+                            $('#sportTypeDropdown').append('Выбрать Тип Спорта');
+                        }
                         $('#sportTypeInput').val('');
                     },
                     error: function (err) {

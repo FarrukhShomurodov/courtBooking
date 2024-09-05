@@ -3,6 +3,10 @@
 @endphp
 @extends('admin.layouts.app')
 
+@section('title')
+    <title>{{'Frest - '. __('book.all_book') }}</title>
+@endsection
+
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         @if ($errors->any())

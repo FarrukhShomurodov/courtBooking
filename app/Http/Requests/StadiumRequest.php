@@ -29,7 +29,7 @@ class StadiumRequest extends FormRequest
 
         return [
             'name' => 'required|string|max:200',
-            'description' => 'required|string',
+            'description' => 'required|string|max:400',
             'address' => 'required|string',
             'map_link' => 'required|string',
             'sport_types' => 'required|array',

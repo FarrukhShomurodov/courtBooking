@@ -28,6 +28,6 @@ class UniqueOwner implements Rule
 
     public function message(): string
     {
-        return 'У этого пользователя уже есть стадион.';
+        return 'У этого владельца уже есть стадион.';
     }
 }

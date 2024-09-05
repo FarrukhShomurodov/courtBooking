@@ -24,7 +24,7 @@ class SportTypeRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:200',
-            'description' => 'required|string',
+            'description' => 'required|string|max:200',
             'photos' => 'sometimes|array',
             'photos.*' => 'image|mimes:jpg,png',
         ];

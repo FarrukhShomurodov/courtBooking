@@ -26,7 +26,7 @@ class AuthController extends Controller
             return $this->redirectBasedOnRole();
         }
 
-        return back()->withErrors(['login' => 'Invalid login details']);
+        return back()->withErrors(['login' => 'Неверные данные для входа в систему']);
     }
 
     public function OwnerConfirmation(Request $request): RedirectResponse

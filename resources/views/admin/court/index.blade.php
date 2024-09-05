@@ -1,5 +1,9 @@
 @extends('admin.layouts.app')
 
+@section('title')
+    <title>{{'Frest - '. __('court.courts') }}</title>
+@endsection
+
 @section('content')
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
@@ -22,7 +26,6 @@
                 <tr>
                     <th>Id</th>
                     <th>{{ __('court.name') }}</th>
-                    <th>{{ __('court.description') }}</th>
                     <th>{{ __('court.sport_types') }}</th>
                     <th>{{ __('court.is_active') }}</th>
                     @role('admin')
@@ -38,7 +41,6 @@
                     <tr>
                         <td>{{ $court->id }}</td>
                         <td>{{ $court->name }}</td>
-                        <td>{{ $court->description }}</td>
                         <td>{{ $court->sportTypes->name }}</td>
                         <td>
                             <label class="switch">

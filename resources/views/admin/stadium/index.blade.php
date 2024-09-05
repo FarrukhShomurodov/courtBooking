@@ -1,5 +1,10 @@
 @extends('admin.layouts.app')
 
+@section('title')
+    <title>{{'Frest - '. __('stadium.stadium') }}</title>
+@endsection
+
+
 @section('content')
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
@@ -24,7 +29,6 @@
                 <tr>
                     <th>@lang('stadium.id')</th>
                     <th>@lang('stadium.name')</th>
-                    <th>@lang('stadium.description')</th>
                     <th>@lang('stadium.address')</th>
                     <th>@lang('stadium.map_link')</th>
                     <th>@lang('stadium.coach')</th>
@@ -41,14 +45,13 @@
                     <tr>
                         <td>{{ $stadium->id }}</td>
                         <td>{{ $stadium->name }}</td>
-                        <td>{{ $stadium->description }}</td>
                         <td>{{ $stadium->address }}</td>
                         <td>{{ $stadium->map_link }}</td>
                         <td>{{ $stadium->coach->user->name ?? '' }}</td>
                         <td>{{ $stadium->owner->name }}</td>
                         <td>
                             @foreach($stadium->sportTypes as $sportType)
-                                <span>{{ $sportType->name }} {{ count($stadium->sportTypes) > 1 ? ',' : '' }}</span><br>
+                                <span>{{ $sportType->name }} {{ count($stadium->sportTypes) !== $sportType->id ? (count($stadium->sportTypes) > 1 ? ',' : ''): '' }}</span><br>
                             @endforeach
                         </td>
                         <td>

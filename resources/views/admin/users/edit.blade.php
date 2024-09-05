@@ -1,5 +1,9 @@
 @extends('admin.layouts.app')
 
+@section('title')
+    <title>{{'Frest - '. __('user.Редактировать пользователя') }}</title>
+@endsection
+
 @section('content')
     <h6 class="py-3 breadcrumb-wrapper mb-4">
         <span class="text-muted fw-light"><a class="text-muted" href="{{route('users.index')}}">{{  __('menu.Пользователи') }}</a> /</span>{{ __('user.Редактировать пользователя') }}

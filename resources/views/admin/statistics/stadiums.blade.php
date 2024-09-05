@@ -1,16 +1,19 @@
 @extends('admin.layouts.app')
 
-@section('content')
+@section('title')
+    <title>{{'Frest - '. __('stadium.statistics') }}</title>
+@endsection
 
+@section('content')
     <div class="row mb-3">
         <h6 class="py-3 breadcrumb-wrapper mb-4">
-            <span class="text-muted fw-light"><a class="text-muted" href="{{route('dashboard')}}">{{  __('menu.Dashboard') }}</a> /</span> @lang('stadium.statistics')
+            <span class="text-muted fw-light"><a class="text-muted"
+                                                 href="{{route('dashboard')}}">{{  __('menu.Dashboard') }}</a> /</span> @lang('stadium.statistics')
         </h6>
         <div class="col-12 text-end">
             <a href="{{ route('statistics.stadiums.export') }}" class="btn btn-success btn-sm">
                 <i class="fas fa-file-export me-2"></i>{{ __('dashboard.statistics_export') }}
             </a>
-
         </div>
     </div>
     <div class="card">
@@ -19,6 +22,9 @@
             @can('manage stadiums')
                 <form method="GET" action="{{ route('statistics.stadiums') }}">
                     <div class="d-flex">
+                        <div style="margin-right: 10px">
+                            <input onchange="this.form.submit()" name="date" type="date" class="form-control" value="{{ request('date') }}">
+                        </div>
                         <div class="me-2">
                             <select id="select2"
                                     class="select2 form-select"
@@ -75,9 +81,9 @@
                         <td>{{ $statistic['statistic']['total_book_count'] }}</td>
                         <td>{{ $statistic['statistic']['bot_book_count'] }}</td>
                         <td>{{ $statistic['statistic']['manual_book_count'] }}</td>
-                        <td>{{ $statistic['statistic']['total_revenue'] }}</td>
-                        <td>{{ $statistic['statistic']['bot_revenue'] }}</td>
-                        <td>{{ $statistic['statistic']['manual_revenue'] }}</td>
+                        <td>{{ number_format($statistic['statistic']['total_revenue'], 0) }}</td>
+                        <td>{{ number_format($statistic['statistic']['bot_revenue'], 0) }}</td>
+                        <td>{{ number_format($statistic['statistic']['manual_revenue'], 0) }}</td>
                     </tr>
                 @endforeach
                 </tbody>

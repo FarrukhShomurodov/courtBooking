@@ -1,5 +1,9 @@
 @extends('admin.layouts.app')
 
+@section('title')
+    <title>{{'Frest - '. __('sportType.sport_types') }}</title>
+@endsection
+
 @section('content')
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
@@ -20,7 +24,6 @@
                 <tr>
                     <th>@lang('sportType.id')</th>
                     <th>@lang('sportType.name')</th>
-                    <th>@lang('sportType.description')</th>
                     <th>@lang('sportType.photo')</th>
                     <th></th>
                 </tr>
@@ -31,7 +34,6 @@
                     <tr>
                         <td>{{ $spotType->id }}</td>
                         <td>{{ $spotType->name }}</td>
-                        <td>{{ $spotType->description }}</td>
                         <td>
                             <div class="main__td">
                                 @if($spotType->photos)

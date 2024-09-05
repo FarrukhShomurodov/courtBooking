@@ -80,9 +80,9 @@ class StatisticsRepositories
         ];
     }
 
-    public function stadiumStatistics(Stadium $stadium)
+    public function stadiumStatistics(Stadium $stadium, $date = null)
     {
-        $statistics = $stadium->bookingStatistics();
+        $statistics = $stadium->bookingStatistics($date);
 
         return [
             'bot_book_count' => $statistics['bot_hours'],
@@ -94,14 +94,20 @@ class StatisticsRepositories
         ];
     }
 
-    public function courtStatistics(Court $court): array
+    public function courtStatistics(Court $court, $date = null): array
     {
-        $bookCountFromBot = $court->bookings()->where('source', 'bot')->count();
-        $bookCountFromManual = $court->bookings()->where('source', 'manual')->count();
+        if ($date) {
+            $query = $court->bookings()->where('date', $date)->get();
+        } else {
+            $query = $court->bookings()->get();
+        }
+
+        $bookCountFromBot = $query->where('source', 'bot')->count();
+        $bookCountFromManual = $query->where('source', 'manual')->count();
         $totalBookCount = $bookCountFromBot + $bookCountFromManual;
 
-        $botRevenue = $court->bookings()->where('source', 'bot')->sum('price');
-        $manualRevenue = $court->bookings()->where('source', 'manual')->sum('price');
+        $botRevenue = $query->where('source', 'bot')->sum('price');
+        $manualRevenue = $query->where('source', 'manual')->sum('price');
         $totalRevenue = $botRevenue + $manualRevenue;
 
         return [
@@ -114,7 +120,7 @@ class StatisticsRepositories
         ];
     }
 
-    public function sportTypeStatistics(SportType $sportType): array
+    public function sportTypeStatistics(SportType $sportType, $date  = null): array
     {
         // Initialize statistics array
         $statistics = [
@@ -128,7 +134,7 @@ class StatisticsRepositories
 
         // Loop through each court related to the sport type
         foreach ($sportType->courts as $court) {
-            $bookings = $court->bookings;
+            $bookings = $date ? $court->bookings->where('date', $date) : $court->bookings;
 
             // Calculate total bookings and revenue
             $statistics['total_bookings'] += $bookings->count();

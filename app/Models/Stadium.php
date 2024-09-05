@@ -45,9 +45,14 @@ class Stadium extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
-    public function bookingStatistics()
+    public function bookingStatistics($date)
     {
-        $bookings = $this->courts()->with('bookings')->get()->pluck('bookings')->flatten();
+        $bookings = $this->courts()->with(['bookings' => function ($query) use ($date) {
+            if ($date) {
+                $query->whereDate('date', $date);
+            }
+        }])->get()->pluck('bookings')->flatten();
+
         $totalHours = $bookings->sum(function ($booking) {
             return $booking->getHours();
         });

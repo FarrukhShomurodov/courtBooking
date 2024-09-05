@@ -1,5 +1,9 @@
 @extends('admin.layouts.app')
 
+@section('title')
+    <title>{{'Frest - '. __('user.Пользователи') }}</title>
+@endsection
+
 @section('content')
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">

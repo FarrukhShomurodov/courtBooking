@@ -133,9 +133,13 @@
                             <span class="app-brand-text demo h3 mb-0 fw-bold">Frest</span>
                         </a>
                     </div>
-                    <!-- /Logo -->
-                    {{--                    <h4 class="mb-2">Welcome to Frest! 👋</h4>--}}
-                    {{--                    <p class="mb-4">Please sign-in to your account and start the adventure</p>--}}
+                    @if ($errors->any())
+                        <div class="alert alert-solid-danger" role="alert">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </div>
+                    @endif
 
                     <form id="formAuthentication" class="mb-3" action="{{ route('login') }}" method="POST">
                         @csrf

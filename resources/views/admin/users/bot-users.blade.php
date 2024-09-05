@@ -1,9 +1,13 @@
 @extends('admin.layouts.app')
 
+@section('title')
+    <title>{{'Frest - '. __('user.bot_user') }}</title>
+@endsection
+
 @section('content')
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
-            <h5 class="card-header">Пользователи бота</h5>
+            <h5 class="card-header"> {{__('user.bot_user')}}</h5>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-users table border-top">

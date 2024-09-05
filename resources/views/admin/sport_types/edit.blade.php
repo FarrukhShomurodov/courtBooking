@@ -1,5 +1,9 @@
 @extends('admin.layouts.app')
 
+@section('title')
+    <title>{{'Frest - '. __('sportType.edit_sport_type') }}</title>
+@endsection
+
 @section('content')
     <h6 class="py-3 breadcrumb-wrapper mb-4">
         <span class="text-muted fw-light"><a class="text-muted"
@@ -9,6 +13,13 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">@lang('sportType.edit_sport_type')</h5>
         </div>
+        @if ($errors->any())
+            <div class="alert alert-solid-danger" role="alert">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </div>
+        @endif
         <div class="card-body">
             <form id="apartmentForm" action="{{ route('sport-types.update', $sportType->id) }}" method="POST"
                   enctype="multipart/form-data">

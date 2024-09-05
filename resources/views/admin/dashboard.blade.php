@@ -1,5 +1,10 @@
 @extends('admin.layouts.app')
 
+@section('title')
+    <title>Dashboard - Analytics | Frest - Bootstrap Admin</title>
+@endsection
+
+
 @section('content')
     @php
         $isOwner = session('isOwner', false);

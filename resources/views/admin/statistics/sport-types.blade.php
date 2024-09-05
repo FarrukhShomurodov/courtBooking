@@ -1,9 +1,14 @@
 @extends('admin.layouts.app')
 
+@section('title')
+    <title>{{'Frest - '. __('sportType.statistics') }}</title>
+@endsection
+
 @section('content')
     <div class="row mb-3">
         <h6 class="py-3 breadcrumb-wrapper mb-4">
-            <span class="text-muted fw-light"><a class="text-muted" href="{{route('dashboard')}}">{{  __('menu.Dashboard') }}</a> /</span> {{ __('dashboard.Типы спорта') }}
+            <span class="text-muted fw-light"><a class="text-muted"
+                                                 href="{{route('dashboard')}}">{{  __('menu.Dashboard') }}</a> /</span> {{ __('sportType.statistics') }}
         </h6>
         <div class="col-12 text-end">
             <a href="{{ route('statistics.sport.type.export') }}" class="btn btn-success btn-sm">
@@ -13,9 +18,12 @@
     </div>
     <div class="card">
         <div class="d-flex justify-content-between align-items-center p-3">
-            <h5 class="card-header">{{ __('dashboard.Типы спорта') }}</h5>
+            <h5 class="card-header">{{ __('sportType.statistics') }}</h5>
             <form method="GET" action="{{ route('statistics.sport.type') }}">
                 <div class="d-flex">
+                    <div style="margin-right: 10px">
+                        <input onchange="this.form.submit()" name="date" type="date" class="form-control" value="{{ request('date') }}">
+                    </div>
                     <div class="me-2">
                         <select id="select2"
                                 class="select2 form-select"
@@ -54,13 +62,14 @@
                     <tr>
                         <td>{{ $statistic['spotType']->name }}</td>
                         <td>{{ $statistic['statistic']['total_bookings'] }}</td>
-                        <td>{{ $statistic['statistic']['total_revenue'] }}</td>
-                        <td>{{ $statistic['statistic']['manual_revenue'] }}</td>
-                        <td>{{ $statistic['statistic']['bot_revenue'] }}</td>
+                        <td>{{ number_format($statistic['statistic']['total_revenue'], 0) }}</td>
+                        <td>{{ number_format($statistic['statistic']['manual_revenue'], 0) }}</td>
+                        <td>{{ number_format($statistic['statistic']['bot_revenue'], 0) }}</td>
                         <td>{{ $statistic['statistic']['most_booked_date'] ?? '-' }}</td>
                         <td>
                             @if($statistic['statistic']['most_booked_time_slot'])
-                                {{ $statistic['statistic']['most_booked_time_slot']['start_time'] }} - {{ $statistic['statistic']['most_booked_time_slot']['end_time'] }}
+                                {{ $statistic['statistic']['most_booked_time_slot']['start_time'] }}
+                                - {{ $statistic['statistic']['most_booked_time_slot']['end_time'] }}
                             @else
                                 -
                             @endif

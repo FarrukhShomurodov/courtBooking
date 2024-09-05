@@ -42,7 +42,7 @@
     <div class="menu-divider mt-0"></div>
 
     <ul class="menu-inner py-1 ps ps--active-y">
-        <li class="menu-item {{ Request::is('/') ? 'active' : '' }}">
+        <li class="menu-item {{ Request::is('/') || Request::is('statistics*') ? 'active' : '' }}">
             <a href="{{route('dashboard')}}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle m"></i>
                 <div data-i18n="{{  __('menu.Dashboard') }}">{{  __('menu.Dashboard') }}</div>
