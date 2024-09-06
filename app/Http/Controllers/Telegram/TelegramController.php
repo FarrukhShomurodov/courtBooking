@@ -30,7 +30,7 @@ class TelegramController extends Controller
         // Retrieve or create a BotUser instance
         $user = BotUser::query()->firstOrCreate(['chat_id' => $chatId], ['isactive' => true]);
 
-        if ($user->isactive) {
+        if (!$user->isactive) {
             $this->telegram->sendMessage([
                 'chat_id' => $chatId,
                 'text' => __('telegram.user_isnt_active'),
