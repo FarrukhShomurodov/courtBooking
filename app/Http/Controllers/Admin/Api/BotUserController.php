@@ -21,7 +21,7 @@ class BotUserController extends Controller
     {
         $validated = $request->validate(['isactive' => 'required|boolean']);
 
-        $this->botUserService($botUser, $validated);
+        $this->botUserService->update($botUser, $validated);
 
         return response()->json([], 200);
     }

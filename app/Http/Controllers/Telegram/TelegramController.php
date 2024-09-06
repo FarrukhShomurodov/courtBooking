@@ -28,7 +28,16 @@ class TelegramController extends Controller
         $text = $update->getMessage()->getText();
 
         // Retrieve or create a BotUser instance
-        $user = BotUser::query()->firstOrCreate(['chat_id' => $chatId]);
+        $user = BotUser::query()->firstOrCreate(['chat_id' => $chatId], ['isactive' => true]);
+
+        if ($user->isactive) {
+            $this->telegram->sendMessage([
+                'chat_id' => $chatId,
+                'text' => __('telegram.user_isnt_active'),
+            ]);
+            return;
+        }
+
         $botUserInfo = $update->getMessage();
         if (isset($user->lang)) {
             Session::put('locale', $user->lang);
@@ -344,7 +353,7 @@ class TelegramController extends Controller
                 $user->save();
                 $this->sendSettings($chatId, $user);
             } else {
-                $user->isactive = true;
+//                $user->isactive = true;
                 $user->step = 'OFFER';
                 $user->save();
                 $this->sendOffer($chatId);

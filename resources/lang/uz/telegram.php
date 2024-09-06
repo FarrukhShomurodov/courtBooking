@@ -28,4 +28,5 @@ return [
     'send_new_name' => 'Iltimos, yangi ismingizni yuboring.',
     'name_successfully_changed' => 'Ism muvaffaqiyatli o‘zgartirildi.',
     'support_connect' => 'Qo‘llab-quvvatlash bilan bog‘lanish',
+    'user_isnt_active' => 'Hisobingiz faol emas. Iltimos, qo‘llab-quvvatlash xizmatiga murojaat qiling.'
 ];
