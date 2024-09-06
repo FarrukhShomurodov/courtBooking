@@ -42,16 +42,16 @@
                     <span id="description">{{ $stadium->description }}</span>
                     <p class="pointer mt-15" id="read-more">Читать полностью</p>
                     <div class="w-100 mt-30">
-                        <div class="d-flex justify-content-between align-items-center address">
-                            <h2 id="address-text">{{ $stadium->address }}</h2>
-                            <img src="{{ asset('img/findz/icons/copy.svg') }}" alt="copy icon" id="copy-icon"
-                                 style="cursor: pointer;">
-                        </div>
-                        <a href="{{ $stadium->map_link }}">
-                            <img class="yamap mt-15"
-                                 src="https://static-maps.yandex.ru/v1?lang=en_US&ll=28.97709,41.005233&z=14&theme=dark&apikey=dbbcb516-093e-4f66-9fcf-3a152aa0d7bd"
-                                 style="margin: 0; border-radius: 20px; width: 100%; height: 100vh;">
-                        </a>
+                            <div class="d-flex justify-content-between align-items-center address">
+                                <h2 id="address-text">{{ $stadium->address }}</h2>
+                                <img src="{{ asset('img/findz/icons/copy.svg') }}" alt="copy icon" id="copy-icon"
+                                     style="cursor: pointer;">
+                            </div>
+                            <a  target="_blank" href="{{ $stadium->map_link }}">
+                                <img class="yamap mt-15"
+                                     src="https://static-maps.yandex.ru/v1?lang=en_US&ll=28.97709,41.005233&z=14&theme=dark&apikey=dbbcb516-093e-4f66-9fcf-3a152aa0d7bd"
+                                     style="margin: 0; border-radius: 20px; width: 100%; height: 100vh;">
+                            </a>
                     </div>
                 </div>
             </div>
