@@ -9,6 +9,6 @@ class BookingRepository
 {
     public function byDate($date): Collection|array
     {
-      return Booking::query()->where('date', $date)->where('status', 'paid')->get();
+        return Booking::query()->where('date', $date)->get();
     }
 }

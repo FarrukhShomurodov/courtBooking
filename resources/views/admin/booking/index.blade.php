@@ -60,14 +60,16 @@
                                                 @php
                                                     $bookingId = 0;
                                                     $hasBooking = false;
+                                                    $isPaid = false;
                                                     $currentTime = Carbon::createFromTime($i, 0, 0);
-                                                    foreach($court->bookings as $booking) {
-                                                        $bookingId = $booking->id;
+                                                    foreach($court->bookings as $booking){
                                                         if (Carbon::parse($booking->date)->isToday()) {
                                                             $bookingStartTime = Carbon::parse($booking->start_time);
                                                             $bookingEndTime = Carbon::parse($booking->end_time);
                                                             if ($currentTime->between($bookingStartTime, $bookingEndTime)) {
                                                                 $hasBooking = true;
+                                                                $bookingId = $booking->id;
+                                                                $isPaid = $booking->status === 'paid';
                                                                 break;
                                                             }
                                                         }
@@ -76,7 +78,7 @@
                                                 <td style="padding: 0px !important;" data-court-id="{{$court->id}}">
                                                     <div class=" @if($hasBooking) booking-cell @endif"
                                                          data-booking-id="{{$bookingId}}"
-                                                         style="width: 100%; height: 43.5px; @if($hasBooking) background-color: #ff294d; @endif"></div>
+                                                         style="width: 100%; height: 43.5px; @if($hasBooking && $isPaid) background-color: #006400; @elseif($hasBooking && !$isPaid) background-color: #ff294d; @endif"></div>
                                                 </td>
                                             @endforeach
                                         </tr>
@@ -128,6 +130,7 @@
                                         <input type="hidden" name="court_id" id="courtInput">
                                     </div>
                                 </div>
+
                                 <div class="mb-3">
                                     <label class="form-label" for="fullName">{{ __('book.fio') }}</label>
                                     <input type="text" name="full_name" class="form-control" id="fullName"
@@ -320,6 +323,7 @@
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (response) {
+                        console.log(response)
                         displayBookings(response);
                     },
                     error: function (err) {
@@ -338,6 +342,7 @@
                     const startTime = booking.start_time;
                     const endTime = booking.end_time;
                     const bookingId = booking.id;
+                    const isPaid = booking.status === 'paid';
 
                     const startHour = parseInt(startTime.split(':')[0], 10);
                     const endHour = parseInt(endTime.split(':')[0], 10);
@@ -347,7 +352,7 @@
                     if (courtColumn !== -1) {
                         for (let i = startHour; i <= endHour; i++) {
                             const cell = $(`.table tbody tr:eq(${i}) td:eq(${courtColumn})`);
-                            cell.css('background-color', '#ff294d');
+                            cell.css('background-color', `${isPaid ? '#006400' : '#ff294d'} `);
                             cell.find('div').addClass('booking-cell').data('booking-id', bookingId);
                         }
                     }
