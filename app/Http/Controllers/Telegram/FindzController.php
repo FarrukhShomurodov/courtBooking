@@ -11,7 +11,6 @@ use App\Models\SportType;
 use App\Models\Stadium;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class FindzController extends Controller
@@ -31,47 +30,26 @@ class FindzController extends Controller
         $startTime = $request->input('start_time');
         $endTime = $request->input('end_time');
 
-        if ($date || ($startTime && $endTime)) {
-            // Если есть дата или оба времени
-            $courts = $sportTypes->first()->courts()
-                ->where('is_active', true)
-                ->with('sportTypes')
-                ->with('stadium')
-                ->with(['bookings' => function ($query) use ($date, $startTime, $endTime) {
-                    if ($date) {
-                        $query->where('date', $date);
-                        $query->where('status', 'paid');
-                    }
+        // Получаем стадионы по выбранному типу спорта
+        $stadiums = SportType::findOrFail($sportTypeId)->stadiums()->where('is_active', true)->get();
 
-                    if ($startTime && $endTime) {
-                        $query->where(function ($query) use ($startTime, $endTime) {
-                            $query->whereBetween('start_time', [$startTime, $endTime])
-                                ->orWhereBetween('end_time', [$startTime, $endTime])
-                                ->orWhere(function ($query) use ($startTime, $endTime) {
-                                    $query->where('start_time', '<', $startTime)
-                                        ->where('end_time', '>', $endTime);
-                                });
-                        });
-                    }
-                }])
-                ->get();
+        // Проверяем наличие свободных кортов и фильтруем стадионы
+        $stadiums->each(function ($stadium) use ($date, $startTime, $endTime) {
+            $stadium->filteredCourts = $stadium->filterCourts($date, $startTime, $endTime);
+        });
 
-            $courts = $courts->filter(function ($court) {
-                return $court->bookings->isEmpty();
-            });
-        } else {
-            // Без фильтрации по бронированиям
-            $courts = $sportTypes->first()->courts()
-                ->where('is_active', true)
-                ->with('sportTypes')
-                ->with('stadium')
-                ->with('bookings')
-                ->get();
+        // Фильтруем стадионы без свободных кортов
+        $stadiums = $stadiums->filter(function ($stadium) {
+            return $stadium->filteredCourts->isNotEmpty();
+        });
+
+        if ($stadiums->isEmpty()) {
+            $stadiums = collect();
         }
 
-        return view('findz.pages.courts', [
+        return view('findz.pages.stadiums', [
             'sportTypes' => $sportTypes,
-            'courts' => $courts,
+            'stadiums' => $stadiums,
             'currentSportTypeId' => $sportTypeId
         ]);
     }
@@ -80,52 +58,34 @@ class FindzController extends Controller
     {
         $sportTypes = SportType::all();
 
+        $sportTypeId = $sportType->id ?? SportType::first()->id;
+
         $date = $request->input('date');
+
         $startTime = $request->input('start_time');
         $endTime = $request->input('end_time');
 
-        if ($date || ($startTime && $endTime)) {
-            // Если есть дата или оба времени
-            $courts = $sportType->courts()
-                ->where('is_active', true)
-                ->with('sportTypes')
-                ->with('stadium')
-                ->with(['bookings' => function ($query) use ($date, $startTime, $endTime) {
-                    if ($date) {
-                        $query->where('date', $date);
-                        $query->where('status', 'paid');
-                    }
+        // Получаем стадионы по выбранному типу спорта
+        $stadiums = SportType::findOrFail($sportTypeId)->stadiums()->where('is_active', true)->get();
 
-                    if ($startTime && $endTime) {
-                        $query->where(function ($query) use ($startTime, $endTime) {
-                            $query->whereBetween('start_time', [$startTime, $endTime])
-                                ->orWhereBetween('end_time', [$startTime, $endTime])
-                                ->orWhere(function ($query) use ($startTime, $endTime) {
-                                    $query->where('start_time', '<', $startTime)
-                                        ->where('end_time', '>', $endTime);
-                                });
-                        });
-                    }
-                }])
-                ->get();
+        // Проверяем наличие свободных кортов и фильтруем стадионы
+        $stadiums->each(function ($stadium) use ($date, $startTime, $endTime) {
+            $stadium->filteredCourts = $stadium->filterCourts($date, $startTime, $endTime);
+        });
 
-            $courts = $courts->filter(function ($court) {
-                return $court->bookings->isEmpty();
-            });
-        } else {
-            // Без фильтрации по бронированиям
-            $courts = $sportType->courts()
-                ->where('is_active', true)
-                ->with('sportTypes')
-                ->with('stadium')
-                ->with('bookings')
-                ->get();
+        // Фильтруем стадионы без свободных кортов
+        $stadiums = $stadiums->filter(function ($stadium) {
+            return $stadium->filteredCourts->isNotEmpty();
+        });
+
+        if ($stadiums->isEmpty()) {
+            $stadiums = collect();
         }
 
-        return view('findz.pages.courts', [
+        return view('findz.pages.stadiums', [
             'sportTypes' => $sportTypes,
-            'courts' => $courts,
-            'currentSportTypeId' => $sportType->id
+            'stadiums' => $stadiums,
+            'currentSportTypeId' => $sportTypeId
         ]);
     }
 
@@ -213,20 +173,23 @@ class FindzController extends Controller
         return view('findz.pages.show.coach', compact('coach', 'minPrice', 'currentSportTypeId'));
     }
 
-    public function courtShow(Court $court): View
+    public function stadiumShow(Stadium $stadium, Request $request): View
     {
-        $currentSportTypeId = false;
+        $currentSportTypeId = $request->get('sportType');
 
-        return view('findz.pages.show.court', compact('court', 'currentSportTypeId'));
+        return view('findz.pages.show.stadium', compact('stadium', 'currentSportTypeId'));
     }
 
 
     public function book(Request $request): View
     {
-        $courts = Court::with('schedules')->where('is_active', true)->get();
         $currentSportTypeId = $request->input('sportType');
+        $stadium = Stadium::query()->find($request->get('stadium'));
+        $courts = $stadium->courts()->where('is_active', true)->where('sport_type_id', $currentSportTypeId)->get();
+
         $isUpdate = false;
-        return view('findz.book', compact('courts', 'currentSportTypeId', 'isUpdate'));
+
+        return view('findz.book', compact('courts','stadium', 'currentSportTypeId', 'isUpdate'));
     }
 
     public function bookUpdate(Booking $booking, Request $request): View

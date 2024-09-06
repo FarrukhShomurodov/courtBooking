@@ -75,4 +75,51 @@ class Stadium extends Model
         ];
     }
 
+    public function getMinimumCourtCost(): ?int
+    {
+        // Получаем минимальную стоимость из всех кортов стадиона
+        return $this->courts->map(function ($court) {
+            return $court->getMinimumCost();
+        })->filter()->min();
+    }
+
+    public function filterCourts($date = null, $startTime = null, $endTime = null)
+    {
+        // Получаем все активные корты стадиона
+        $courts = $this->courts()->where('is_active', true)
+            ->with('sportTypes')
+            ->with('stadium')
+            ->with(['bookings' => function ($query) use ($date, $startTime, $endTime) {
+                if ($date) {
+                    $query->where('date', $date)
+                        ->where('status', 'paid');
+                }
+
+                if ($startTime && $endTime) {
+                    $query->where(function ($query) use ($startTime, $endTime) {
+                        $query->whereBetween('start_time', [$startTime, $endTime])
+                            ->orWhereBetween('end_time', [$startTime, $endTime])
+                            ->orWhere(function ($query) use ($startTime, $endTime) {
+                                $query->where('start_time', '<', $startTime)
+                                    ->where('end_time', '>', $endTime);
+                            });
+                    });
+                }
+            }])
+            ->get();
+
+        // Проверяем, есть ли у какого-либо корта свободное время
+        $availableCourts = $courts->filter(function ($court) {
+            return $court->bookings->isEmpty();
+        });
+
+        // Если есть свободные корты, возвращаем их
+        if ($availableCourts->isNotEmpty()) {
+            return $availableCourts;
+        }
+
+        // Если свободных кортов нет, возвращаем все корты без фильтрации
+        return $courts;
+    }
+
 }

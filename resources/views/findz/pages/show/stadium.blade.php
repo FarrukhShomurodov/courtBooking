@@ -7,7 +7,7 @@
 
 @section('header')
     <header class="d-flex row align-items-center justify-content-between fixed-header">
-        <a href="{{ route('webapp', ['sportType' => $court->sportTypes->id, 'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}">
+        <a href="{{ route('webapp', ['sportType' => $stadium->sportTypes[0]->id, 'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}">
             <img src="{{ asset('img/findz/icons/back.svg') }}" alt="back icon" class="header-icon">
         </a>
         <img id="favourite" src="{{ asset('img/findz/icons/favourite.svg') }}" alt="favourite icon" class="header-icon">
@@ -18,10 +18,10 @@
     <div class="container_mobile">
         <div class="content">
             <div class="stadiums">
-                @if($court->photos)
+                @if($stadium->photos)
                     <div class="court_images">
                         <div class="scroll-container">
-                            @foreach(json_decode($court->photos) as $photo)
+                            @foreach(json_decode($stadium->photos) as $photo)
                                 <img src="{{ \Illuminate\Support\Facades\Storage::url($photo) }}" alt="Stadium photos"/>
                             @endforeach
                         </div>
@@ -30,24 +30,24 @@
 
                 <div class="date_time d-flex row align-items-center gap-12">
                     <div class="d-flex row align-items-center justify-content-center ">
-                        <p>{{ $court->sportTypes->name }}</p>
+                        <p>{{ $stadium->sportTypes[0]->name }}</p>
                     </div>
                     <div class="d-flex row align-items-center justify-content-center">
-                        <p>от {{ $court->getMinimumCost() }}.000 uzs/час</p>
+                        <p>от {{ $stadium->getMinimumCourtCost() }}.000 uzs/час</p>
                     </div>
                 </div>
 
                 <div class="stadium_desc mt-15">
-                    <h1>{{ $court->name }}</h1>
-                    <span id="description">{{ $court->description }}</span>
+                    <h1>{{ $stadium->name }}</h1>
+                    <span id="description">{{ $stadium->description }}</span>
                     <p class="pointer mt-15" id="read-more">Читать полностью</p>
                     <div class="w-100 mt-30">
                         <div class="d-flex justify-content-between align-items-center address">
-                            <h2 id="address-text">{{ $court->stadium->address }}</h2>
+                            <h2 id="address-text">{{ $stadium->address }}</h2>
                             <img src="{{ asset('img/findz/icons/copy.svg') }}" alt="copy icon" id="copy-icon"
                                  style="cursor: pointer;">
                         </div>
-                        <a href="{{ $court->stadium->map_link }}">
+                        <a href="{{ $stadium->map_link }}">
                             <img class="yamap mt-15"
                                  src="https://static-maps.yandex.ru/v1?lang=en_US&ll=28.97709,41.005233&z=14&theme=dark&apikey=dbbcb516-093e-4f66-9fcf-3a152aa0d7bd"
                                  style="margin: 0; border-radius: 20px; width: 100%; height: 100vh;">
@@ -76,7 +76,7 @@
 @section('footer')
     <footer class="w-100 d-flex justify-content-around row">
         <button id="close-btn" class="nav_active btn footer_btn"
-                onclick="location.href='{{ route('findz.book', ['court' => $court->id, 'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}'">
+                onclick="location.href='{{ route('findz.book', ['stadium' => $stadium->id,'sportType' => $currentSportTypeId,  'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}'">
             {{ __('findz/book.book_now') }}
         </button>
     </footer>
@@ -85,7 +85,7 @@
 @section('extra-scripts')
     <script>
         $(document).ready(function () {
-            LlfromAddress('{{$court->stadium->address}}')
+            LlfromAddress('{{$stadium->address}}')
 
             function truncateText(selector, maxChars) {
                 var element = $(selector);

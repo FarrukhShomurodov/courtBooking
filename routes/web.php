@@ -61,13 +61,13 @@ Route::prefix('telegram')->group(function () {
 
     // Main pages
     Route::get('/webapp', [FindzController::class, 'courts'])->name('webapp');
-    Route::get('/courts/sport-type/{sportType}', [FindzController::class, 'courtsBySportType'])->name('findz.courts.filter.sport.type');
+    Route::get('/stadiums/sport-type/{sportType}', [FindzController::class, 'courtsBySportType'])->name('findz.stadiums.filter.sport.type');
     Route::get('/coaches/sport-type/{sportType}', [FindzController::class, 'coachesBySportType'])->name('findz.coaches.filter.sport.type');
     Route::get('/filter/{sportType}', [FindzController::class, 'filter'])->name('findz.filter');
 
     // Show pages
     Route::get('/show/coach/{coach}', [FindzController::class, 'coachShow'])->name('findz.show.coach');
-    Route::get('/show/court/{court}', [FindzController::class, 'courtShow'])->name('findz.show.court');
+    Route::get('/show/stadium/{stadium}', [FindzController::class, 'stadiumShow'])->name('findz.show.stadium');
 
 
     Route::get('/book', [FindzController::class, 'book'])->name('findz.book');

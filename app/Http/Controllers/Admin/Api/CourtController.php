@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Court;
 use App\Models\Booking;
+use App\Models\Stadium;
 use App\Traits\BookingTrait;
 use App\Traits\PhotoTrait;
 use Illuminate\Http\JsonResponse;
@@ -18,9 +19,10 @@ class CourtController extends Controller
     public function getSchedule(Request $request)
     {
         $date = $request->query('date');
+        $stadium = Stadium::query()->find($request->get('stadium'));
 
         // Fetch courts with schedules and bookings for the given date
-        $courts = Court::with(['schedules', 'stadium'])->where('is_active', true)
+        $courts = $stadium->courts()->with(['schedules', 'stadium'])->where('is_active', true)->where('sport_type_id', $request->get('sportTypeId'))
             ->get();
 
         $bookings = Booking::whereDate('date', $date)->where('status', 'paid')

@@ -1,6 +1,11 @@
 @php
     use Carbon\Carbon;
 @endphp
+@php
+    $selectedCourt = $selectedCourt ?? request('stadium');
+    $selectedStartTime = $selectedStartTime ?? request('start_time');
+    $selectedEndTime = $selectedEndTime ?? request('end_time');
+@endphp
 
 @extends('findz.layouts.app')
 
@@ -31,16 +36,15 @@
                 <img src="{{ asset('img/findz/icons/next.svg') }}" alt="next icon" class="header-icon">
             </button>
         </div>
-
         <div class="time-slots">
-            <div class="court_stadium"> {{ $courts->first()->stadium->name }}</div>
+            <div class="court_stadium"> {{ $stadium->name }}</div>
             <table class="slots-table">
                 <thead>
-                <tr>
-                    @foreach($courts as $court)
-                        <th data-court-id="{{ $court->id }}">{{ $court->name }}</th>
-                    @endforeach
-                </tr>
+                    <tr>
+                        @foreach($courts as $court)
+                            <th data-court-id="{{ $court->id }}">{{ $court->name }}</th>
+                        @endforeach
+                    </tr>
                 </thead>
 
                 <tbody class="table-border-bottom-0">
@@ -71,11 +75,6 @@
                                             }
                                         }
                                     }
-                                @endphp
-                                @php
-                                    $selectedCourt = $selectedCourt ?? request('court');
-                                    $selectedStartTime = $selectedStartTime ?? request('start_time');
-                                    $selectedEndTime = $selectedEndTime ?? request('end_time');
                                 @endphp
 
                                 <div
@@ -206,7 +205,7 @@
                 $.ajax({
                     url: '/api/get-schedule',
                     method: 'GET',
-                    data: {date: selectedDate},
+                    data: {date: selectedDate, stadium: {{ request('stadium') }}, sportTypeId: {{ $currentSportTypeId }} },
                     success: function (res) {
                         updateSlots(res);
                     },
@@ -258,7 +257,7 @@
                         @if($isUpdate)
                             selected = oldSelectedSlot;
                         @else
-                            selected = (court.id == {{ request('court') }} && (schedule.start_time.slice(0, 5) >= "{{ $selectedStartTime }}" && schedule.start_time.slice(0, 5) <= "{{ $selectedEndTime }}"));
+                            selected = (court.id == {{ request('stadium') }} && (schedule.start_time.slice(0, 5) >= "{{ $selectedStartTime }}" && schedule.start_time.slice(0, 5) <= "{{ $selectedEndTime }}"));
                             let endTime = "{{ $selectedEndTime }}"
                         @endif
 
