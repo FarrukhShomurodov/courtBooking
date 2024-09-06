@@ -80,11 +80,9 @@
                         <td>{{ $statistic['statistic']['bot_book_count'] }}</td>
                         <td>{{ $statistic['statistic']['manual_book_count'] }}</td>
 
-
-
-                        <td>{{ number_format($statistic['statistic']['total_revenue'], 0) }}</td>
-                        <td>{{ number_format($statistic['statistic']['bot_revenue'], 0) }}</td>
-                        <td>{{ number_format($statistic['statistic']['manual_revenue'], 0) }}</td>
+                        <td>{{ is_float($statistic['statistic']['total_revenue']) ? round($statistic['statistic']['total_revenue']) : $statistic['statistic']['total_revenue'] }}</td>
+                        <td>{{ is_float($statistic['statistic']['bot_revenue']) ? round($statistic['statistic']['bot_revenue']) : $statistic['statistic']['bot_revenue'] }}</td>
+                        <td>{{ is_float($statistic['statistic']['manual_revenue']) ? round($statistic['statistic']['manual_revenue']) : $statistic['statistic']['manual_revenue'] }}</td>
                     </tr>
                 @endforeach
                 </tbody>
