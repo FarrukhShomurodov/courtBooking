@@ -82,7 +82,6 @@
                         <td>{{ $statistic['statistic']['bot_book_count'] }}</td>
                         <td>{{ $statistic['statistic']['manual_book_count'] }}</td>
 
-
                         <td>{{ $statistic['statistic']['total_revenue'] }}</td>
                         <td>{{ $statistic['statistic']['bot_revenue'] }}</td>
                         <td>{{ $statistic['statistic']['manual_revenue'] }}</td>
