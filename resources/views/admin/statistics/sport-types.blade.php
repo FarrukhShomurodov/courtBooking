@@ -68,6 +68,7 @@
                         <td>{{ is_float($statistic['statistic']['manual_revenue']) ? round($statistic['statistic']['manual_revenue']) : $statistic['statistic']['manual_revenue'] }}</td>
                         <td>{{ is_float($statistic['statistic']['bot_revenue']) ? round($statistic['statistic']['bot_revenue']) : $statistic['statistic']['bot_revenue'] }}</td>
 
+
                         <td>{{ $statistic['statistic']['most_booked_date'] ?? '-' }}</td>
                         <td>
                             @if($statistic['statistic']['most_booked_time_slot'])
