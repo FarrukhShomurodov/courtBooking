@@ -79,6 +79,7 @@
                         <td>{{ $statistic['statistic']['total_book_count'] }}</td>
                         <td>{{ $statistic['statistic']['bot_book_count'] }}</td>
                         <td>{{ $statistic['statistic']['manual_book_count'] }}</td>
+
                         <td>{{ number_format($statistic['statistic']['total_revenue'], 0) }}</td>
                         <td>{{ number_format($statistic['statistic']['bot_revenue'], 0) }}</td>
                         <td>{{ number_format($statistic['statistic']['manual_revenue'], 0) }}</td>

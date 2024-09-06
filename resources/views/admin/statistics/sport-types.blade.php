@@ -22,7 +22,8 @@
             <form method="GET" action="{{ route('statistics.sport.type') }}">
                 <div class="d-flex">
                     <div style="margin-right: 10px">
-                        <input onchange="this.form.submit()" name="date" type="date" class="form-control" value="{{ request('date') }}">
+                        <input onchange="this.form.submit()" name="date" type="date" class="form-control"
+                               value="{{ request('date') }}">
                     </div>
                     <div class="me-2">
                         <select id="select2"
@@ -62,9 +63,11 @@
                     <tr>
                         <td>{{ $statistic['spotType']->name }}</td>
                         <td>{{ $statistic['statistic']['total_bookings'] }}</td>
-                        <td>{{ number_format($statistic['statistic']['total_revenue'], 0) }}</td>
-                        <td>{{ number_format($statistic['statistic']['manual_revenue'], 0) }}</td>
-                        <td>{{ number_format($statistic['statistic']['bot_revenue'], 0) }}</td>
+
+                        <td>{{ is_float($statistic['statistic']['total_revenue']) ? round($statistic['statistic']['total_revenue']) : $statistic['statistic']['total_revenue'] }}</td>
+                        <td>{{ is_float($statistic['statistic']['manual_revenue']) ? round($statistic['statistic']['manual_revenue']) : $statistic['statistic']['manual_revenue'] }}</td>
+                        <td>{{ is_float($statistic['statistic']['bot_revenue']) ? round($statistic['statistic']['bot_revenue']) : $statistic['statistic']['bot_revenue'] }}</td>
+
                         <td>{{ $statistic['statistic']['most_booked_date'] ?? '-' }}</td>
                         <td>
                             @if($statistic['statistic']['most_booked_time_slot'])
