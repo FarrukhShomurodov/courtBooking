@@ -28,7 +28,15 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::group(['middleware' => 'role:owner stadium|admin'], function () {
-        Route::resource('/stadiums', StadiumController::class)->names('stadiums');
+        Route::group(['middleware' => 'role:owner stadium|admin'], function () {
+            Route::resource('/stadiums', StadiumController::class)->names('stadiums');
+        });
+
+        Route::group(['middleware' => 'role:admin'], function () {
+            Route::get('/stadiums/create', [StadiumController::class, 'create'])->name('stadiums.create');
+            Route::get('/stadiums/{stadium}/edit', [StadiumController::class, 'edit'])->name('stadiums.edit');
+        });
+
         Route::resource('/courts', CourtController::class);
         Route::get('/all-bookings', [BookingController::class, 'fetchAllBooking'])->name('all-bookings');
 
