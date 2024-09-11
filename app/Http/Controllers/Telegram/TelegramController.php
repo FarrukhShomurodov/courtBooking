@@ -70,6 +70,21 @@ class TelegramController extends Controller
             $this->sendOtp($chatId, $phoneNumber, $user);
             return;
         }
+        elseif ($text && ($user->step === 'PHONE_REQUEST' || $user->step === 'CHANGE_PHONE')) {
+            $phoneNumber = $text;
+            if (preg_match('/^\+998\d{9}$/', $phoneNumber)) {
+                if ($user->step !== 'CHANGE_PHONE') {
+                    $user->step = 'VERIFY_PHONE';
+                    $user->save();
+                }
+
+                $user->phone = $phoneNumber;
+                $user->save();
+                $this->sendOtp($chatId, $phoneNumber, $user);
+            } else {
+                $this->sendMessage($chatId, __('telegram.send_phone_mes'));
+            }
+        }
 
         if ($user->step === 'VERIFY_PHONE' || $user->step === 'CHANGE_PHONE') {
             if ($text !== __('telegram.resend_phone_number')) {
