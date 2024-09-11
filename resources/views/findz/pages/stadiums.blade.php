@@ -12,11 +12,11 @@
 
 
 @section('header')
-    <header class="d-flex row justify-content-between align-items-center">
-        <h1 class="findz">FINDZ</h1>
-        <a href="{{ route('findz.filter', $currentSportTypeId) }}">
-            <img src="{{ asset('img/findz/icons/filter.svg') }}" alt="filter icon">
-        </a>
+    <header class="d-flex row justify-content-center align-items-center">
+        <h3 class="findz">FINDZ</h3>
+{{--        <a href="{{ route('findz.filter', $currentSportTypeId) }}">--}}
+{{--            <img src="{{ asset('img/findz/icons/filter.svg') }}" alt="filter icon">--}}
+{{--        </a>--}}
     </header>
 @endsection
 
