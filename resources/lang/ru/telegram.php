@@ -24,7 +24,7 @@ return array(
     'name' => 'Имя',
     'phone' => 'Телефон',
     'back' => 'Назад',
-    'language_changed' => 'Язык успешно изменён на  :language',
+    'language_changed' => 'Язык успешно изменён',
     'send_new_name' => 'Пожалуйста, отправьте ваше новое имя.',
     'name_successfully_changed' => 'Имя успешно изменено.',
     'support_connect' => 'Связаться с поддержкой',

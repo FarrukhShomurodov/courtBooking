@@ -24,7 +24,7 @@ return [
     'name' => 'Ism',
     'phone' => 'Telefon',
     'back' => 'Orqaga',
-    'language_changed' => 'Til muvaffaqiyatli o‘zgartirildi :language ga',
+    'language_changed' => 'Til muvaffaqiyatli o‘zgartirildi',
     'send_new_name' => 'Iltimos, yangi ismingizni yuboring.',
     'name_successfully_changed' => 'Ism muvaffaqiyatli o‘zgartirildi.',
     'support_connect' => 'Qo‘llab-quvvatlash bilan bog‘lanish',
