@@ -69,8 +69,7 @@ class TelegramController extends Controller
 
             $this->sendOtp($chatId, $phoneNumber, $user);
             return;
-        }
-        elseif ($text && ($user->step === 'PHONE_REQUEST' || $user->step === 'CHANGE_PHONE')) {
+        } elseif ($text && ($user->step === 'PHONE_REQUEST' || $user->step === 'CHANGE_PHONE')) {
             $phoneNumber = $text;
             if (preg_match('/^\+998\d{9}$/', $phoneNumber)) {
                 if ($user->step !== 'CHANGE_PHONE') {
@@ -86,7 +85,7 @@ class TelegramController extends Controller
             } else {
                 $this->telegram->sendMessage([
                     'chat_id' => $chatId,
-                    'text' =>__('telegram.send_phone_mes'),
+                    'text' => __('telegram.send_phone_mes'),
                 ]);
             }
         }
@@ -332,7 +331,19 @@ class TelegramController extends Controller
         $otp = $this->generateOtp();
 
         $otpTEXT = 'Код подтверждения для регистрации в Telegram-боте FindzBot: ' . $otp;
-        $this->otpService->sendMessage(str_replace('+', '', $phoneNumber), $otpTEXT);
+        $otpService = $this->otpService->sendMessage(str_replace('+', '', $phoneNumber), $otpTEXT);
+
+        if (!$otpService) {
+            $user->update([
+                'step' => 'PHONE_REQUEST'
+            ]);
+
+            $this->telegram->sendMessage([
+                'chat_id' => $chatId,
+                'text' => __('telegram.occur_error')
+            ]);
+            return;
+        }
 
         $user->sms_code = $otp;
         $user->save();

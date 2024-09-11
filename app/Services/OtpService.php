@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -29,11 +30,18 @@ class OtpService
 
     public function sendMessage($phoneNumber, $message): string
     {
-        return Http::withToken($this->getToken())->post('notify.eskiz.uz/api/message/sms/send', [
-            'mobile_phone' => $phoneNumber,
-            'message' => $message,
-            'from' => 4546,
-            'callback_url' => '',
-        ])->body();
+        try {
+            $response = Http::withToken($this->getToken())->post('https://notify.eskiz.uz/api/message/sms/send', [
+                'mobile_phone' => $phoneNumber,
+                'message' => $message,
+                'from' => 4546,
+                'callback_url' => '',
+            ]);
+
+            return true;
+        } catch (ConnectException $e) {
+            Log::error('Ошибка соединения: ' . $e->getMessage());
+            return false;
+        }
     }
 }

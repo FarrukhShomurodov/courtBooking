@@ -30,4 +30,5 @@ return [
     'support_connect' => 'Qo‘llab-quvvatlash bilan bog‘lanish',
     'user_isnt_active' => 'Hisobingiz faol emas. Iltimos, qo‘llab-quvvatlash xizmatiga murojaat qiling.',
     'faq' => 'Tez-tez savollar',
+    'occur_error' => "Xato yuz berdi qayta urinib ko'ring",
 ];
