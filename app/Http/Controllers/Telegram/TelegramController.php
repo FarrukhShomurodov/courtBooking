@@ -82,7 +82,10 @@ class TelegramController extends Controller
                 $user->save();
                 $this->sendOtp($chatId, $phoneNumber, $user);
             } else {
-                $this->sendMessage($chatId, __('telegram.send_phone_mes'));
+                $this->telegram->sendMessage([
+                    'chat_id' => $chatId,
+                    'text' =>__('telegram.send_phone_mes'),
+                ]);
             }
             return;
         }
