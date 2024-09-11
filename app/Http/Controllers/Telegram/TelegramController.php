@@ -67,27 +67,11 @@ class TelegramController extends Controller
             $user->phone = $phoneNumber;
             $user->save();
 
-            try {
-                $this->sendOtp($chatId, $phoneNumber, $user);
-                return;
-            } catch (\Exception) {
-                $user->update([
-                    'step' => 'PHONE_REQUEST'
-                ]);
-
-                $this->telegram->sendMessage([
-                    'chat_id' => $chatId,
-                    'text' => __('telegram.occur_error')
-                ]);
-                return;
-            }
+            $this->sendOtp($chatId, $phoneNumber, $user);
+            return;
         } elseif ($text && ($user->step === 'PHONE_REQUEST' || $user->step === 'CHANGE_PHONE')) {
             $phoneNumber = $text;
             if (preg_match('/^\+998\d{9}$/', $phoneNumber)) {
-                if ($user->step !== 'CHANGE_PHONE') {
-                    $user->step = 'VERIFY_PHONE';
-                    $user->save();
-                }
 
                 $user->phone = $phoneNumber;
                 $user->save();
@@ -355,6 +339,11 @@ class TelegramController extends Controller
                 'text' => __('telegram.occur_error')
             ]);
             return;
+        }else{
+            if ($user->step !== 'CHANGE_PHONE') {
+                $user->step = 'VERIFY_PHONE';
+                $user->save();
+            }
         }
 
         $user->sms_code = $otp;
