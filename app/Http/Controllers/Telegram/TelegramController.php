@@ -81,13 +81,14 @@ class TelegramController extends Controller
                 $user->phone = $phoneNumber;
                 $user->save();
                 $this->sendOtp($chatId, $phoneNumber, $user);
+                return;
+
             } else {
                 $this->telegram->sendMessage([
                     'chat_id' => $chatId,
                     'text' =>__('telegram.send_phone_mes'),
                 ]);
             }
-            return;
         }
 
         if ($user->step === 'VERIFY_PHONE' || $user->step === 'CHANGE_PHONE') {
