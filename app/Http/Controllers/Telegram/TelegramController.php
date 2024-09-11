@@ -58,26 +58,18 @@ class TelegramController extends Controller
 
         if ($update->getMessage()->has('contact')) {
             $phoneNumber = $update->getMessage()->getContact()->getPhoneNumber();
-
-            if ($user->step !== 'CHANGE_PHONE') {
-                $user->step = 'VERIFY_PHONE';
-                $user->save();
-            }
-
             $user->phone = $phoneNumber;
             $user->save();
-
             $this->sendOtp($chatId, $phoneNumber, $user);
             return;
         } elseif ($text && ($user->step === 'PHONE_REQUEST' || $user->step === 'CHANGE_PHONE')) {
             $phoneNumber = $text;
-            if (preg_match('/^\+998\d{9}$/', $phoneNumber)) {
 
+            if (preg_match('/^\+998\d{9}$/', $phoneNumber)) {
                 $user->phone = $phoneNumber;
                 $user->save();
                 $this->sendOtp($chatId, $phoneNumber, $user);
                 return;
-
             } else {
                 $this->telegram->sendMessage([
                     'chat_id' => $chatId,
