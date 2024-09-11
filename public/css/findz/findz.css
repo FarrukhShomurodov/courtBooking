@@ -17,7 +17,7 @@ body {
     /*if date time active - margin: 182px auto 0;*/
 }
 
-header, nav, .date_time, .select-lang{
+header, nav, .date_time, .select-lang {
     position: fixed;
     width: 343px;
     left: 50%;
@@ -138,6 +138,7 @@ footer {
     width: 100%;
     z-index: 10000;
     color: #CED1DD;
+    font-size: 14px;
 }
 
 .footer_active {
@@ -163,7 +164,7 @@ footer ul li a {
     width: 100%;
     overflow-x: scroll;
     scrollbar-width: none; /* For Firefox */
-    -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
 }
 
 .court_images::-webkit-scrollbar {
@@ -178,7 +179,7 @@ footer ul li a {
     margin-right: 10px; /* Space between images */
 }
 
-.select-lang{
+.select-lang {
     display: none;
     top: 100px;
     padding-top: 5px;
@@ -186,7 +187,7 @@ footer ul li a {
     z-index: 1000;
 }
 
-.select-lang a button{
+.select-lang a button {
     border: 1px solid #31303B;
     padding: 7px 16px;
     background-color: transparent;
@@ -194,7 +195,8 @@ footer ul li a {
     border-radius: 44px;
     font-weight: 600;
 }
-.selected-lang{
+
+.selected-lang {
     background-color: #B2F888 !important;
     color: black !important;
 }
