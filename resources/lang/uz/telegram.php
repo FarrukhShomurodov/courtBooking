@@ -5,7 +5,7 @@ return [
     'auth_success' => 'Avtorizatsiya muvaffaqiyatli!',
     'support' => '@username ga murojaat qiling yoki +998 90 000 00 00 raqamiga qo‘ng‘iroq qiling.',
     'send_phone_btn' => 'Telefon raqamini yuborish',
-    'send_phone_mes' => 'Iltimos, telefon raqamingizni yuboring.',
+    'send_phone_mes' => 'Iltimos, telefon raqamingizni quyidagi formatda yuboring: +998XX12345678.',
     'auth_code_mes' => 'Biz telefon raqamingizga autentifikatsiya kodini yubordik, iltimos, kodni kiriting.',
     'auth_code_resend_mes' => 'Agar kodni olmagan bo‘lsangiz, “kodni qayta yuborish” tugmasini bosing.',
     'phone_successfully_changed' => 'Telefon raqami muvaffaqiyatli o‘zgartirildi.',
