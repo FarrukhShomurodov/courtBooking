@@ -2,6 +2,11 @@
 
 @section('extra-css')
     <link rel="stylesheet" href="{{asset('css/findz/mybookings.css')}}"/>
+    <style>
+        .container_mobile {
+            margin: 65px auto 0;
+        }
+    </style>
 @endsection
 
 @section('header')
