@@ -540,7 +540,6 @@
                     } else {
                         previousSelectedSlot = null;
                     }
-
                     updateSelectedSlots();
                 }
             });
