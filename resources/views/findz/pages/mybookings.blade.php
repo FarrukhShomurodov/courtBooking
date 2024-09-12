@@ -7,7 +7,7 @@
 @section('header')
     <header class="d-flex row justify-content-around align-items-center booking_header">
         <h3 class="book pointer">{{ __('findz/book.bookings') }}</h3>
-        <h2 class="favourite pointer">{{ __('findz/book.favourites') }}</h2>
+        <h2 class="favourite pointer" style="display:none;">{{ __('findz/book.favourites') }}</h2>
     </header>
 @endsection
 
