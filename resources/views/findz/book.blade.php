@@ -26,7 +26,6 @@
 
 @section('content')
     <div class="container_mobile">
-
         <div class="date-selector">
             <button class="prev">
                 <img src="{{ asset('img/findz/icons/prev.svg') }}" alt="prev icon" class="header-icon">
@@ -40,11 +39,11 @@
             <div class="court_stadium"> {{ $stadium->name }}</div>
             <table class="slots-table">
                 <thead>
-                    <tr>
-                        @foreach($courts as $court)
-                            <th data-court-id="{{ $court->id }}">{{ $court->name }}</th>
-                        @endforeach
-                    </tr>
+                <tr>
+                    @foreach($courts as $court)
+                        <th data-court-id="{{ $court->id }}">{{ $court->name }}</th>
+                    @endforeach
+                </tr>
                 </thead>
 
                 <tbody class="table-border-bottom-0">
@@ -149,11 +148,16 @@
             let dateObject = new Date(selectedDate);
             let dayOfWeek = getRussianDayOfWeek(dateObject);
 
+            let currentMonth = dateObject.getMonth();
+            let currentYear = dateObject.getFullYear();
+            let lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
+
             flatpickr.localize(flatpickr.l10ns.ru);
             let flatpickrCalendar = flatpickr("#calendar_date", {
                 static: true,
                 disableMobile: true,
                 minDate: "today",
+                maxDate: lastDayOfMonth,
                 monthSelectorType: "static",
                 defaultDate: selectedDate,
                 onOpen: function () {
@@ -175,7 +179,7 @@
                 },
                 onChange: function (selectedDates, dateStr) {
                     selectedDate = dateStr
-                }
+                },
             });
 
             updateDateDisplay();
@@ -183,14 +187,35 @@
             $('.prev').click(function () {
                 dateObject.setDate(dateObject.getDate() - 1);
                 selectedDate = formatDate(dateObject);
-                updateDateDisplay();
+                updateButtonState();
             });
 
             $('.next').click(function () {
                 dateObject.setDate(dateObject.getDate() + 1);
                 selectedDate = formatDate(dateObject);
-                updateDateDisplay();
+
+                updateButtonState();
             });
+
+            function updateButtonState() {
+                let today = new Date();
+
+                if (dateObject <= today) {
+                    $('.prev').addClass('disabled');
+                } else {
+                    $('.prev').removeClass('disabled');
+                }
+
+                if (dateObject.getDate() >= lastDayOfMonth.getDate()) {
+                    $('.next').addClass('disabled');
+                } else {
+                    $('.next').removeClass('disabled');
+                }
+
+                updateDateDisplay();
+            }
+
+            updateButtonState()
 
             function updateDateDisplay() {
                 dayOfWeek = getRussianDayOfWeek(dateObject);
@@ -205,7 +230,11 @@
                 $.ajax({
                     url: '/api/get-schedule',
                     method: 'GET',
-                    data: {date: selectedDate, stadium: {{ request('stadium') }}, sportTypeId: {{ $currentSportTypeId }} },
+                    data: {
+                        date: selectedDate,
+                        stadium: {{ request('stadium') }},
+                        sportTypeId: {{ $currentSportTypeId }}
+                    },
                     success: function (res) {
                         updateSlots(res);
                     },
@@ -258,13 +287,13 @@
                             selected = oldSelectedSlot;
                         @else
                             selected = (court.id == {{ request('stadium') }} && (schedule.start_time.slice(0, 5) >= "{{ $selectedStartTime }}" && schedule.start_time.slice(0, 5) <= "{{ $selectedEndTime }}"));
-                            let endTime = "{{ $selectedEndTime }}"
+                        let endTime = "{{ $selectedEndTime }}"
                         @endif
 
                         let selectedClass = selected ? 'selected' : '';
                         let slotClass = hasBooking ? 'slot_booked' : '';
 
-                        if(schedule.start_time.slice(0, 5) == endTime){
+                        if (schedule.start_time.slice(0, 5) == endTime) {
                             console.log("=-")
                             row += `
                             <div class="slot next_slot"
@@ -276,7 +305,7 @@
                                 <span>${schedule.cost} т.с/ч</span>
                             </div>
                         `;
-                        }else{
+                        } else {
                             row += `
                             <div class="slot ${slotClass} ${selectedClass}"
                                 data-time="${schedule.start_time.slice(0, 5)}"
@@ -577,21 +606,21 @@
 
                                 @if($isUpdate)
                                     bookingData.date = @json($userBook->date);
-                                    $.ajax({
-                                        url: '/api/booking/{{$userBook->id}}',
-                                        method: 'PUT',
-                                        data: bookingData,
-                                        success: function (response) {
-                                            window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
-                                        },
-                                        error: function (err) {
-                                            let errors = err.responseJSON.message;
-                                            let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
-                                            $('.res_error').empty();
-                                            $('.res_error').append(errorHtml);
-                                            $('#error_modal').fadeIn().delay(5000).fadeOut();
-                                        }
-                                    });
+                                $.ajax({
+                                    url: '/api/booking/{{$userBook->id}}',
+                                    method: 'PUT',
+                                    data: bookingData,
+                                    success: function (response) {
+                                        window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
+                                    },
+                                    error: function (err) {
+                                        let errors = err.responseJSON.message;
+                                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
+                                        $('.res_error').empty();
+                                        $('.res_error').append(errorHtml);
+                                        $('#error_modal').fadeIn().delay(5000).fadeOut();
+                                    }
+                                });
                                 @else
                                 $.ajax({
                                     url: '/api/booking',

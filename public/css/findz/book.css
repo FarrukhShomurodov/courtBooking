@@ -261,3 +261,13 @@
     display: none;
     z-index: 1000;
 }
+
+.numInputWrapper{
+    display: none !important;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
