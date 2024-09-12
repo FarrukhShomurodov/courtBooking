@@ -134,7 +134,7 @@
 @section('footer')
     <footer class="w-100 d-flex justify-content-around row">
         <button id="close-btn"
-                class="nav_active btn footer_btn book">{{$isUpdate ? 'Готово' : __('findz/book.Оплатить через PayMe') }}</button>
+                class="nav_active btn footer_btn book disabled">{{$isUpdate ? 'Готово' : __('findz/book.Оплатить через PayMe') }}</button>
     </footer>
 @endsection
 
@@ -387,6 +387,7 @@
                         time: $(this).data('time'),
                         price: parseFloat($(this).data('price')),
                     });
+
                 });
 
                 $('.slot.next_slot').each(function () {
@@ -397,6 +398,12 @@
                         price: 0,
                     });
                 });
+
+                if (selectedSlots.length >= 1) {
+                    $('.book').removeClass('disabled');
+                }else{
+                    $('.book').addClass('disabled');
+                }
 
                 const groupedSlots = selectedSlots.reduce((groups, slot) => {
                     if (!groups[slot.field]) {
@@ -541,6 +548,22 @@
                         previousSelectedSlot = null;
                     }
                     updateSelectedSlots();
+                }
+
+                const selectedSlots = [];
+                $('.selected-slots .selected-slot').each(function () {
+                    selectedSlots.push({
+                        court_id: $(this).find('h2').data('court-id'),
+                        start_time: $(this).find('span[data-start-time]').data('start-time'),
+                        end_time: $(this).find('span[data-end-time]').data('end-time'),
+                        price: parseInt($(this).find('.cost_cancel_section h2').text().replace('т.с', '').trim(), 10)
+                    });
+                });
+
+                if (selectedSlots.length >= 1) {
+                    $('.book').removeClass('disabled');
+                }else{
+                    $('.book').addClass('disabled');
                 }
             });
 
