@@ -10,7 +10,7 @@
         <a href="{{ route('webapp', ['sportType' => $stadium->sportTypes[0]->id, 'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}">
             <img src="{{ asset('img/findz/icons/back.svg') }}" alt="back icon" class="header-icon">
         </a>
-        <img id="favourite" src="{{ asset('img/findz/icons/favourite.svg') }}" alt="favourite icon" class="header-icon">
+{{--        <img id="favourite" src="{{ asset('img/findz/icons/favourite.svg') }}" alt="favourite icon" class="header-icon">--}}
     </header>
 @endsection
 

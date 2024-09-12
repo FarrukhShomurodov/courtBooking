@@ -81,7 +81,7 @@
 
 @if ($currentRouteName == 'webapp' || $currentRouteName == 'findz.coaches.filter.sport.type' || $currentRouteName == 'findz.stadiums.filter.sport.type' || $currentRouteName == 'findz.mybookings')
     <footer class="w-100">
-        <ul class="d-flex row align-items-center justify-content-between" style="padding: 0px !important;">
+        <ul class="d-flex row align-items-center justify-content-around" style="padding: 0px !important;">
             <li class="d-flex col align-items-center  @if($currentRouteName == 'webapp' || $currentRouteName == 'findz.stadiums.filter.sport.type') footer_active @endif">
                 <img
                     class="pointer"
@@ -90,15 +90,15 @@
                     alt="footer icon">
                 <a href="{{ route('webapp', ['sportType' => $currentSportTypeId, 'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}">Площадки</a>
             </li>
-            <li class="d-flex col align-items-center @if($currentRouteName == 'findz.coaches.filter.sport.type') footer_active @endif">
-                <img
-                    class="pointer"
-                    onclick="location.href='{{ route('findz.coaches.filter.sport.type', ['sportType' => $currentSportTypeId ?? App\Models\SportType::first()->id, 'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}'"
-                    src="@if( $currentRouteName == 'findz.coaches.filter.sport.type') {{  asset('img/findz/icons/coach_active.svg') }} @else {{  asset('img/findz/icons/coach.svg') }} @endif"
-                    alt="footer icon">
-                <a href="{{ route('findz.coaches.filter.sport.type', ['sportType' => $currentSportTypeId ?? App\Models\SportType::first()->id, 'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}">Тренера</a>
+{{--            <li class="d-flex col align-items-center @if($currentRouteName == 'findz.coaches.filter.sport.type') footer_active @endif">--}}
+{{--                <img--}}
+{{--                    class="pointer"--}}
+{{--                    onclick="location.href='{{ route('findz.coaches.filter.sport.type', ['sportType' => $currentSportTypeId ?? App\Models\SportType::first()->id, 'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}'"--}}
+{{--                    src="@if( $currentRouteName == 'findz.coaches.filter.sport.type') {{  asset('img/findz/icons/coach_active.svg') }} @else {{  asset('img/findz/icons/coach.svg') }} @endif"--}}
+{{--                    alt="footer icon">--}}
+{{--                <a href="{{ route('findz.coaches.filter.sport.type', ['sportType' => $currentSportTypeId ?? App\Models\SportType::first()->id, 'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}">Тренера</a>--}}
 
-            </li>
+{{--            </li>--}}
             <li class="d-flex col align-items-center @if($currentRouteName == 'findz.mybookings') footer_active @endif">
                 <img id="myBookingsImg" class="pointer"
                      src="@if($currentRouteName == 'findz.mybookings') {{ asset('img/findz/icons/bookings_active.svg') }} @else {{ asset('img/findz/icons/booking.svg') }} @endif"
