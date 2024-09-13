@@ -271,3 +271,11 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+.dayContainer {
+    padding: 10px !important;
+}
+
+.flatpickr-weekdays {
+    padding: 10px !important;
+}

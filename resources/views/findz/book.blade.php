@@ -176,13 +176,17 @@
                     const selected_date = selectedDates[0];
                     const dayOfWeek = getRussianDayOfWeek(selected_date);
                     $('.date').html(`${dateStr}, ${dayOfWeek}`);
+                    $('.selected_date').html(`${dateStr}, ${dayOfWeek}`);
+                    dateObject =  new Date(dateStr);
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('date', dateStr);
+                    window.history.replaceState(null, null, url);
                 },
                 onChange: function (selectedDates, dateStr) {
-                    selectedDate = dateStr
+                 
                 },
             });
 
-            updateDateDisplay();
 
             $('.prev').click(function () {
                 dateObject.setDate(dateObject.getDate() - 1);
@@ -236,6 +240,16 @@
                         sportTypeId: {{ $currentSportTypeId }}
                     },
                     success: function (res) {
+                        const selectedSlots = [];
+                        $('.selected-slots .selected-slot').each(function () {
+                            selectedSlots.push({
+                                court_id: $(this).find('h2').data('court-id'),
+                                start_time: $(this).find('span[data-start-time]').data('start-time'),
+                                end_time: $(this).find('span[data-end-time]').data('end-time'),
+                                price: parseInt($(this).find('.cost_cancel_section h2').text().replace('т.с', '').trim(), 10)
+                            });
+                        });
+
                         updateSlots(res);
                     },
                     error: function (err) {
@@ -258,7 +272,7 @@
                 const daysOfWeek = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
                 @endif
 
-                    return daysOfWeek[date.getDay()];
+                return daysOfWeek[date.getDay()];
             }
 
             function updateSlots(data) {
@@ -326,6 +340,7 @@
                     $('.slots-table tbody tr').append(row);
                 });
 
+
                 @if (request('start_time'))
                 $('.slot.selected').each(function () {
                     const field = $(this).data('field');
@@ -336,6 +351,8 @@
                     autoSelectSlotsInRange(previousSelectedSlot, $(this));
                 });
                 @endif
+
+                restoreSlotsFromLocalStorage()
             }
 
 
@@ -376,9 +393,8 @@
 
             let isFirstSlot = false;
 
-            function updateSelectedSlots() {
+            function updateSelectedSlots(restored = false) {
                 const selectedSlots = [];
-
 
                 $('.slot.selected').each(function () {
                     selectedSlots.push({
@@ -399,9 +415,14 @@
                     });
                 });
 
+
+                if (selectedSlots.length > 1 && !restored) {
+                    saveSlotsToLocalStorage(selectedSlots);
+                }
+
                 if (selectedSlots.length >= 1) {
                     $('.book').removeClass('disabled');
-                }else{
+                } else {
                     $('.book').addClass('disabled');
                 }
 
@@ -451,7 +472,6 @@
                         combinedSlots.push(currentSlot);
                     }
 
-
                     if (combinedSlots.length > 1) {
                         let result = combinedSlots.reduce((acc, slot) => {
                             acc.start = acc.start ? (acc.start < slot.start ? acc.start : slot.start) : slot.start;
@@ -460,7 +480,7 @@
                             acc.court_id = slot.court_id;
                             return acc;
                         }, {start: null, end: null, price: 0});
-
+                        
                         const slotDiv = $(`
                             <div class="selected-slot">
                                 <div>
@@ -517,39 +537,45 @@
             }
 
             @if($isUpdate)
-            setTimeout(() => updateSelectedSlots(), 1000);
+                setTimeout(() => updateSelectedSlots(true), 1000);
             @endif
 
             let previousSelectedSlot = null;
 
             $(document).on('click', '.slot', function () {
-                const isSelected = $(this).hasClass('selected');
-                const isBooked = $(this).hasClass('slot_booked');
-                const isFirstSlot = $(this).siblings('.selected').length === 0;
-                const isNextSlot = $(this).hasClass('.next_slot');
+                const $this = $(this);
+                const isSelected = $this.hasClass('selected');
+                const isBooked = $this.hasClass('slot_booked');
+                const isFirstSlot = $this.siblings('.selected').length === 0;
+                const isNextSlot = $this.hasClass('next_slot');
 
                 if (!isBooked) {
-                    $(this).toggleClass('selected');
+                    // Toggle 'selected' class
+                    $this.toggleClass('selected');
 
-                    const nextTime = getNextTime($(this).data('time'));
-                    const nextSlot = $(this).siblings(`.slot[data-time="${nextTime}"]`);
+                    // Determine the next time slot
+                    const nextTime = getNextTime($this.data('time'));
+                    const $nextSlot = $this.siblings(`.slot[data-time="${nextTime}"]`);
 
-                    if (nextSlot.length && !nextSlot.hasClass('slot_booked') && !nextSlot.hasClass('selected')) {
-                        nextSlot.toggleClass('next_slot');
+                    if ($nextSlot.length && !($nextSlot.hasClass('slot_booked') || $nextSlot.hasClass('selected'))) {
+                        $nextSlot.toggleClass('next_slot');
                     }
 
+                    // Handle the logic for selecting and deselecting slots
                     if (!isSelected) {
-                        if (previousSelectedSlot && previousSelectedSlot.data('field') === $(this).data('field')) {
-                            autoSelectSlotsInRange(previousSelectedSlot, $(this));
+                        if (previousSelectedSlot && previousSelectedSlot.data('field') === $this.data('field')) {
+                            autoSelectSlotsInRange(previousSelectedSlot, $this);
                         } else {
-                            previousSelectedSlot = $(this);
+                            previousSelectedSlot = $this;
                         }
                     } else {
                         previousSelectedSlot = null;
                     }
+
                     updateSelectedSlots();
                 }
 
+                // Update book button state
                 const selectedSlots = [];
                 $('.selected-slots .selected-slot').each(function () {
                     selectedSlots.push({
@@ -562,12 +588,69 @@
 
                 if (selectedSlots.length >= 1) {
                     $('.book').removeClass('disabled');
-                }else{
+                } else {
+                    saveSlotsToLocalStorage([]);
                     $('.book').addClass('disabled');
                 }
             });
 
-            updateSelectedSlots();
+
+            function saveSlotsToLocalStorage(selectedSlots) {
+                localStorage.setItem('selectedSlots', JSON.stringify(selectedSlots));
+            }
+
+            function restoreSlotsFromLocalStorage() {
+                let savedSlots = JSON.parse(localStorage.getItem('selectedSlots'));
+
+                if (savedSlots && savedSlots.length > 0) {
+                    // Объединяем слоты по court_id
+                    const groupedSlots = savedSlots.reduce((acc, slot) => {
+                        if (!acc[slot.court_id]) {
+                            acc[slot.court_id] = [];
+                        }
+                        acc[slot.court_id].push(slot);
+                        return acc;
+                    }, {});
+
+                    // Обрабатываем каждый court_id
+                    Object.keys(groupedSlots).forEach(court_id => {
+                        const slots = groupedSlots[court_id];
+
+                        // Добавляем классы ко всем слотам court_id
+                        slots.forEach((slot, index) => {
+                            const slotElement = $(`.slot[data-court-id="${slot.court_id}"][data-time="${slot.time}"]`);
+                            slotElement.addClass('selected').addClass('next_slot');
+                            
+                            // Если это первый слот, убираем класс 'next_slot'
+                            if (index === 0) {
+                                slotElement.removeClass('next_slot');
+                            }
+                        });
+
+                        // Убираем класс 'selected' у последнего слота
+                        const lastSlot = slots.at(-1);
+                        if (lastSlot) {
+                            const lastSlotElement = $(`.slot[data-court-id="${lastSlot.court_id}"][data-time="${lastSlot.time}"]`);
+                            lastSlotElement.removeClass('selected');
+                        }
+                    });
+
+                    // Обновляем выбранные слоты
+                    updateSelectedSlots(true);
+                }
+            }
+
+
+
+
+            $(document).ready(function () {
+                restoreSlotsFromLocalStorage();
+            });
+
+            function clearSlotsFromLocalStorage() {
+                localStorage.removeItem('selectedSlots');
+            }
+
 
             $('.payment-options button').click(function () {
                 const paymentMethod = $(this).data('payment');
@@ -649,6 +732,7 @@
                                     method: 'POST',
                                     data: bookingData,
                                     success: function (response) {
+                                        clearSlotsFromLocalStorage();
                                         @if (!$isUpdate)
                                         initiatePaycomPayment(response.booking_ids, response.total_sum);
                                         @else
