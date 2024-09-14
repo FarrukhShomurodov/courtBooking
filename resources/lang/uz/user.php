@@ -22,5 +22,5 @@ return [
     'Сохранить' => 'Saqlash',
     'Создать пользователя' => 'Foydalanuvchi yaratish',
     'bot_user' => 'Bot foydalanuvchilari',
-
+    'bot_user_created_at' => "Ro'yxatdan o'tish vaqti",
 ];

@@ -8,6 +8,13 @@
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-header"> {{__('user.bot_user')}}</h5>
+            <div class="row me-1">
+                <div class="col-12 text-end ">
+                    <a href="{{ route('statistics.bot-users') }}" class="btn btn-success btn-sm">
+                        <i class="fas fa-file-export me-1"></i>{{ __('dashboard.statistics_export') }}
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-users table border-top">
@@ -23,7 +30,7 @@
                     <th>sms_code</th>
                     <th>step</th>
                     <th>isactive</th>
-                    <th>Время регистрации</th>
+                    <th>{{ __('user.bot_user_created_at') }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -40,7 +47,8 @@
                         <td>{{ $user->step}}</td>
                         <td>
                             <label class="switch">
-                                <input type="checkbox" class="switch-input" data-user-id="{{ $user->id }}" @if($user->isactive) checked @endif>
+                                <input type="checkbox" class="switch-input" data-user-id="{{ $user->id }}"
+                                       @if($user->isactive) checked @endif>
                                 <span class="switch-toggle-slider">
                                     <span class="switch-on"></span>
                                     <span class="switch-off"></span>
@@ -58,10 +66,10 @@
 
 @section('scripts')
     <script>
-        $(document).ready(function() {
-            $('.switch-input').on('change', function() {
-                let  userId = $(this).data('user-id');
-                let  isActive = $(this).is(':checked') ? 1 : 0;
+        $(document).ready(function () {
+            $('.switch-input').on('change', function () {
+                let userId = $(this).data('user-id');
+                let isActive = $(this).is(':checked') ? 1 : 0;
 
                 $.ajax({
                     url: `/api/bot-users/${userId}/is-active`,

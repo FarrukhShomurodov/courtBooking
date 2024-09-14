@@ -44,6 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::prefix('statistics')->name('statistics.')->group(function () {
+            Route::get('/bot-users', [StatisticsController::class, 'exportBotUsers'])->name('bot-users')->middleware('role:admin');
             Route::get('/stadiums', [StatisticsController::class, 'stadiums'])->name('stadiums');
             Route::get('/courts', [StatisticsController::class, 'courts'])->name('courts');
             Route::get('/sport-type', [StatisticsController::class, 'sportType'])->name('sport.type');

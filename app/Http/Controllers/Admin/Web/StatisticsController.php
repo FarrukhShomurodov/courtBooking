@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\BotUser;
 use App\Models\Court;
 use App\Models\SportType;
 use App\Models\Stadium;
@@ -444,6 +445,86 @@ class StatisticsController extends Controller
 
         $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $response->headers->set('Content-Disposition', 'attachment;filename="sport_type_statistics.xlsx"');
+        $response->headers->set('Cache-Control', 'max-age=0');
+
+        return $response;
+    }
+
+    public function exportBotUsers(): StreamedResponse
+    {
+        $botUsers = BotUser::all();
+
+        $statistics = [];
+
+        foreach ($botUsers as $user) {
+            $statistics[] = [
+                'id' => $user->id ?? '-',
+                'chat_id' => $user->chat_id ?? '-',
+                'first_name' => $user->first_name ?? '-',
+                'second_name' => $user->second_name ?? '-',
+                'uname' => $user->uname ?? '-',
+                'typed_name' => $user->typed_name ?? '-',
+                'phone' => $user->phone ?? '-',
+                'sms_code' => $user->sms_code ?? '-',
+                'step' => $user->step ?? '-',
+                __('user.bot_user_created_at') => $user->created_at ?? '-',
+            ];
+        }
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set headers
+        $headers = [
+            'id',
+            'chat_id',
+            'first_name',
+            'second_name',
+            'uname',
+            'typed_name',
+            'phone',
+            'sms_code',
+            'step',
+            __('user.bot_user_created_at'),
+        ];
+
+        $columnLetters = range('A', 'J');
+        foreach ($columnLetters as $index => $letter) {
+            $sheet->setCellValue($letter . '1', $headers[$index]);
+            $sheet->getStyle($letter . '1')->getFont()->setBold(true); // Make header bold
+        }
+
+        // Add data to cells
+        $row = 2;
+        foreach ($statistics as $data) {
+            $sheet->setCellValue('A' . $row, $data['id']);
+            $sheet->setCellValue('B' . $row, $data['chat_id']);
+            $sheet->setCellValue('C' . $row, $data['first_name']);
+            $sheet->setCellValue('D' . $row, $data['second_name']);
+            $sheet->setCellValue('E' . $row, $data['uname']);
+            $sheet->setCellValue('F' . $row, $data['typed_name']);
+            $sheet->setCellValue('G' . $row, $data['phone']);
+            $sheet->setCellValue('H' . $row, $data['sms_code']);
+            $sheet->setCellValue('I' . $row, $data['step']);
+            $sheet->setCellValue('J' . $row, $data[__('user.bot_user_created_at')]);
+            $row++;
+        }
+
+        // Auto resize columns
+        foreach ($columnLetters as $letter) {
+            $sheet->getColumnDimension($letter)->setAutoSize(true);
+        }
+
+
+        // Create writer and set the output stream
+        $writer = new Xlsx($spreadsheet);
+
+        $response = new StreamedResponse(function () use ($writer) {
+            $writer->save('php://output');
+        });
+
+        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->headers->set('Content-Disposition', 'attachment;filename="bot_user_statistics.xlsx"');
         $response->headers->set('Cache-Control', 'max-age=0');
 
         return $response;
