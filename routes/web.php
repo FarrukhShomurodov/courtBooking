@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/login', [AuthController::class, 'showLoginForm']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/confirm-owner', [AuthController::class, 'OwnerConfirmation'])->name('owner.confirmation');
 Route::get('/set-lang/{locale}/{botUser?}', [DashboardController::class, 'setLocale'])->name('set.lang');
 
 Route::group(['middleware' => 'auth'], function () {

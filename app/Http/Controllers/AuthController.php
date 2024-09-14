@@ -29,30 +29,6 @@ class AuthController extends Controller
         return back()->withErrors(['login' => 'Неверные данные для входа в систему']);
     }
 
-    public function OwnerConfirmation(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'login' => 'required|string',
-            'password' => 'required',
-        ]);
-
-        if (Auth::attempt($request->only('login', 'password'))) {
-            $user = Auth::user();
-
-            if ($user->hasRole('owner stadium')) {
-                session(['isOwner' => true]);
-                return redirect()->route('dashboard');
-            }
-
-            session(['isOwner' => false]);
-            return redirect()->route('dashboard');
-        }
-
-        return back()->withErrors([
-            'login' => 'Неверный логин или пароль.',
-        ]);
-    }
-
     public function logout(): RedirectResponse
     {
         Auth::logout();
