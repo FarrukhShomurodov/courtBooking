@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueManager;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\UniqueOwner;
 use App\Rules\UniqueCoach;
@@ -41,6 +42,11 @@ class StadiumRequest extends FormRequest
                 'required',
                 'exists:users,id',
                 new UniqueOwner($stadiumId)
+            ],
+            'manager_id' => [
+                'required',
+                'exists:users,id',
+                new UniqueManager($stadiumId)
             ],
             'coach_id' => [
                 'nullable',

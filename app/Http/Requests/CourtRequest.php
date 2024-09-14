@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\IsActiveStadium;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +40,11 @@ class CourtRequest extends FormRequest
             'photos' => 'sometimes|array',
             'photos.*' => 'image|mimes:jpg,png',
             'is_active' => 'nullable|boolean',
-            'stadium_id' => 'required|exists:stadiums,id',
+            'stadium_id' => [
+                'required',
+                'exists:stadiums,id',
+                new IsActiveStadium($this->stadium_id),
+            ],
             'sport_type_id' => 'required|exists:sport_types,id',
             'schedule' => 'required|array',
             'schedule.*' => 'required|array',

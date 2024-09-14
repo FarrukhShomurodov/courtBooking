@@ -46,7 +46,8 @@
                 <div class="mb-3">
                     <label class="form-label" for="stadium-description">{{ __('stadium.description') }}</label>
                     <textarea id="stadium-description" name="description" class="form-control"
-                              placeholder="{{ __('stadium.description') }}" required>{{ $stadium->description }}</textarea>
+                              placeholder="{{ __('stadium.description') }}"
+                              required>{{ $stadium->description }}</textarea>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="stadium-address">{{ __('stadium.address') }}</label>
@@ -92,14 +93,37 @@
                             @endif
                         </button>
                         <ul class="dropdown-menu w-100" aria-labelledby="ownerDropdown">
-                            @foreach($users as $user)
+                            @foreach($owners as $owner)
                                 <li><a class="dropdown-item" href="#"
-                                       data-value="{{ $user->id }}">{{ $user->name }}</a></li>
+                                       data-value="{{ $owner->id }}">{{ $owner->name }}</a></li>
                             @endforeach
                         </ul>
                         <input type="hidden" name="owner_id" id="ownerInput" value="{{ $stadium->owner_id }}">
                     </div>
                 </div>
+
+                <div class="mb-3">
+                    <label for="managerDropdown" class="form-label">{{ __('stadium.manager') }}</label>
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle w-100 d-flex justify-content-between"
+                                type="button" id="ownerDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                style="border: 1px solid #d4d8dd; padding: .535rem 1.375rem .535рем .75рем;">
+                            @if($stadium->manager)
+                                {{ $stadium->manager->name }}
+                            @else
+                                {{ __('stadium.select_manager') }}
+                            @endif
+                        </button>
+                        <ul class="dropdown-menu w-100" aria-labelledby="ownerDropdown">
+                            @foreach($managers as $manager)
+                                <li><a class="dropdown-item" href="#"
+                                       data-value="{{ $manager->id }}">{{ $manager->name }}</a></li>
+                            @endforeach
+                        </ul>
+                        <input type="hidden" name="manager_id" id="managerInput" value="{{ $stadium->manager_id }}">
+                    </div>
+                </div>
+
                 <div class="mb-3">
                     <label for="coachDropdown" class="form-label">{{ __('stadium.coach') }}</label>
                     <div class="dropdown">
@@ -129,7 +153,8 @@
                     @if($stadium->photos)
                         @foreach(json_decode($stadium->photos) as $photo)
                             <div class="image-container td__img" data-photo-path="{{ $photo }}">
-                                <img src="{{ asset('storage/' . $photo) }}" alt="{{ __('stadium.stadium_photo') }}" class="uploaded-image">
+                                <img src="{{ asset('storage/' . $photo) }}" alt="{{ __('stadium.stadium_photo') }}"
+                                     class="uploaded-image">
                                 <button type="button" class="btn btn-danger btn-sm delete-image"
                                         data-photo-path="{{ $photo }}">{{ __('stadium.delete') }}
                                 </button>
@@ -159,7 +184,8 @@
 
             const dropdowns = [
                 {dropdown: $('#ownerDropdown'), input: $('#ownerInput')},
-                {dropdown: $('#coachDropdown'), input: $('#coachInput')}
+                {dropdown: $('#coachDropdown'), input: $('#coachInput')},
+                {dropdown: $('#managerDropdown'), input: $('#managerInput')}
             ];
             const originalBorderColor = '#d4d8dd';
 

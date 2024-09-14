@@ -38,7 +38,6 @@ class CourtController extends Controller
     {
         $stadiums = Stadium::query()->where('is_active', true)->get();
         return view('admin.court.create', compact('stadiums'));
-
     }
 
     public function store(CourtRequest $request): RedirectResponse

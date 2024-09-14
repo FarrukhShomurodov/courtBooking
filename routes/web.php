@@ -38,7 +38,6 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
         Route::resource('/courts', CourtController::class);
-        Route::get('/all-bookings', [BookingController::class, 'fetchAllBooking'])->name('all-bookings');
 
         // Statistics
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -55,7 +54,11 @@ Route::group(['middleware' => 'auth'], function () {
         });
     });
 
-    Route::resource('/bookings', BookingController::class);
+    // Bookings
+    Route::group(['middleware' => 'role:owner stadium|admin|stadium manager'], function () {
+        Route::get('/all-bookings', [BookingController::class, 'fetchAllBooking'])->name('all-bookings');
+        Route::resource('/bookings', BookingController::class);
+    });
 });
 
 // Telegram

@@ -35,8 +35,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'manage courts'
         ]);
 
-        Role::create(['name' => 'user']);
         Role::create(['name' => 'trainer']);
+        Role::create(['name' => 'stadium manager']);
 
         $user = User::query()->find(1)->first();
         $user->assignRole('admin');

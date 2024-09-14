@@ -35,4 +35,7 @@ return [
     'manual_revenue' => 'Qo\'lda daromad',
 
     'all_sport_types' => 'Barcha sport turlari',
+    'select_manager' => 'Stadion administratorini tanlang',
+    'manager' => 'Stadion administratori',
+
 ];

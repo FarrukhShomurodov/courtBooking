@@ -25,9 +25,12 @@ class BookingController extends Controller
     {
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
             $courts = Auth::user()->stadiumOwner()->first()->courts()->where('is_active', true)->get()->load('schedules');
+        } elseif (Auth::user()->roles()->first()->name == 'stadium manager') {
+            $courts = Auth::user()->stadiumManager()->first()->courts()->where('is_active', true)->get()->load('schedules');
         } else {
             $courts = Court::query()->where('is_active', true)->get()->load('schedules');
         }
+
         $users = User::all();
         return view('admin.booking.index', compact('courts', 'users'));
     }
@@ -38,7 +41,7 @@ class BookingController extends Controller
 
         switch ($role) {
             case 'admin':
-                $bookings =  Booking::query()->get()->load('court');
+                $bookings = Booking::query()->get()->load('court');
                 break;
             case 'owner stadium':
                 $owner = Auth::user()->stadiumOwner()->first();
@@ -48,6 +51,13 @@ class BookingController extends Controller
                     $bookings = collect();
                 }
                 break;
+            case 'stadium manager':
+                $stadiumManager = Auth::user()->stadiumManager()->first();
+                if ($stadiumManager) {
+                    $bookings = Booking::whereIn('court_id', $stadiumManager->courts->pluck('id'))->get()->load('court');
+                } else {
+                    $bookings = collect();
+                }
                 break;
         }
 

@@ -38,12 +38,17 @@ class StadiumController extends Controller
     public function create(): View
     {
         $sportTypes = SportType::all();
-        $users = User::query()->whereDoesntHave('roles', function ($query) {
-            $query->where('name', 'admin')
-            ->orWhere('name', 'trainer');
+
+        $owners = User::query()->whereHas('roles', function ($query) {
+            $query->where('name', 'owner stadium');
         })->get();
+
+        $managers = User::query()->whereHas('roles', function ($query) {
+            $query->where('name', 'stadium manager');
+        })->get();
+
         $coaches = Coach::query()->whereDoesntHave('stadium')->get();
-        return view('admin.stadium.create', compact('sportTypes', 'users', 'coaches'));
+        return view('admin.stadium.create', compact('sportTypes', 'owners', 'managers', 'coaches'));
 
     }
 
@@ -57,11 +62,17 @@ class StadiumController extends Controller
     {
         $stadium->load("coach");
         $sportTypes = SportType::all();
-        $users = User::whereDoesntHave('roles', function ($query) {
-            $query->where('name', 'admin');
+
+        $owners = User::query()->whereHas('roles', function ($query) {
+            $query->where('name', 'owner stadium');
         })->get();
+
+        $managers = User::query()->whereHas('roles', function ($query) {
+            $query->where('name', 'stadium manager');
+        })->get();
+
         $coaches = Coach::query()->whereDoesntHave('stadium');
-        return view('admin.stadium.edit', compact('stadium', 'sportTypes', 'users','coaches'));
+        return view('admin.stadium.edit', compact('stadium', 'sportTypes', 'owners', 'managers', 'coaches'));
     }
 
     public function update(StadiumRequest $request, Stadium $stadium): RedirectResponse

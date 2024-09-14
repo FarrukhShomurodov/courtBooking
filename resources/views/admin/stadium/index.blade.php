@@ -33,6 +33,7 @@
                     <th>@lang('stadium.map_link')</th>
                     <th>@lang('stadium.coach')</th>
                     <th>@lang('stadium.owner')</th>
+                    <th>@lang('stadium.manager')</th>
                     <th>@lang('stadium.sport_types')</th>
                     <th>@lang('stadium.is_active')</th>
                     <th>@lang('stadium.photos')</th>
@@ -49,6 +50,7 @@
                         <td>{{ $stadium->map_link }}</td>
                         <td>{{ $stadium->coach->user->name ?? '' }}</td>
                         <td>{{ $stadium->owner->name }}</td>
+                        <td>{{ $stadium->manager->name }}</td>
                         <td>
                             @foreach($stadium->sportTypes as $sportType)
                                 <span>{{ $sportType->name }} {{ count($stadium->sportTypes) !== $sportType->id ? (count($stadium->sportTypes) > 1 ? ',' : ''): '' }}</span><br>

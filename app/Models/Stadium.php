@@ -22,6 +22,7 @@ class Stadium extends Model
         'photos',
         'is_active',
         'coach_id',
+        'manager_id',
         'owner_id',
     ];
 
@@ -43,6 +44,11 @@ class Stadium extends Model
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function manager(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'manager_id');
     }
 
     public function bookingStatistics($date)

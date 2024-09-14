@@ -75,7 +75,8 @@
                             </select>
                         </div>
                     </div>
-                    <div class="mb-3">
+
+                    <div class="mb-3 mt-3">
                         <label for="ownerDropdown" class="form-label">{{ __('stadium.owner') }}</label>
                         <div class="dropdown">
                             <button class="btn btn-default dropdown-toggle w-100 d-flex justify-content-between"
@@ -84,14 +85,33 @@
                                 {{ __('stadium.select_owner') }}
                             </button>
                             <ul class="dropdown-menu w-100" aria-labelledby="ownerDropdown">
-                                @foreach($users as $user)
+                                @foreach($owners as $owner)
                                     <li><a class="dropdown-item" href="#"
-                                           data-value="{{ $user->id }}">{{ $user->name }}</a></li>
+                                           data-value="{{ $owner->id }}">{{ $owner->name }}</a></li>
                                 @endforeach
                             </ul>
                             <input type="hidden" name="owner_id" id="ownerInput">
                         </div>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="managerDropdown" class="form-label">{{ __('stadium.manager') }}</label>
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle w-100 d-flex justify-content-between"
+                                    type="button" id="managerDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                    style="border: 1px solid #d4d8dd; padding: .535rem 1.375rem .535rem .75rem;">
+                                {{ __('stadium.select_manager') }}
+                            </button>
+                            <ul class="dropdown-menu w-100" aria-labelledby="managerDropdown">
+                                @foreach($managers as $manager)
+                                    <li><a class="dropdown-item" href="#"
+                                           data-value="{{ $manager->id }}">{{ $manager->name }}</a></li>
+                                @endforeach
+                            </ul>
+                            <input type="hidden" name="manager_id" id="managerInput">
+                        </div>
+                    </div>
+
                     <div class="mb-3">
                         <label for="coachDropdown" class="form-label">{{ __('stadium.coach') }}</label>
                         <div class="dropdown">
@@ -131,7 +151,8 @@
             });
             const dropdowns = [
                 {dropdown: $('#ownerDropdown'), input: $('#ownerInput')},
-                {dropdown: $('#coachDropdown'), input: $('#coachInput')}
+                {dropdown: $('#coachDropdown'), input: $('#coachInput')},
+                {dropdown: $('#managerDropdown'), input: $('#managerInput')}
             ];
             const originalBorderColor = '#d4d8dd';
 
