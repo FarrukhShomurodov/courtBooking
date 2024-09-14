@@ -13,6 +13,7 @@
             <table class="datatables-users table border-top">
                 <thead>
                 <tr>
+                    <th>id</th>
                     <th>chat_id</th>
                     <th>first_name</th>
                     <th>second_name</th>
@@ -22,11 +23,13 @@
                     <th>sms_code</th>
                     <th>step</th>
                     <th>isactive</th>
+                    <th>Время регистрации</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($botUsers as $user)
                     <tr>
+                        <td>{{ $user->id }}</td>
                         <td>{{ $user->chat_id }}</td>
                         <td>{{ $user->first_name }}</td>
                         <td>{{ $user->second_name }}</td>
@@ -44,6 +47,7 @@
                                 </span>
                             </label>
                         </td>
+                        <td>{{ $user->created_at}}</td>
                     </tr>
                 @endforeach
                 </tbody>
