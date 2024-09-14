@@ -63,7 +63,7 @@ Route::prefix('telegram')->group(function () {
     Route::get('/webhook', function () {
         $telegram = new \Telegram\Bot\Api(config('telegram.bot_token'));
         $hook = $telegram->setWebhook(['url' => env('TELEGRAM_WEBHOOK_URL')]);
-        return dd($hook);
+        dd($hook);
     });
 
     Route::post('/webhook', [TelegramController::class, 'handleWebhook']);
