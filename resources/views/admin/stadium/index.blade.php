@@ -50,7 +50,7 @@
                         <td>{{ $stadium->map_link }}</td>
                         <td>{{ $stadium->coach->user->name ?? '' }}</td>
                         <td>{{ $stadium->owner->name }}</td>
-                        <td>{{ $stadium->manager->name }}</td>
+                        <td>{{ $stadium->manager->name ?? ''}}</td>
                         <td>
                             @foreach($stadium->sportTypes as $sportType)
                                 <span>{{ $sportType->name }} {{ count($stadium->sportTypes) !== $sportType->id ? (count($stadium->sportTypes) > 1 ? ',' : ''): '' }}</span><br>
