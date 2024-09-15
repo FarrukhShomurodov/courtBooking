@@ -21,9 +21,15 @@
             <h5 class="card-header">{{ __('sportType.statistics') }}</h5>
             <form method="GET" action="{{ route('statistics.sport.type') }}">
                 <div class="d-flex">
-                    <div style="margin-right: 10px">
-                        <input onchange="this.form.submit()" name="date" type="date" class="form-control"
-                               value="{{ request('date') }}">
+                    <div class="d-flex flex-row align-items-center " style="margin-right: 10px">
+                        <label class="me-2">От: </label>
+                        <input onchange="this.form.submit()" name="date_from" type="date" class="form-control"
+                               value="{{ request('date_from') }}">
+                    </div>
+                    <div class="d-flex flex-row align-items-center " style="margin-right: 10px">
+                        <label class="me-2">До: </label>
+                        <input onchange="this.form.submit()" name="date_to" type="date" class="form-control"
+                               value="{{ request('date_to') }}">
                     </div>
                     <div class="me-2">
                         <select id="select2"
@@ -42,6 +48,27 @@
                             @endforeach
                         </select>
                     </div>
+
+                    @role('admin')
+                    <div class="me-2">
+                        <select id="select2"
+                                class="select2 form-select"
+                                name="stadium-id"
+                                onchange="this.form.submit()"
+                                tabindex="-1" aria-hidden="true" style="margin-right: 10px">
+                            <option value="all" {{ request('stadium-id-id') == 'all' ? 'selected' : '' }}>
+                                {{ __('court.select_stadium') }}
+                            </option>
+                            @foreach($stadiums as $stadium)
+                                <option value="{{ $stadium->id }}"
+                                    {{ request('stadium-id') == $stadium->id ? 'selected' : '' }}>
+                                    {{ $stadium->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endrole
+
                 </div>
             </form>
         </div>

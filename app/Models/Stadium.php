@@ -51,11 +51,14 @@ class Stadium extends Model
         return $this->belongsTo(User::class, 'manager_id');
     }
 
-    public function bookingStatistics($date)
+    public function bookingStatistics($dateFrom = null, $dateTo = null)
     {
-        $bookings = $this->courts()->with(['bookings' => function ($query) use ($date) {
-            if ($date) {
-                $query->whereDate('date', $date);
+        $bookings = $this->courts()->with(['bookings' => function ($query) use ($dateFrom, $dateTo) {
+            if ($dateFrom) {
+                $query->whereDate('date', '>=', $dateFrom);
+            }
+            if ($dateTo) {
+                $query->whereDate('date', '<=', $dateTo);
             }
         }])->get()->pluck('bookings')->flatten();
 
@@ -80,6 +83,7 @@ class Stadium extends Model
             'bot_revenue' => $botRevenue,
         ];
     }
+
 
     public function getMinimumCourtCost(): ?int
     {

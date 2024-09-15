@@ -80,9 +80,9 @@ class StatisticsRepositories
         ];
     }
 
-    public function stadiumStatistics(Stadium $stadium, $date = null)
+    public function stadiumStatistics(Stadium $stadium, $dateFrom = null, $dateTo = null)
     {
-        $statistics = $stadium->bookingStatistics($date);
+        $statistics = $stadium->bookingStatistics($dateFrom, $dateTo);
 
         return [
             'bot_book_count' => $statistics['bot_hours'],
@@ -94,13 +94,13 @@ class StatisticsRepositories
         ];
     }
 
-    public function courtStatistics(Court $court, $date = null): array
+    public function courtStatistics(Court $court, $dateFrom = null, $dateTo = null): array
     {
-        if ($date) {
-            $query = $court->bookings()->where('date', $date)->get();
-        } else {
-            $query = $court->bookings()->get();
-        }
+        $query = $court->bookings()->when($dateFrom, function ($query, $dateFrom) {
+            $query->whereDate('date', '>=', $dateFrom);
+        })->when($dateTo, function ($query, $dateTo) {
+            $query->whereDate('date', '<=', $dateTo);
+        })->get();
 
         $bookCountFromBot = $query->where('source', 'bot')->count();
         $bookCountFromManual = $query->where('source', 'manual')->count();
@@ -120,9 +120,9 @@ class StatisticsRepositories
         ];
     }
 
-    public function sportTypeStatistics(SportType $sportType, $date  = null): array
+    public function sportTypeStatistics(SportType $sportType, $stadiumId, $dateFrom = null, $dateTo = null): array
     {
-        // Initialize statistics array
+        // Инициализация статистики
         $statistics = [
             'total_bookings' => 0,
             'total_revenue' => 0,
@@ -132,17 +132,33 @@ class StatisticsRepositories
             'most_booked_time_slot' => null,
         ];
 
-        // Loop through each court related to the sport type
-        foreach ($sportType->courts as $court) {
-            $bookings = $date ? $court->bookings->where('date', $date) : $court->bookings;
+        // Проходим по кортам, которые принадлежат конкретному стадиону и типу спорта
+        if ($stadiumId === 'all') {
+            $courts = Court::where('sport_type_id', $sportType->id)
+                ->get();
+        } else {
+            $courts = Court::where('stadium_id', $stadiumId)
+                ->where('sport_type_id', $sportType->id)
+                ->get();
+        }
 
-            // Calculate total bookings and revenue
+        foreach ($courts as $court) {
+            $bookings = $court->bookings()->where(function ($query) use ($dateFrom, $dateTo) {
+                if ($dateFrom) {
+                    $query->whereDate('date', '>=', $dateFrom);
+                }
+                if ($dateTo) {
+                    $query->whereDate('date', '<=', $dateTo);
+                }
+            })->get();
+
+            // Подсчет бронирований и доходов
             $statistics['total_bookings'] += $bookings->count();
             $statistics['total_revenue'] += $bookings->sum('price');
             $statistics['manual_revenue'] += $bookings->where('source', 'manual')->sum('price');
             $statistics['bot_revenue'] += $bookings->where('source', 'bot')->sum('price');
 
-            // Calculate the most booked date
+            // Подсчет наиболее бронируемой даты
             $mostBookedDate = $bookings->groupBy('date')
                 ->sortByDesc(function ($dateGroup) {
                     return $dateGroup->count();
@@ -152,7 +168,7 @@ class StatisticsRepositories
 
             $statistics['most_booked_date'] = $mostBookedDate ?: null;
 
-            // Calculate the most booked time slot
+            // Подсчет наиболее бронируемого временного интервала
             $mostBookedTimeSlot = $bookings->groupBy(function ($booking) {
                 return $booking->start_time . '-' . $booking->end_time;
             })

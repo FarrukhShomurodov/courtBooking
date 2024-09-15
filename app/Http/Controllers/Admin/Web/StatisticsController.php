@@ -49,18 +49,24 @@ class StatisticsController extends Controller
             });
         }
 
-        $date = null;
+        $dateFrom = null;
+        $dateTo = null;
 
-        if ($request->get('date')) {
-            $date = $request->get('date');
+        if ($request->get('date_from')) {
+            $dateFrom = $request->get('date_from');
         }
+
+        if ($request->get('date_to')) {
+            $dateTo = $request->get('date_to');
+        }
+
 
         $statistics = [];
 
         foreach ($stadiums as $stadium) {
             $statistics[] = [
                 'stadium' => $stadium,
-                'statistic' => $this->statisticsRepository->stadiumStatistics($stadium, $date),
+                'statistic' => $this->statisticsRepository->stadiumStatistics($stadium, $dateFrom, $dateTo),
             ];
         }
         $sportTypes = SportType::all();
@@ -93,10 +99,16 @@ class StatisticsController extends Controller
             });
         }
 
-        $date = null;
 
-        if ($request->get('date')) {
-            $date = $request->get('date');
+        $dateFrom = null;
+        $dateTo = null;
+
+        if ($request->get('date_from')) {
+            $dateFrom = $request->get('date_from');
+        }
+
+        if ($request->get('date_to')) {
+            $dateTo = $request->get('date_to');
         }
 
         $statistics = [];
@@ -104,7 +116,7 @@ class StatisticsController extends Controller
         foreach ($courts as $court) {
             $statistics[] = [
                 'court' => $court,
-                'statistic' => $this->statisticsRepository->courtStatistics($court, $date),
+                'statistic' => $this->statisticsRepository->courtStatistics($court, $dateFrom, $dateTo),
             ];
         }
 
@@ -119,40 +131,47 @@ class StatisticsController extends Controller
     public function sportType(Request $request): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $sportTypeId = $request->input('sport-type-id');
+        $stadiumId  = $request->input('stadium-id');
 
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
             $sportTypes = Auth::user()->stadiumOwner()->first()->sportTypes()->get();
+            $stadiumId = Auth::user()->stadiumOwner()->first()->id;
             $allSportTypes = Auth::user()->stadiumOwner()->first()->sportTypes()->get();
         } else {
             $sportTypes = SportType::all();
             $allSportTypes = SportType::all();
         }
 
-
-        if ($sportTypeId && $sportTypeId === 'all') {
-            $sportTypes = SportType::with('courts.bookings')->get();
+        if ($stadiumId && $stadiumId !== 'all') {
+            $sportTypes = Stadium::query()->find($stadiumId)->sportTypes()->get();
         }
 
         if ($sportTypeId && $sportTypeId !== 'all') {
             $sportTypes = SportType::with('courts.bookings')->where('id', $sportTypeId)->get();
         }
 
-        $date = null;
+        $dateFrom = null;
+        $dateTo = null;
 
-        if ($request->get('date')) {
-            $date = $request->get('date');
+        if ($request->get('date_from')) {
+            $dateFrom = $request->get('date_from');
         }
 
+        if ($request->get('date_to')) {
+            $dateTo = $request->get('date_to');
+        }
         $statistics = [];
+
 
         foreach ($sportTypes as $sportType) {
             $statistics[] = [
                 'spotType' => $sportType,
-                'statistic' => $this->statisticsRepository->sportTypeStatistics($sportType, $date),
+                'statistic' => $this->statisticsRepository->sportTypeStatistics($sportType, $stadiumId, $dateFrom, $dateTo),
             ];
         }
 
-        return view('admin.statistics.sport-types', compact('statistics', 'sportTypes', 'allSportTypes'));
+        $stadiums = Stadium::all();
+        return view('admin.statistics.sport-types', compact('statistics', 'sportTypes', 'allSportTypes', 'stadiums'));
     }
 
     public function exportStatistics(): StreamedResponse
