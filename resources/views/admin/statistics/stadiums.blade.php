@@ -94,6 +94,18 @@
                         <td>{{ is_float($statistic['statistic']['manual_revenue']) ? round($statistic['statistic']['manual_revenue']) : $statistic['statistic']['manual_revenue'] }}</td>
                     </tr>
                 @endforeach
+
+                @role('admin')
+                <tr style="font-weight: bold;">
+                    <td>@lang('court.total')</td>
+                    <td>{{ $totalStatistics['total_book_count'] }}</td>
+                    <td>{{ $totalStatistics['bot_book_count'] }}</td>
+                    <td>{{ $totalStatistics['manual_book_count'] }}</td>
+                    <td>{{ round($totalStatistics['total_revenue']) }}</td>
+                    <td>{{ round($totalStatistics['bot_revenue']) }}</td>
+                    <td>{{ round($totalStatistics['manual_revenue']) }}</td>
+                </tr>
+                @endrole
                 </tbody>
             </table>
         </div>

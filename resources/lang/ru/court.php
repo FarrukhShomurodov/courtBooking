@@ -29,4 +29,5 @@ return [
     'total_revenue' => 'Общая выручка',
     'bot_revenue' => 'Выручка через бота',
     'manual_revenue' => 'Выручка вручную',
+    'total' => 'ИТОГО',
 ];

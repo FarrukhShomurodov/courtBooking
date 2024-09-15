@@ -74,7 +74,26 @@ class StatisticsController extends Controller
             $query->where('name', 'user')
                 ->orWhere('name', 'trainer');
         })->get();
-        return view('admin.statistics.stadiums', compact('statistics', 'sportTypes', 'ownerStadium'));
+
+
+        $totalStatistics = [
+            'total_book_count' => 0,
+            'bot_book_count' => 0,
+            'manual_book_count' => 0,
+            'total_revenue' => 0,
+            'bot_revenue' => 0,
+            'manual_revenue' => 0,
+        ];
+
+        foreach ($statistics as $statistic) {
+            $totalStatistics['total_book_count'] += $statistic['statistic']['total_book_count'];
+            $totalStatistics['bot_book_count'] += $statistic['statistic']['bot_book_count'];
+            $totalStatistics['manual_book_count'] += $statistic['statistic']['manual_book_count'];
+            $totalStatistics['total_revenue'] += $statistic['statistic']['total_revenue'];
+            $totalStatistics['bot_revenue'] += $statistic['statistic']['bot_revenue'];
+            $totalStatistics['manual_revenue'] += $statistic['statistic']['manual_revenue'];
+        }
+        return view('admin.statistics.stadiums', compact('statistics', 'sportTypes', 'ownerStadium', 'totalStatistics'));
     }
 
     public function courts(Request $request): View|\Illuminate\Foundation\Application|Factory|Application
@@ -120,12 +139,30 @@ class StatisticsController extends Controller
             ];
         }
 
+        $totalStatistics = [
+            'total_book_count' => 0,
+            'bot_book_count' => 0,
+            'manual_book_count' => 0,
+            'total_revenue' => 0,
+            'bot_revenue' => 0,
+            'manual_revenue' => 0,
+        ];
+
+        foreach ($statistics as $statistic) {
+            $totalStatistics['total_book_count'] += $statistic['statistic']['total_book_count'];
+            $totalStatistics['bot_book_count'] += $statistic['statistic']['bot_book_count'];
+            $totalStatistics['manual_book_count'] += $statistic['statistic']['manual_book_count'];
+            $totalStatistics['total_revenue'] += $statistic['statistic']['total_revenue'];
+            $totalStatistics['bot_revenue'] += $statistic['statistic']['bot_revenue'];
+            $totalStatistics['manual_revenue'] += $statistic['statistic']['manual_revenue'];
+        }
+
         $sportTypes = SportType::all();
         $ownerStadium = User::query()->whereDoesntHave('roles', function ($query) {
             $query->where('name', 'user')
                 ->orWhere('name', 'trainer');
         })->get();
-        return view('admin.statistics.courts', compact('statistics', 'sportTypes', 'ownerStadium'));
+        return view('admin.statistics.courts', compact('statistics', 'sportTypes', 'ownerStadium', 'totalStatistics'));
     }
 
     public function sportType(Request $request): View|\Illuminate\Foundation\Application|Factory|Application
@@ -170,8 +207,22 @@ class StatisticsController extends Controller
             ];
         }
 
+        $totalStatistics = [
+            'total_bookings' => 0,
+            'total_revenue' => 0,
+            'manual_revenue' => 0,
+            'bot_revenue' => 0,
+        ];
+
+        foreach ($statistics as $statistic) {
+            $totalStatistics['total_bookings'] += $statistic['statistic']['total_bookings'];
+            $totalStatistics['total_revenue'] += $statistic['statistic']['total_revenue'];
+            $totalStatistics['manual_revenue'] += $statistic['statistic']['manual_revenue'];
+            $totalStatistics['bot_revenue'] += $statistic['statistic']['bot_revenue'];
+        }
+
         $stadiums = Stadium::all();
-        return view('admin.statistics.sport-types', compact('statistics', 'sportTypes', 'allSportTypes', 'stadiums'));
+        return view('admin.statistics.sport-types', compact('statistics', 'allSportTypes', 'stadiums', 'totalStatistics'));
     }
 
     public function exportStatistics(): StreamedResponse

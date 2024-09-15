@@ -29,4 +29,5 @@ return [
     'total_revenue' => 'Umumiy daromad',
     'bot_revenue' => 'Bot orqali daromad',
     'manual_revenue' => 'Qo\'lda daromad',
+    'total' => 'JAMI',
 ];

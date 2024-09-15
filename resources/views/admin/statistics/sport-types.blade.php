@@ -106,6 +106,16 @@
                         </td>
                     </tr>
                 @endforeach
+
+                <tr style="font-weight: bold;">
+                    <td>@lang('court.total')</td>
+                    <td>{{ $totalStatistics['total_bookings'] }}</td>
+                    <td>{{ round($totalStatistics['total_revenue']) }}</td>
+                    <td>{{ round($totalStatistics['manual_revenue']) }}</td>
+                    <td>{{ round($totalStatistics['bot_revenue']) }}</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
                 </tbody>
             </table>
         </div>
