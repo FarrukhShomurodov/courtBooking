@@ -30,6 +30,7 @@
                     <th>sms_code</th>
                     <th>step</th>
                     <th>isactive</th>
+                    <th>book_count</th>
                     <th>{{ __('user.bot_user_created_at') }}</th>
                 </tr>
                 </thead>
@@ -56,6 +57,7 @@
                             </label>
                         </td>
                         <td>{{ $user->created_at}}</td>
+                        <td>{{ $user->bookings->count }}</td>
                     </tr>
                 @endforeach
                 </tbody>
