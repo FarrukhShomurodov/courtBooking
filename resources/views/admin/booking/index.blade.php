@@ -78,6 +78,8 @@
                                                 <td style="padding: 0px !important;" data-court-id="{{$court->id}}">
                                                     <div class=" @if($hasBooking) booking-cell @endif"
                                                          data-booking-id="{{$bookingId}}"
+                                                         data-bs-toggle="tooltip"
+                                                         title="{{ $hasBooking ? $booking->full_name : '' }}"
                                                          style="width: 100%; height: 43.5px; @if($hasBooking && $isPaid) background-color: #006400; @elseif($hasBooking && !$isPaid) background-color: #ff294d; @endif"></div>
                                                 </td>
                                             @endforeach
@@ -214,6 +216,11 @@
 @section('scripts')
     <script>
         $(document).ready(function () {
+            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
             const courtDropdown = $('#courtDropdown');
             const courtInput = $('#courtInput');
 
@@ -332,16 +339,16 @@
                 });
             }
 
-
             function displayBookings(bookings) {
                 $('.table tbody tr td').css('background-color', 'white');
-                $('.table tbody tr div').css('background-color', '').removeClass('booking-cell');
+                $('.table tbody tr div').css('background-color', '').removeClass('booking-cell').removeAttr('data-bs-toggle').removeAttr('title');
 
                 bookings.forEach(booking => {
                     const courtId = booking.court_id;
                     const startTime = booking.start_time;
                     const endTime = booking.end_time;
                     const bookingId = booking.id;
+                    const fullName = booking.full_name; // Ensure this property exists
                     const isPaid = booking.status === 'paid';
 
                     const startHour = parseInt(startTime.split(':')[0], 10);
@@ -352,10 +359,19 @@
                     if (courtColumn !== -1) {
                         for (let i = startHour; i <= endHour; i++) {
                             const cell = $(`.table tbody tr:eq(${i}) td:eq(${courtColumn})`);
-                            cell.css('background-color', `${isPaid ? '#006400' : '#ff294d'} `);
-                            cell.find('div').addClass('booking-cell').data('booking-id', bookingId);
+                            cell.css('background-color', `${isPaid ? '#006400' : '#ff294d'}`);
+                            const cellDiv = cell.find('div');
+                            cellDiv.addClass('booking-cell').data('booking-id', bookingId)
+                                .attr('data-bs-toggle', 'tooltip')
+                                .attr('title', fullName); // Set tooltip title
                         }
                     }
+                });
+
+                // Reinitialize tooltips
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
                 });
             }
 

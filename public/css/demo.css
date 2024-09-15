@@ -221,3 +221,7 @@
 .price_for_coach, .sport_types_for_coach, .coach_desc{
     display: none;
 }
+
+.booking-cell{
+    cursor: pointer;
+}

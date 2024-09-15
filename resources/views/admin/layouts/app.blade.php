@@ -122,6 +122,8 @@
 <script src="{{asset('vendor/libs/flatpickr/flatpickr.js')}}"></script>
 <script src="{{asset('vendor/libs/moment/moment.js')}}"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- Main JS -->
 <script src="{{ asset('js/main.js') }}"></script>
