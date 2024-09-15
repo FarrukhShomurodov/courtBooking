@@ -131,7 +131,7 @@ class StatisticsController extends Controller
     public function sportType(Request $request): View|\Illuminate\Foundation\Application|Factory|Application
     {
         $sportTypeId = $request->input('sport-type-id');
-        $stadiumId  = $request->input('stadium-id');
+        $stadiumId = $request->input('stadium-id') ?? 'all';
 
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
             $sportTypes = Auth::user()->stadiumOwner()->first()->sportTypes()->get();
