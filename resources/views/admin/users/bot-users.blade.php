@@ -56,8 +56,8 @@
                                 </span>
                             </label>
                         </td>
-                        <td>{{ $user->created_at}}</td>
                         <td>{{ $user->bookings->count() }}</td>
+                        <td>{{ $user->created_at}}</td>
                     </tr>
                 @endforeach
                 </tbody>
