@@ -79,6 +79,7 @@
                     <th>@lang('stadium.total_revenue')</th>
                     <th>@lang('stadium.bot_revenue')</th>
                     <th>@lang('stadium.manual_revenue')</th>
+                    <th>@lang('stadium.unbooked_hours')</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -92,6 +93,7 @@
                         <td>{{ is_float($statistic['statistic']['total_revenue']) ? round($statistic['statistic']['total_revenue']) : $statistic['statistic']['total_revenue'] }}</td>
                         <td>{{ is_float($statistic['statistic']['bot_revenue']) ? round($statistic['statistic']['bot_revenue']) : $statistic['statistic']['bot_revenue'] }}</td>
                         <td>{{ is_float($statistic['statistic']['manual_revenue']) ? round($statistic['statistic']['manual_revenue']) : $statistic['statistic']['manual_revenue'] }}</td>
+                        <td>{{ $statistic['statistic']['unbooked_hours'] }}</td>
                     </tr>
                 @endforeach
 
@@ -104,6 +106,7 @@
                     <td>{{ round($totalStatistics['total_revenue']) }}</td>
                     <td>{{ round($totalStatistics['bot_revenue']) }}</td>
                     <td>{{ round($totalStatistics['manual_revenue']) }}</td>
+                    <td>{{ $totalStatistics['unbooked_hours'] }}</td>
                 </tr>
                 @endrole
                 </tbody>

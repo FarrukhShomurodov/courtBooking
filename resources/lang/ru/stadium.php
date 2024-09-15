@@ -7,7 +7,6 @@ return [
     'is_active' => 'Is Active',
     'photos' => 'Фото',
     'sport_type_photo' => 'Фото типа спорта',
-
     'edit_stadium' => 'Редактировать стадион',
     'name' => 'Название',
     'description' => 'Описание',
@@ -25,7 +24,6 @@ return [
     'delete_photo_error' => 'Ошибка удаления фото:',
     'save' => 'Сохранить',
     'create_stadium' => 'Создать стадион',
-
     'statistics' => 'Статистика стадионов',
     'total_hours' => 'Всего часов',
     'bot_hours' => 'Часы через бота',
@@ -33,9 +31,8 @@ return [
     'total_revenue' => 'Общая выручка',
     'bot_revenue' => 'Выручка через бота',
     'manual_revenue' => 'Выручка вручную',
-
     'all_sport_types' => 'Все типы спорта',
-
     'select_manager' => 'Выбрать администратор стадион',
     'manager' => 'Администратор стадион',
+    'unbooked_hours' => 'Не забронированные часы',
 ];

@@ -7,7 +7,6 @@ return [
     'is_active' => 'Faol',
     'photos' => 'Rasmlar',
     'sport_type_photo' => 'Sport turi rasm',
-
     'edit_stadium' => 'Stadionni tahrirlash',
     'name' => 'Nom',
     'description' => 'Tavsif',
@@ -25,7 +24,6 @@ return [
     'delete_photo_error' => 'Rasmni oʻchirish xatosi:',
     'save' => 'Saqlash',
     'create_stadium' => 'Stadion yaratish',
-
     'statistics' => 'Stadionlar statistikasi',
     'total_hours' => 'Umumiy soatlar',
     'bot_hours' => 'Bot orqali soatlar',
@@ -33,9 +31,8 @@ return [
     'total_revenue' => 'Umumiy daromad',
     'bot_revenue' => 'Bot orqali daromad',
     'manual_revenue' => 'Qo\'lda daromad',
-
     'all_sport_types' => 'Barcha sport turlari',
     'select_manager' => 'Stadion administratorini tanlang',
     'manager' => 'Stadion administratori',
-
+    'unbooked_hours' => 'Band qilinmagan soatlar',
 ];

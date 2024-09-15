@@ -83,6 +83,7 @@
                     <th>@lang('court.bot_revenue')</th>
                     <th>@lang('dashboard.Дата наибольшего бронирования')</th>
                     <th>@lang('dashboard.Cамый загруженный временной интервал')</th>
+                    <th>@lang('stadium.unbooked_hours')</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -104,6 +105,7 @@
                                 -
                             @endif
                         </td>
+                        <td>{{ $statistic['statistic']['unbooked_hours'] }}</td>
                     </tr>
                 @endforeach
 
@@ -115,6 +117,7 @@
                     <td>{{ round($totalStatistics['bot_revenue']) }}</td>
                     <td>-</td>
                     <td>-</td>
+                    <td>{{ $totalStatistics['unbooked_hours'] }}</td>
                 </tr>
                 </tbody>
             </table>

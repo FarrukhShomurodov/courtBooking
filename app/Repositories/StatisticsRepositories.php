@@ -87,27 +87,48 @@ class StatisticsRepositories
         return [
             'bot_book_count' => $statistics['bot_hours'],
             'manual_book_count' => $statistics['manual_hours'],
-            'total_book_count' => $statistics['total_hours'],
+            'total_book_count' => $statistics['total_hours_booked'],
             'bot_revenue' => $statistics['bot_revenue'],
             'manual_revenue' => $statistics['manual_revenue'],
             'total_revenue' => $statistics['total_revenue'],
+            'unbooked_hours' => $statistics['unbooked_hours'],
         ];
     }
 
     public function courtStatistics(Court $court, $dateFrom = null, $dateTo = null): array
     {
-        $query = $court->bookings()->when($dateFrom, function ($query, $dateFrom) {
+        // Получаем все бронирования в заданный период
+        $bookings = $court->bookings()->when($dateFrom, function ($query, $dateFrom) {
             $query->whereDate('date', '>=', $dateFrom);
         })->when($dateTo, function ($query, $dateTo) {
             $query->whereDate('date', '<=', $dateTo);
         })->get();
 
-        $bookCountFromBot = $query->where('source', 'bot')->count();
-        $bookCountFromManual = $query->where('source', 'manual')->count();
+        // Считаем забронированные часы
+        $totalHoursBooked = $bookings->sum(function ($booking) {
+            return $booking->getHours();
+        });
+
+        // Получаем расписания корта для заданного периода
+        $schedules = $court->schedules()->get();
+
+        // Рассчитываем доступные рабочие часы на основе расписаний
+        $totalAvailableHours = $schedules->reduce(function ($carry, $schedule) {
+            $start = \Carbon\Carbon::parse($schedule->start_time);
+            $end = \Carbon\Carbon::parse($schedule->end_time);
+            return $carry + $end->diffInHours($start);
+        }, 0);
+
+        // Рассчитываем незабронированные часы
+        $unbookedHours = $totalAvailableHours - $totalHoursBooked;
+
+        // Рассчитываем статистику по бронированиям
+        $bookCountFromBot = $bookings->where('source', 'bot')->count();
+        $bookCountFromManual = $bookings->where('source', 'manual')->count();
         $totalBookCount = $bookCountFromBot + $bookCountFromManual;
 
-        $botRevenue = $query->where('source', 'bot')->sum('price');
-        $manualRevenue = $query->where('source', 'manual')->sum('price');
+        $botRevenue = $bookings->where('source', 'bot')->sum('price');
+        $manualRevenue = $bookings->where('source', 'manual')->sum('price');
         $totalRevenue = $botRevenue + $manualRevenue;
 
         return [
@@ -117,8 +138,10 @@ class StatisticsRepositories
             'bot_revenue' => $botRevenue,
             'manual_revenue' => $manualRevenue,
             'total_revenue' => $totalRevenue,
+            'unbooked_hours' => $unbookedHours,
         ];
     }
+
 
     public function sportTypeStatistics(SportType $sportType, $stadiumId, $dateFrom = null, $dateTo = null): array
     {
@@ -130,20 +153,20 @@ class StatisticsRepositories
             'bot_revenue' => 0,
             'most_booked_date' => null,
             'most_booked_time_slot' => null,
+            'unbooked_hours' => 0,
         ];
 
-        // Проходим по кортам, которые принадлежат конкретному стадиону и типу спорта
         if ($stadiumId === 'all') {
-            $courts = Court::where('sport_type_id', $sportType->id)
-                ->get();
+            $courts = Court::where('sport_type_id', $sportType->id)->get();
         } else {
             $courts = Court::where('stadium_id', $stadiumId)
                 ->where('sport_type_id', $sportType->id)
                 ->get();
         }
 
-        foreach ($courts as $court) {
-            $bookings = $court->bookings()->where(function ($query) use ($dateFrom, $dateTo) {
+        // Сбор всех бронирований для подсчета незабронированных часов
+        $allBookings = $courts->flatMap(function ($court) use ($dateFrom, $dateTo) {
+            return $court->bookings()->where(function ($query) use ($dateFrom, $dateTo) {
                 if ($dateFrom) {
                     $query->whereDate('date', '>=', $dateFrom);
                 }
@@ -151,43 +174,65 @@ class StatisticsRepositories
                     $query->whereDate('date', '<=', $dateTo);
                 }
             })->get();
+        });
 
-            // Подсчет бронирований и доходов
-            $statistics['total_bookings'] += $bookings->count();
-            $statistics['total_revenue'] += $bookings->sum('price');
-            $statistics['manual_revenue'] += $bookings->where('source', 'manual')->sum('price');
-            $statistics['bot_revenue'] += $bookings->where('source', 'bot')->sum('price');
+        // Подсчет забронированных часов
+        $totalHoursBooked = $allBookings->sum(function ($booking) {
+            return $booking->getHours();
+        });
 
-            // Подсчет наиболее бронируемой даты
-            $mostBookedDate = $bookings->groupBy('date')
-                ->sortByDesc(function ($dateGroup) {
-                    return $dateGroup->count();
-                })
-                ->keys()
-                ->first();
+        // Получение расписаний для всех кортов
+        $schedules = $courts->flatMap(function ($court) use ($dateFrom, $dateTo) {
+            return $court->schedules()->get();
+        });
 
-            $statistics['most_booked_date'] = $mostBookedDate ?: null;
+        // Подсчет доступных рабочих часов на основе расписаний
+        $totalAvailableHours = $schedules->reduce(function ($carry, $schedule) {
+            $start = \Carbon\Carbon::parse($schedule->start_time);
+            $end = \Carbon\Carbon::parse($schedule->end_time);
+            return $carry + $end->diffInHours($start);
+        }, 0);
 
-            // Подсчет наиболее бронируемого временного интервала
-            $mostBookedTimeSlot = $bookings->groupBy(function ($booking) {
-                return $booking->start_time . '-' . $booking->end_time;
+        // Рассчитываем незабронированные часы
+        $unbookedHours = $totalAvailableHours - $totalHoursBooked;
+        $statistics['unbooked_hours'] = $unbookedHours;
+
+        // Подсчет бронирований и доходов
+        $statistics['total_bookings'] = $allBookings->count();
+        $statistics['total_revenue'] = $allBookings->sum('price');
+        $statistics['manual_revenue'] = $allBookings->where('source', 'manual')->sum('price');
+        $statistics['bot_revenue'] = $allBookings->where('source', 'bot')->sum('price');
+
+        // Подсчет наиболее бронируемой даты
+        $mostBookedDate = $allBookings->groupBy('date')
+            ->sortByDesc(function ($dateGroup) {
+                return $dateGroup->count();
             })
-                ->sortByDesc(function ($timeSlotGroup) {
-                    return $timeSlotGroup->count();
-                })
-                ->first();
+            ->keys()
+            ->first();
 
-            if ($mostBookedTimeSlot) {
-                $firstBooking = $mostBookedTimeSlot->first();
-                $statistics['most_booked_time_slot'] = [
-                    'start_time' => $firstBooking->start_time,
-                    'end_time' => $firstBooking->end_time,
-                ];
-            } else {
-                $statistics['most_booked_time_slot'] = null;
-            }
+        $statistics['most_booked_date'] = $mostBookedDate ?: null;
+
+        // Подсчет наиболее бронируемого временного интервала
+        $mostBookedTimeSlot = $allBookings->groupBy(function ($booking) {
+            return $booking->start_time . '-' . $booking->end_time;
+        })
+            ->sortByDesc(function ($timeSlotGroup) {
+                return $timeSlotGroup->count();
+            })
+            ->first();
+
+        if ($mostBookedTimeSlot) {
+            $firstBooking = $mostBookedTimeSlot->first();
+            $statistics['most_booked_time_slot'] = [
+                'start_time' => $firstBooking->start_time,
+                'end_time' => $firstBooking->end_time,
+            ];
+        } else {
+            $statistics['most_booked_time_slot'] = null;
         }
 
         return $statistics;
     }
+
 }

@@ -53,6 +53,7 @@ class Stadium extends Model
 
     public function bookingStatistics($dateFrom = null, $dateTo = null)
     {
+        // Получаем все бронирования в заданный период
         $bookings = $this->courts()->with(['bookings' => function ($query) use ($dateFrom, $dateTo) {
             if ($dateFrom) {
                 $query->whereDate('date', '>=', $dateFrom);
@@ -62,16 +63,41 @@ class Stadium extends Model
             }
         }])->get()->pluck('bookings')->flatten();
 
-        $totalHours = $bookings->sum(function ($booking) {
+        // Суммируем забронированные часы
+        $totalHoursBooked = $bookings->sum(function ($booking) {
             return $booking->getHours();
         });
 
+        // Рассчитываем доступные рабочие часы на основе расписаний кортов
+        $totalAvailableHours = $this->courts()->get()->reduce(function ($carry, $court) use ($dateFrom, $dateTo) {
+            $totalHours = 0;
+
+            // Получаем расписания для заданного периода
+            $schedules = $court->schedules()->get();
+
+            // Рассчитываем рабочие часы для каждого расписания
+            foreach ($schedules as $schedule) {
+                $start = \Carbon\Carbon::parse($schedule->start_time);
+                $end = \Carbon\Carbon::parse($schedule->end_time);
+                $totalHours += $end->diffInHours($start);
+            }
+
+            // Добавляем часы этого корта к общей сумме
+            return $carry + $totalHours;
+        }, 0);
+
+
+        // Рассчитываем незабронированные часы
+        $unbookedHours = $totalAvailableHours - $totalHoursBooked;
+
+        // Рассчитываем общую выручку и разделение на ручные и бот-бронирования
         $totalRevenue = $bookings->sum('price');
         $manualRevenue = $bookings->where('source', 'manual')->sum('price');
         $botRevenue = $totalRevenue - $manualRevenue;
 
+        // Возвращаем данные
         return [
-            'total_hours' => $totalHours,
+            'total_hours_booked' => $totalHoursBooked,
             'manual_hours' => $bookings->where('source', 'manual')->sum(function ($booking) {
                 return $booking->getHours();
             }),
@@ -81,8 +107,10 @@ class Stadium extends Model
             'total_revenue' => $totalRevenue,
             'manual_revenue' => $manualRevenue,
             'bot_revenue' => $botRevenue,
+            'unbooked_hours' => $unbookedHours,
         ];
     }
+
 
 
     public function getMinimumCourtCost(): ?int

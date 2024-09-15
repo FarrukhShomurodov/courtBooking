@@ -83,6 +83,7 @@ class StatisticsController extends Controller
             'total_revenue' => 0,
             'bot_revenue' => 0,
             'manual_revenue' => 0,
+            'unbooked_hours' => 0,
         ];
 
         foreach ($statistics as $statistic) {
@@ -92,6 +93,7 @@ class StatisticsController extends Controller
             $totalStatistics['total_revenue'] += $statistic['statistic']['total_revenue'];
             $totalStatistics['bot_revenue'] += $statistic['statistic']['bot_revenue'];
             $totalStatistics['manual_revenue'] += $statistic['statistic']['manual_revenue'];
+            $totalStatistics['unbooked_hours'] += $statistic['statistic']['unbooked_hours'];
         }
         return view('admin.statistics.stadiums', compact('statistics', 'sportTypes', 'ownerStadium', 'totalStatistics'));
     }
@@ -146,6 +148,7 @@ class StatisticsController extends Controller
             'total_revenue' => 0,
             'bot_revenue' => 0,
             'manual_revenue' => 0,
+            'unbooked_hours' => 0,
         ];
 
         foreach ($statistics as $statistic) {
@@ -155,6 +158,7 @@ class StatisticsController extends Controller
             $totalStatistics['total_revenue'] += $statistic['statistic']['total_revenue'];
             $totalStatistics['bot_revenue'] += $statistic['statistic']['bot_revenue'];
             $totalStatistics['manual_revenue'] += $statistic['statistic']['manual_revenue'];
+            $totalStatistics['unbooked_hours'] += $statistic['statistic']['unbooked_hours'];
         }
 
         $sportTypes = SportType::all();
@@ -212,6 +216,7 @@ class StatisticsController extends Controller
             'total_revenue' => 0,
             'manual_revenue' => 0,
             'bot_revenue' => 0,
+            'unbooked_hours' => 0,
         ];
 
         foreach ($statistics as $statistic) {
@@ -219,6 +224,7 @@ class StatisticsController extends Controller
             $totalStatistics['total_revenue'] += $statistic['statistic']['total_revenue'];
             $totalStatistics['manual_revenue'] += $statistic['statistic']['manual_revenue'];
             $totalStatistics['bot_revenue'] += $statistic['statistic']['bot_revenue'];
+            $totalStatistics['unbooked_hours'] += $statistic['statistic']['unbooked_hours'];
         }
 
         $stadiums = Stadium::all();
