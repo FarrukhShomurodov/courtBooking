@@ -28,21 +28,19 @@
                         },
                         body: JSON.stringify(userData)
                     });
+
                     let result = await response.json();
 
-                    if (result.exists == 'true') {
-                        tg.expand();
+                    if (result.exists) {
+                        if (result.isactive) {
+                            tg.expand();
+                        } else {
+                            tg.sendData('Пройдите регистрацию.');
+                        }
                     } else {
                         tg.sendData('Пользователь не найден.');
                         window.location.href = 'https://t.me/cuourts_bokking_bot';
                     }
-
-                    if (result.isactive == 1) {
-                        tg.expand();
-                    } else {
-                        tg.sendData('Пройдите регистрацию.');
-                    }
-
 
                 } catch (error) {
                     console.error('Error:', error);

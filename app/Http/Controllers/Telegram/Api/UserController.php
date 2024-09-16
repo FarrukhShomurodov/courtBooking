@@ -29,16 +29,18 @@ class UserController extends Controller
     public function hasUser(Request $request): JsonResponse
     {
         $userData = $request->all();
-
         $userId = $userData['user']['id'] ?? null;
 
-        if ($userId && BotUser::query()->where('chat_id', $userId)->exists()) {
+        $user = BotUser::query()->where('chat_id', $userId)->first();
+
+        if ($user) {
             return response()->json([
                 'exists' => true,
-                'isactive' => BotUser::query()->where('chat_id', $userId)->first()->isactive
+                'isactive' => $user->isactive
             ], 200);
         } else {
             return response()->json(['exists' => false], 200);
         }
     }
+
 }
