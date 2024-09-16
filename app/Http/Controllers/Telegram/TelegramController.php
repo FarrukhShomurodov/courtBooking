@@ -30,7 +30,7 @@ class TelegramController extends Controller
         // Retrieve or create a BotUser instance
         $user = BotUser::query()->firstOrCreate(['chat_id' => $chatId]);
 
-        if (!$user->isactive && ($user->step !== 'PHONE_REQUEST' || $user->step !== 'LANG_SELECTION' ||  $user->step !== 'VERIFY_PHONE')) {
+        if (!$user->isactive && ($user->step !== 'PHONE_REQUEST' || $user->step !== 'LANG_SELECTION' || $user->step !== 'VERIFY_PHONE')) {
             $this->telegram->sendMessage([
                 'chat_id' => $chatId,
                 'text' => __('telegram.user_isnt_active'),
@@ -151,7 +151,7 @@ class TelegramController extends Controller
             default:
                 if ($user->step === 'CHANGE_NAME') {
                     $this->saveNewName($chatId, $text, $user);
-                } else if($text != __('telegram.order_btn')){
+                } else if ($text != __('telegram.order_btn')) {
                     $this->sendMainMenu($chatId, $user);
                 }
                 break;
@@ -315,7 +315,7 @@ class TelegramController extends Controller
                 'text' => __('telegram.occur_error')
             ]);
             return;
-        }else{
+        } else {
             if ($user->step !== 'CHANGE_PHONE') {
                 $user->step = 'VERIFY_PHONE';
                 $user->save();
@@ -402,9 +402,10 @@ class TelegramController extends Controller
 //                    'text' => __('telegram.order_btn'),
 //                    'web_app' => ['url' => env('APP_URL').'telegram/webapp']
 //                ],
+                __('telegram.settings_in_menu'),
                 __('telegram.my_order_btn')],
 
-            [__('telegram.settings_in_menu'), __('telegram.support_connect'), __('telegram.faq')]
+            [__('telegram.support_connect'), __('telegram.faq')]
         ];
 
         $reply_markup = Keyboard::make([
