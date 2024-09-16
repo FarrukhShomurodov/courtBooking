@@ -103,6 +103,20 @@
             <h1 class="total-price">0 {{ __('findz/book.т.с') }}</h1>
         </div>
 
+        <div class="user-info mt-30">
+            <h3>{{ __('findz/book.user_info') }}</h3>
+            <div class="form-group">
+                <label for="user_name">{{ __('findz/book.name') }}</label><br>
+                <input class="w-100 user-info-form" type="text" id="user_name" name="user_name"
+                       placeholder="{{ __('findz/book.name') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="user_phone">{{ __('findz/book.phone_number') }}</label><br>
+                <input class="w-100 user-info-form" type="tel" id="user_phone" name="user_phone"
+                       placeholder="+998XX12345678" required>
+            </div>
+        </div>
+
         @if(!$isUpdate)
             <div class="payment-method mt-30">
                 <h3>{{ __('findz/book.Способ Оплаты') }}</h3>
@@ -116,7 +130,6 @@
         <div class="booking-rules mt-30">
             <p>{{ __('findz/book.Правила брони') }}</p>
             <ul>
-                {{--                <li>{{ __('findz/book.Резервация может быть отменена с возвратом средств, если до ее начала остается более чем 24 часа. В противном случае, средства не возвращаются') }}</li>--}}
                 <li>{{ __('findz/book.Рекомендуется быть на месте за 15 минут до начала') }}</li>
             </ul>
         </div>
@@ -128,7 +141,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @section('footer')
@@ -177,13 +189,13 @@
                     const dayOfWeek = getRussianDayOfWeek(selected_date);
                     $('.date').html(`${dateStr}, ${dayOfWeek}`);
                     $('.selected_date').html(`${dateStr}, ${dayOfWeek}`);
-                    dateObject =  new Date(dateStr);
+                    dateObject = new Date(dateStr);
                     const url = new URL(window.location.href);
                     url.searchParams.set('date', dateStr);
                     window.history.replaceState(null, null, url);
                 },
                 onChange: function (selectedDates, dateStr) {
-                 
+
                 },
             });
 
@@ -272,7 +284,7 @@
                 const daysOfWeek = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
                 @endif
 
-                return daysOfWeek[date.getDay()];
+                    return daysOfWeek[date.getDay()];
             }
 
             function updateSlots(data) {
@@ -480,7 +492,7 @@
                             acc.court_id = slot.court_id;
                             return acc;
                         }, {start: null, end: null, price: 0});
-                        
+
                         const slotDiv = $(`
                             <div class="selected-slot">
                                 <div>
@@ -537,7 +549,7 @@
             }
 
             @if($isUpdate)
-                setTimeout(() => updateSelectedSlots(true), 1000);
+            setTimeout(() => updateSelectedSlots(true), 1000);
             @endif
 
             let previousSelectedSlot = null;
@@ -620,7 +632,7 @@
                         slots.forEach((slot, index) => {
                             const slotElement = $(`.slot[data-court-id="${slot.court_id}"][data-time="${slot.time}"]`);
                             slotElement.addClass('selected').addClass('next_slot');
-                            
+
                             // Если это первый слот, убираем класс 'next_slot'
                             if (index === 0) {
                                 slotElement.removeClass('next_slot');
@@ -639,8 +651,6 @@
                     updateSelectedSlots(true);
                 }
             }
-
-
 
 
             $(document).ready(function () {
@@ -665,6 +675,30 @@
                 @endif
             });
 
+
+            let tg = window.Telegram.WebApp;
+            let userData = tg.initDataUnsafe;
+            let chat_id = userData.user.id;
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url: `/api/bot-user/${chat_id}`,
+                method: 'GET',
+                success: function (response) {
+                    if (response.success) {
+                        const user = response.data;
+
+                        $('#user_name').val(`${user.first_name} ${user.second_name || ''}`.trim())
+                        $('#user_phone').val(user.phone)
+                    }
+                }
+            });
+
             $(document).on('click', '.book', function () {
                 const selectedSlots = [];
                 $('.selected-slots .selected-slot').each(function () {
@@ -683,10 +717,6 @@
                     $('.res_error').append(errorHtml);
                     $('#error_modal').fadeIn().delay(5000).fadeOut();
                 } else {
-                    let tg = window.Telegram.WebApp;
-                    let userData = tg.initDataUnsafe;
-                    let chat_id = userData.user.id;
-
                     $.ajaxSetup({
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -702,8 +732,8 @@
 
                                 const bookingData = {
                                     bot_user_id: user.id,
-                                    full_name: `${user.first_name} ${user.second_name || ''}`.trim(),
-                                    phone_number: user.phone,
+                                    full_name: $('#user_name').val(),
+                                    phone_number: $('#user_phone').val(),
                                     slots: selectedSlots,
                                     date: selectedDate,
                                     source: 'bot'
@@ -789,7 +819,8 @@
                     });
                 }
             });
-        });
+        })
+        ;
 
     </script>
 @endsection

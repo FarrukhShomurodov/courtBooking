@@ -18,6 +18,9 @@ return [
     'added_to_favorites' => 'Sevimlilarga qo\'shildi',
     'close_btn' => 'yopish tugmasi',
     'book_now' => 'Buyurtma berish',
+    'name' => 'Ism',
+    'phone_number' => 'Telefon raqami',
+    'user_info' => 'Foydalanuvchi haqida maʼlumot',
 
     'Итого:' => 'Jami:',
     'Способ Оплаты' => 'To\'lov usuli',

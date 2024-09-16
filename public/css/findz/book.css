@@ -279,3 +279,13 @@
 .flatpickr-weekdays {
     padding: 10px !important;
 }
+
+.user-info-form{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 7px 16px;
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    border-radius: 8px;
+}
