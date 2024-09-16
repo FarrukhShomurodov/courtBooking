@@ -28,9 +28,9 @@ class TelegramController extends Controller
         $text = $update->getMessage()->getText();
 
         // Retrieve or create a BotUser instance
-        $user = BotUser::query()->firstOrCreate(['chat_id' => $chatId], ['isactive' => true]);
+        $user = BotUser::query()->firstOrCreate(['chat_id' => $chatId]);
 
-        if (!$user->isactive) {
+        if (!$user->isactive && ($user->step !== 'PHONE_REQUEST' || $user->step !== 'LANG_SELECTION' ||  $user->step !== 'VERIFY_PHONE')) {
             $this->telegram->sendMessage([
                 'chat_id' => $chatId,
                 'text' => __('telegram.user_isnt_active'),
@@ -148,22 +148,6 @@ class TelegramController extends Controller
                 $user->save();
                 $this->requestNewName($chatId);
                 break;
-//            case __('telegram.order_btn'):
-//                $keyboard = [
-//                    [
-//                        ['text' => 'webapp', 'web_app' => ['url' => env('APP_URL') . '/telegram/webapp?lang=' . $user->lang]],
-//                    ]
-//                ];
-//
-//                $reply_markup = Keyboard::make([
-//                    'inline_keyboard' => $keyboard
-//                ]);
-//
-//                $this->telegram->sendMessage([
-//                    'chat_id' => $chatId,
-//                    'text' => __('telegram.order_btn'),
-//                    'reply_markup' => $reply_markup,
-//                ]);
             default:
                 if ($user->step === 'CHANGE_NAME') {
                     $this->saveNewName($chatId, $text, $user);
@@ -377,7 +361,7 @@ class TelegramController extends Controller
                 $user->save();
                 $this->sendSettings($chatId, $user);
             } else {
-//                $user->isactive = true;
+                $user->isactive = true;
                 $user->step = 'OFFER';
                 $user->save();
                 $this->sendOffer($chatId);
