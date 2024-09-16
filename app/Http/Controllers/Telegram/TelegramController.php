@@ -398,10 +398,10 @@ class TelegramController extends Controller
     {
         $keyboard = [
             [
-                [
-                    'text' => __('telegram.order_btn'),
-                    'web_app' => ['url' => env('APP_URL').'telegram/webapp']
-                ],
+//                [
+//                    'text' => __('telegram.order_btn'),
+//                    'web_app' => ['url' => env('APP_URL').'telegram/webapp']
+//                ],
                 __('telegram.my_order_btn')],
 
             [__('telegram.settings_in_menu'), __('telegram.support_connect'), __('telegram.faq')]
