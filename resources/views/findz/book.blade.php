@@ -807,6 +807,7 @@
                             <input type="hidden" name="lang" value="{{app()->getLocale()}}">
                             <input type="hidden" name="callback" value="{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}">
                             <input type="hidden" name="button" data-type="svg" value="colored">
+                            <input type="submit" value="btn">
                         </form>
                     `;
 
