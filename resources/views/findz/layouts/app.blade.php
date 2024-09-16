@@ -31,6 +31,8 @@
 
                     let result = await response.json();
 
+                    console.log(result)
+
                     if (result.exists) {
                         if (result.isactive) {
                             tg.expand();
@@ -44,6 +46,7 @@
 
                 } catch (error) {
                     console.error('Error:', error);
+                    window.location.href = 'https://t.me/cuourts_bokking_bot';
                 }
             }
 
