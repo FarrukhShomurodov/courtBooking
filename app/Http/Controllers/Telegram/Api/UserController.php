@@ -36,7 +36,7 @@ class UserController extends Controller
         if ($user) {
             return response()->json([
                 'exists' => true,
-                'isactive' => $user->isactive
+                'isactive' => $user->isactive == 1
             ], 200);
         } else {
             return response()->json(['exists' => false], 200);
