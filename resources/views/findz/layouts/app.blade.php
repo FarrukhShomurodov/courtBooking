@@ -38,7 +38,7 @@
                             tg.expand();
                         } else {
                             tg.sendData('Пройдите регистрацию.');
-                            window.location.href = 'https://t.me/cuourts_bokking_bot';
+                            tg.close()
                         }
                     } else {
                         tg.sendData('Пользователь не найден.');
