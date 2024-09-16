@@ -35,7 +35,7 @@ class UserController extends Controller
         if ($userId && BotUser::query()->where('chat_id', $userId)->exists()) {
             return response()->json([
                 'exists' => true,
-                'isactive' => BotUser::query()->where('chat_id', $userId)->get()->isactive
+                'isactive' => BotUser::query()->where('chat_id', $userId)->first()->isactive
             ], 200);
         } else {
             return response()->json(['exists' => false], 200);
