@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="{{ asset('css/findz/style.css') }}"/>
     <link rel="stylesheet" href="{{ asset('css/findz/findz.css') }}"/>
     @yield('extra-css')
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+{{--    <script src="https://telegram.org/js/telegram-web-app.js"></script>--}}
+    <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
     <script>
         window.addEventListener('DOMContentLoaded', async (event) => {
             let tg = window.Telegram.WebApp;
