@@ -29,7 +29,8 @@
                         body: JSON.stringify(userData)
                     });
                     let result = await response.json();
-                    console.log(result)
+                    console.log(result.exists)
+                    console.log(result.isactive)
                     if (result.exists) {
                         tg.expand();
                     } else {
