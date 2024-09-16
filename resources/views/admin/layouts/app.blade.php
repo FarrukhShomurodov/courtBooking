@@ -122,9 +122,6 @@
 <script src="{{asset('vendor/libs/flatpickr/flatpickr.js')}}"></script>
 <script src="{{asset('vendor/libs/moment/moment.js')}}"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 <!-- Main JS -->
 <script src="{{ asset('js/main.js') }}"></script>
 <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
@@ -137,8 +134,10 @@
 <script>
     flatpickr.localize(flatpickr.l10ns.ru);
 </script>
-@yield('scripts')
 
+@yield('scripts')
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+{{--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>--}}
 </body>
 
 </html>

@@ -35,7 +35,7 @@ class StadiumRequest extends FormRequest
             'map_link' => 'required|string',
             'sport_types' => 'required|array',
             'sport_types.*' => 'required|integer|exists:sport_types,id',
-            'photos' => 'sometimes|array',
+            'photos' => 'sometimes|array|max:25',
             'photos.*' => 'image|mimes:jpg,png',
             'is_active' => 'nullable|boolean',
             'owner_id' => [
