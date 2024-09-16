@@ -8,7 +8,8 @@
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-header">{{ __('court.courts') }}</h5>
-            <a href="{{ route('courts.create') }}" class="btn btn-primary" style="margin-right: 22px;">{{ __('court.create') }}</a>
+            <a href="{{ route('courts.create') }}" class="btn btn-primary"
+               style="margin-right: 22px;">{{ __('court.create') }}</a>
         </div>
 
         <div class="res_error"></div>
@@ -29,18 +30,27 @@
                     <th>{{ __('court.sport_types') }}</th>
                     <th>{{ __('court.is_active') }}</th>
                     @role('admin')
-                        <th>{{ __('court.stadium') }}</th>
+                    <th>{{ __('court.stadium') }}</th>
                     @endrole
                     <th>{{ __('court.photos') }}</th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
-
                 @foreach($courts as $court)
                     <tr>
                         <td>{{ $court->id }}</td>
-                        <td>{{ $court->name }}</td>
+                        <td>
+                            <a href="#" class="court-name"
+                               data-bs-toggle="modal"
+                               data-bs-target="#courtModal"
+                               data-court-name="{{ $court->name }}"
+                               data-court-description="{{ $court->description }}"
+                               data-court-photos='{{ json_encode($court->photos) }}'
+                            >
+                                {{ $court->name }}
+                            </a>
+                        </td>
                         <td>{{ $court->sportTypes->name }}</td>
                         <td>
                             <label class="switch">
@@ -87,12 +97,27 @@
             </table>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="courtModal" tabindex="-1" aria-labelledby="courtModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="courtModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="court-description"></div>
+                    <div class="court-photos"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
     <script>
         $(document).ready(function () {
-
             $('.switch-input').on('change', function () {
                 let switchInput = $(this);
                 let userId = $(this).data('user-id');
@@ -112,9 +137,7 @@
                         let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
                         $('.res_error').append(errorHtml);
 
-
                         switchInput.prop('checked', !isActive);
-
 
                         setTimeout(function () {
                             $('.res_error').html('');
@@ -123,14 +146,33 @@
                 });
             });
 
+
+            $('.court-name').on('click', function () {
+                let name = $(this).data('court-name');
+                let description = $(this).data('court-description');
+
+                $('#courtModalLabel').text(name);
+                $('.court-description').html(description ? `<p>${description}</p>` : `<p>No description available.</p>`);
+
+
+            });
+
+
+
+            // Initialize tooltips if needed
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
             $('.popup-img').on('click', function () {
                 var src = $(this).attr('src');
                 var popup = `
-                <div class="popup-overlay" onclick="$(this).remove()">
-                    <img src="${src}" class="popup-img-expanded">
-                </div>
-            `;
-                $('body').append(popup);
+                    <div class="popup-overlay" onclick="$(this).remove()">
+                        <img src="${src}" class="popup-img-expanded">
+                    </div>`
+            ;
+            $('body').append(popup);
             });
         });
     </script>
