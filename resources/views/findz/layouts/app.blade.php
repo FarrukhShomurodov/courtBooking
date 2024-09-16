@@ -29,14 +29,21 @@
                         body: JSON.stringify(userData)
                     });
                     let result = await response.json();
-                    console.log(result.exists)
-                    console.log(result.isactive)
-                    if (result.exists) {
+
+                    if (result.exists == 'true') {
                         tg.expand();
                     } else {
-                        tg.sendData('User not found');
+                        tg.sendData('Пользователь не найден.');
                         window.location.href = 'https://t.me/cuourts_bokking_bot';
                     }
+
+                    if (result.isactive === '1') {
+                        tg.expand();
+                    } else {
+                        tg.sendData('Пройдите регистрацию.');
+                    }
+
+
                 } catch (error) {
                     console.error('Error:', error);
                 }
