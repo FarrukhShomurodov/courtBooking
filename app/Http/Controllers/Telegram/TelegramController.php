@@ -167,7 +167,7 @@ class TelegramController extends Controller
             default:
                 if ($user->step === 'CHANGE_NAME') {
                     $this->saveNewName($chatId, $text, $user);
-                } else {
+                } else if($text != __('telegram.order_btn')){
                     $this->sendMainMenu($chatId, $user);
                 }
                 break;

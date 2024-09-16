@@ -13,8 +13,9 @@
     <script>
         window.addEventListener('DOMContentLoaded', async (event) => {
             let tg = window.Telegram.WebApp;
+            tg.expand();
             let userData = tg.initDataUnsafe;
-            let botUserId = userData.user.id;
+            let chatID = userData.user.id;
 
             // Функция для проверки наличия пользователя на сервере
             async function checkUser() {
@@ -48,7 +49,7 @@
             let myBookingsLink = document.getElementById('myBookingsLink');
             if (myBookingsLink) {
                 @if($currentSportTypeId)
-                    myBookingsLink.href = `https://st40.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${botUserId}`;
+                    myBookingsLink.href = `https://st40.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chatID}`;
                 @endif
             }
 
@@ -58,7 +59,7 @@
             let myBookingsImg = document.getElementById('myBookingsImg');
             if (myBookingsImg) {
                 myBookingsImg.onclick = function() {
-                    location.href = `https://st40.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${botUserId}`;
+                    location.href = `https://st40.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chatID}`;
                 };
             }
             @endif
