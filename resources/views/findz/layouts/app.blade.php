@@ -29,6 +29,7 @@
                         body: JSON.stringify(userData)
                     });
                     let result = await response.json();
+                    console.log(result)
                     if (result.exists) {
                         tg.expand();
                     } else {
