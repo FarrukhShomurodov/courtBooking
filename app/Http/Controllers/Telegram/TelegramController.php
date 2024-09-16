@@ -148,22 +148,22 @@ class TelegramController extends Controller
                 $user->save();
                 $this->requestNewName($chatId);
                 break;
-            case __('telegram.order_btn'):
-                $keyboard = [
-                    [
-                        ['text' => 'webapp', 'web_app' => ['url' => env('APP_URL') . '/telegram/webapp?lang=' . $user->lang]],
-                    ]
-                ];
-
-                $reply_markup = Keyboard::make([
-                    'inline_keyboard' => $keyboard
-                ]);
-
-                $this->telegram->sendMessage([
-                    'chat_id' => $chatId,
-                    'text' => __('telegram.order_btn'),
-                    'reply_markup' => $reply_markup,
-                ]);
+//            case __('telegram.order_btn'):
+//                $keyboard = [
+//                    [
+//                        ['text' => 'webapp', 'web_app' => ['url' => env('APP_URL') . '/telegram/webapp?lang=' . $user->lang]],
+//                    ]
+//                ];
+//
+//                $reply_markup = Keyboard::make([
+//                    'inline_keyboard' => $keyboard
+//                ]);
+//
+//                $this->telegram->sendMessage([
+//                    'chat_id' => $chatId,
+//                    'text' => __('telegram.order_btn'),
+//                    'reply_markup' => $reply_markup,
+//                ]);
             default:
                 if ($user->step === 'CHANGE_NAME') {
                     $this->saveNewName($chatId, $text, $user);
@@ -416,6 +416,7 @@ class TelegramController extends Controller
             [
                 [
                     'text' => __('telegram.order_btn'),
+                    'web_app' => ['url' => env('APP_URL').'telegram/webapp']
                 ],
                 __('telegram.my_order_btn')],
 
