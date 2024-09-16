@@ -200,3 +200,25 @@ footer ul li a {
     background-color: #B2F888 !important;
     color: black !important;
 }
+
+.scroll-container .slick-slide {
+    padding: 0 10px;
+}
+
+.scroll-container img {
+    border-radius: 12px;
+    width: 100%;
+    height: auto;
+}
+
+.slick-dots {
+    bottom: 10px;
+}
+
+.slick-dots li button:before {
+    color: white !important;
+}
+
+.slick-dots li.slick-active button:before {
+    color: #B2F888 !important;
+}

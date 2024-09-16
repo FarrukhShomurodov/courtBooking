@@ -85,6 +85,44 @@
 @section('extra-scripts')
     <script>
         $(document).ready(function () {
+            $('.scroll-container').slick({
+                infinite: true,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                dots: true,
+                arrows: true,
+                adaptiveHeight: true
+            });
+
+            $('.scroll-wrapper').on('wheel', function(event) {
+                if (event.originalEvent.deltaY !== 0) {
+                    this.scrollLeft += event.originalEvent.deltaY;
+                    event.preventDefault();
+                }
+            });
+
+            $('#lang-icon').on('click', function() {
+                $('.select-lang').css('display', 'block');
+                $('.container_mobile').css('margin', '152px auto 0', 'important');
+
+                @if(request('date') || request('start_time') || request('end_time'))
+                $('.date_time ').css('top', '136px');
+                $('.container_mobile').css('margin', '202px  auto 0', 'important');
+                @endif
+            });
+
+            $(window).on('click', function(event) {
+                if (!$(event.target).closest('.select-lang, #lang-icon').length) {
+                    $('.select-lang').hide();
+                    $('.container_mobile').css('margin', '122px auto 0', 'important');
+
+                    @if(request('date') || request('start_time') || request('end_time'))
+                    $('.date_time ').css('top', '95px');
+                    $('.container_mobile').css('margin', '182px auto 0', 'important');
+                    @endif
+                }
+            });
+
             LlfromAddress('{{$stadium->address}}')
 
             function truncateText(selector, maxChars) {
