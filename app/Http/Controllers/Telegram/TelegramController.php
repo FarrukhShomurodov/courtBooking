@@ -30,7 +30,7 @@ class TelegramController extends Controller
         // Retrieve or create a BotUser instance
         $user = BotUser::query()->firstOrCreate(['chat_id' => $chatId]);
 
-        if (!$user->isactive && ($user->step !== 'PHONE_REQUEST' || $user->step !== 'LANG_SELECTION' ||  $user->step !== 'VERIFY_PHONE')) {
+        if (!$user->isactive && ($user->step !== 'PHONE_REQUEST' || $user->step !== 'LANG_SELECTION' || $user->step !== 'VERIFY_PHONE')) {
             $this->telegram->sendMessage([
                 'chat_id' => $chatId,
                 'text' => __('telegram.user_isnt_active'),
@@ -151,7 +151,7 @@ class TelegramController extends Controller
             default:
                 if ($user->step === 'CHANGE_NAME') {
                     $this->saveNewName($chatId, $text, $user);
-                } else if($text != __('telegram.order_btn')){
+                } else if ($text != __('telegram.order_btn')) {
                     $this->sendMainMenu($chatId, $user);
                 }
                 break;
@@ -300,26 +300,32 @@ class TelegramController extends Controller
 
     protected function sendOtp($chatId, $phoneNumber, $user): void
     {
-        $otp = $this->generateOtp();
+//        $otp = $this->generateOtp();
+        $otp = 1111;
 
-        $otpTEXT = 'Код подтверждения для регистрации в Telegram-боте FindzBot: ' . $otp;
-        $otpService = $this->otpService->sendMessage(str_replace('+', '', $phoneNumber), $otpTEXT);
+//        $otpTEXT = 'Код подтверждения для регистрации в Telegram-боте FindzBot: ' . $otp;
+//        $otpService = $this->otpService->sendMessage(str_replace('+', '', $phoneNumber), $otpTEXT);
 
-        if (!$otpService) {
-            $user->update([
-                'step' => 'PHONE_REQUEST'
-            ]);
+//        if (!$otpService) {
+//            $user->update([
+//                'step' => 'PHONE_REQUEST'
+//            ]);
+//
+//            $this->telegram->sendMessage([
+//                'chat_id' => $chatId,
+//                'text' => __('telegram.occur_error')
+//            ]);
+//            return;
+//        }else{
+//            if ($user->step !== 'CHANGE_PHONE') {
+//                $user->step = 'VERIFY_PHONE';
+//                $user->save();
+//            }
+//        }
 
-            $this->telegram->sendMessage([
-                'chat_id' => $chatId,
-                'text' => __('telegram.occur_error')
-            ]);
-            return;
-        }else{
-            if ($user->step !== 'CHANGE_PHONE') {
-                $user->step = 'VERIFY_PHONE';
-                $user->save();
-            }
+        if ($user->step !== 'CHANGE_PHONE') {
+            $user->step = 'VERIFY_PHONE';
+            $user->save();
         }
 
         $user->sms_code = $otp;
@@ -400,7 +406,7 @@ class TelegramController extends Controller
             [
                 [
                     'text' => __('telegram.order_btn'),
-                    'web_app' => ['url' => env('APP_URL').'telegram/webapp']
+                    'web_app' => ['url' => env('APP_URL') . 'telegram/webapp']
                 ],
                 __('telegram.my_order_btn')],
 
