@@ -37,7 +37,7 @@
                         window.location.href = 'https://t.me/cuourts_bokking_bot';
                     }
 
-                    if (result.isactive === '1') {
+                    if (result.isactive == 1) {
                         tg.expand();
                     } else {
                         tg.sendData('Пройдите регистрацию.');
