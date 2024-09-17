@@ -55,6 +55,7 @@ class Stadium extends Model
     {
         // Получаем все бронирования в заданный период
         $bookings = $this->courts()->with(['bookings' => function ($query) use ($dateFrom, $dateTo) {
+            $query->where('status', 'paid');
             if ($dateFrom) {
                 $query->whereDate('date', '>=', $dateFrom);
             }
