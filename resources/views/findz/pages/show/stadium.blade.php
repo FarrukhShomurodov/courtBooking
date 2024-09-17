@@ -3,6 +3,11 @@
 @section('extra-css')
     <link rel="stylesheet" href="{{ asset('css/findz/filter.css') }}"/>
     <link rel="stylesheet" href="{{ asset('css/findz/show.css') }}"/>
+    <style>
+        .container_mobile{
+            margin: 90px auto 0;
+        }
+    </style>
 @endsection
 
 @section('header')
