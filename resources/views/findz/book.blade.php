@@ -41,7 +41,7 @@
                 <thead>
                 <tr>
                     @foreach($courts as $court)
-                        <th class="court_name" data-court-id="{{ $court->id }}">{{ $court->name }}</th>
+                        <th class="court_name pointer" data-court-id="{{ $court->id }}">{{ $court->name }}</th>
                     @endforeach
                 </tr>
                 </thead>
