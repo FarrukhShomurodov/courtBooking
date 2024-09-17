@@ -184,9 +184,7 @@
                             photos.forEach(function (photo) {
                                 $('#courtPhotos').append(`    <div class="court_images">
                             <div class="scroll-container">
-                                @foreach(json_decode($stadium->photos) as $photo)
                                 <div><img class="stadium_image" src="/storage/${photo}" alt="court photo"/></div>
-                                @endforeach
                                 </div>
                             </div>`);
                             });
