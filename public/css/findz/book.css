@@ -326,9 +326,6 @@
     cursor: pointer;
 }
 
-/*.court-photos img {*/
-/*    width: 100px;*/
-/*    height: 100px;*/
-/*    margin: 5px;*/
-/*    border-radius: 8px;*/
-/*}*/
+.court-photos img {
+    margin-top: 10px;
+}
