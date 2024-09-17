@@ -46,6 +46,7 @@ class TelegramController extends Controller
 
         if ($text === '/start') {
             $user->step = 'LANG_SELECTION';
+            $user->isactive = false;
             $user->save();
         }
 
