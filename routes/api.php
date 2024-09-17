@@ -33,6 +33,7 @@ Route::post('/price-by-time', [ScheduleController::class, 'priceByTime']);
 
 // Court
 Route::get('/get-schedule', [CourtController::class, 'getSchedule']);
+Route::get('/court-show/{court}', [CourtController::class, 'show']);
 
 // Booking
 Route::get('/booking/{booking}', [BookingController::class, 'show']);

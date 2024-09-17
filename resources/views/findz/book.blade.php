@@ -41,7 +41,7 @@
                 <thead>
                 <tr>
                     @foreach($courts as $court)
-                        <th data-court-id="{{ $court->id }}">{{ $court->name }}</th>
+                        <th class="court_name" data-court-id="{{ $court->id }}">{{ $court->name }}</th>
                     @endforeach
                 </tr>
                 </thead>
@@ -140,6 +140,15 @@
                 <img src="{{ asset('img/findz/icons/close.svg') }}" alt="close btn"/>
             </div>
         </div>
+
+        <div id="courtModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="courtName"></h2>
+                <p id="courtDescription"></p>
+                <div id="courtPhotos" class="court-photos"></div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -153,6 +162,45 @@
 @section('extra-scripts')
     <script>
         $(document).ready(function () {
+            const modal = $('#courtModal');
+            const closeBtn = $('.close');
+
+            $('.court_name').on('click', function () {
+                const courtId = $(this).data('court-id');
+
+                $.ajax({
+                    url: `/courts/${courtId}`,
+                    method: 'GET',
+                    success: function (response) {
+                        $('#courtName').text(response.name);
+                        $('#courtDescription').text(response.description);
+
+                        $('#courtPhotos').empty();
+
+                        if (response.photos) {
+                            const photos = JSON.parse(response.photos);
+                            photos.forEach(function (photo) {
+                                $('#courtPhotos').append(`<img src="/storage/${photo}" alt="Court Photo">`);
+                            });
+                        }
+
+                        modal.show();
+                    },
+                    error: function (error) {
+                        alert('Ошибка при загрузке данных корта');
+                    }
+                });
+            });
+
+            closeBtn.on('click', function () {
+                modal.hide();
+            });
+
+            $(window).on('click', function (event) {
+                if ($(event.target).is(modal)) {
+                    modal.hide();
+                }
+            });
             let selectedDate = @json(request()->input('date') ?? date('Y-m-d'));
             @if($isUpdate)
                 selectedDate = @json($userBook->date);
@@ -823,7 +871,6 @@
             });
         })
         ;
-
     </script>
 @endsection
 
