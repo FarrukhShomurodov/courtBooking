@@ -67,7 +67,7 @@ class BookingController extends Controller
                 'bot_user_id' => $validated['bot_user_id'],
                 'full_name' => $fullName,
                 'phone_number' => $phoneNumber,
-                'price' => $slot['price'],
+                'price' => $slot['price'] * 1000,
                 'date' => $date,
                 'start_time' => $slot['start_time'],
                 'end_time' => $slot['end_time'],
