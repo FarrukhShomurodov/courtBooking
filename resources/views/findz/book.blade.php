@@ -182,11 +182,34 @@
                         if (response.photos) {
                             const photos = JSON.parse(response.photos);
                             photos.forEach(function (photo) {
-                                $('#courtPhotos').append(`    <div class="court_images">
-                            <div class="scroll-container">
-                                <div><img class="stadium_image" src="/storage/${photo}" alt="court photo"/></div>
+                                $('#courtPhotos').append(`
+                            <div class="court_images">
+                                <div class="scroll-container">
+                                    <div><img class="stadium_image" src="/storage/${photo}" alt="court photo"/></div>
                                 </div>
                             </div>`);
+                            });
+                            $('.scroll-container').slick({
+                                infinite: true,
+                                slidesToShow: 1,
+                                slidesToScroll: 1,
+                                dots: true,
+                                arrows: true,
+                                adaptiveHeight: true
+                            });
+
+                            $('.scroll-wrapper').on('wheel', function(event) {
+                                if (event.originalEvent.deltaY !== 0) {
+                                    this.scrollLeft += event.originalEvent.deltaY;
+                                    event.preventDefault();
+                                }
+                            });
+
+                            $('.scroll-wrapper').on('wheel', function (event) {
+                                if (event.originalEvent.deltaY !== 0) {
+                                    this.scrollLeft += event.originalEvent.deltaY;
+                                    event.preventDefault();
+                                }
                             });
                         }
 
@@ -197,6 +220,7 @@
                     }
                 });
             });
+
 
             closeBtn.on('click', function () {
                 modal.hide();
