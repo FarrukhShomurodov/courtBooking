@@ -141,11 +141,11 @@
             $(window).on('click', function(event) {
                 if (!$(event.target).closest('.select-lang, #lang-icon').length) {
                     $('.select-lang').hide();
-                    $('.container_mobile').css('margin', '122px auto 0', 'important');
+                    // $('.container_mobile').css('margin', '122px auto 0', 'important');
 
                     @if(request('date') || request('start_time') || request('end_time'))
                     $('.date_time ').css('top', '95px');
-                    $('.container_mobile').css('margin', '182px auto 0', 'important');
+                    // $('.container_mobile').css('margin', '182px auto 0', 'important');
                     @endif
                 }
             });
@@ -163,7 +163,7 @@
 
                 @if(request('date') || request('start_time') || request('end_time'))
                 $('.date_time ').css('top', '136px');
-                $('.container_mobile').css('margin', '202px  auto 0', 'important');
+                // $('.container_mobile').css('margin', '202px  auto 0', 'important');
                 @endif
             });
 
