@@ -336,10 +336,10 @@
                             <div class="slot ${slotClass} ${selectedClass}"
                                 data-time="${schedule.start_time.slice(0, 5)}"
                                 data-field="${court.name}"
-                                data-price="${schedule.cost}"
+                                data-price="${Math.round(schedule.cost)}"
                                 data-court-id="${court.id}">
                                 ${schedule.start_time.slice(0, 5)}<br>
-                                <span>${schedule.cost} т.с/ч</span>
+                                <span>${Math.round(schedule.cost)} т.с/ч</span>
                             </div>
                         `;
                         }
