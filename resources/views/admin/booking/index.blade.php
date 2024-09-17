@@ -4,7 +4,7 @@
 @extends('admin.layouts.app')
 
 @section('title')
-    <title>{{'Frest - '. __('book.all_book') }}</title>
+    <title>{{'Findz - '. __('book.all_book') }}</title>
 @endsection
 
 @section('content')

@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('title')
-    <title>Dashboard - Analytics | Frest - Bootstrap Admin</title>
+    <title>Dashboard - Analytics | Findz - Bootstrap Admin</title>
 @endsection
 
 

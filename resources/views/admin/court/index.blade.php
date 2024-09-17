@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('title')
-    <title>{{'Frest - '. __('court.courts') }}</title>
+    <title>{{'Findz - '. __('court.courts') }}</title>
 @endsection
 
 @section('content')

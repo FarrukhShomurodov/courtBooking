@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('title')
-    <title>{{'Frest - '. __('stadium.create_stadium') }}</title>
+    <title>{{'Findz - '. __('stadium.create_stadium') }}</title>
 @endsection
 
 
