@@ -44,7 +44,7 @@
                     <div class="stadium_desc mt-15">
                         <p>{{ $booking->start_time }} - {{  $booking->end_time}} | {{ $booking->date}}</p>
                         <p>{{ $booking->court->stadium->name }}, {{  $booking->court->name }}</p>
-                        <span>{{ $booking->price }} {{ __('findz/book.currency') }}</span>
+                        <span>{{ round($booking->price) / 1000 }} {{ __('findz/book.currency') }}</span>
                         <span>{{ $booking->court->stadium->address }}</span>
                         @if($hoursRemaining <= 24)
                             <i>Перенос брони менее чем за 24 часа невозможен.</i>

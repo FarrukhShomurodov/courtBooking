@@ -798,6 +798,7 @@
 
                     function initiatePaycomPayment(bookingId, amount) {
                         let formattedAmount = Math.round(amount);
+                        let callback = `https://st40.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chat_id}`;
 
                         let paycomForm = `
                         <form id="form-payme" method="POST" action="https://checkout.paycom.uz">
@@ -805,7 +806,7 @@
                             <input type="hidden" name="account[book_id]" value="${bookingId[0]}">
                             <input type="hidden" name="amount" value="${formattedAmount}">
                             <input type="hidden" name="lang" value="{{app()->getLocale()}}">
-                            <input type="hidden" name="callback" value="{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}">
+                            <input type="hidden" name="callback" value="${callback}">
                             <input type="hidden" name="button" data-type="svg" value="colored">
                             <input type="submit" value="btn">
                         </form>
