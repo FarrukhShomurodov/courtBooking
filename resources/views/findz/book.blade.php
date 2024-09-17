@@ -169,7 +169,7 @@
                 const courtId = $(this).data('court-id');
 
                 $.ajax({
-                    url: `/courts/${courtId}`,
+                    url: `/api/court-show/${courtId}`,
                     method: 'GET',
                     success: function (response) {
                         $('#courtName').text(response.name);
