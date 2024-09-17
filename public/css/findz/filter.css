@@ -1,7 +1,8 @@
 .footer_btn {
-    margin-top: 16px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     border-radius: 44px;
-    width: 342px;
+    width: 100%;
     padding: 20px 40px 20px 40px;
     font-size: 16px;
     font-weight: 600;

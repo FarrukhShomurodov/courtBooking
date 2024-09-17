@@ -22,7 +22,7 @@
                     <div class="court_images">
                         <div class="scroll-container">
                             @foreach(json_decode($stadium->photos) as $photo)
-                                <img src="{{ \Illuminate\Support\Facades\Storage::url($photo) }}" alt="Stadium photos"/>
+                                <img class="stadium_image" src="{{ \Illuminate\Support\Facades\Storage::url($photo) }}" alt="Stadium photos"/>
                             @endforeach
                         </div>
                     </div>
