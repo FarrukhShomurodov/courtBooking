@@ -147,7 +147,7 @@
                     <h2 id="courtName"></h2>
                     <span class="close"><img src="{{ asset('img/findz/icons/close.svg') }}" alt="close btn"/></span>
                 </div>
-                <p id="courtDescription"></p>
+                <span id="courtDescription"></span>
                 <div id="courtPhotos" class="court-photos"></div>
             </div>
         </div>
