@@ -187,9 +187,9 @@ footer ul li a {
     display: flex;
 }
 
-.scroll-container img {
-    margin-right: 10px; /* Space between images */
-}
+/*.scroll-container img {*/
+/*    margin-right: 10px; !* Space between images *!*/
+/*}*/
 
 .select-lang {
     display: none;
@@ -214,11 +214,7 @@ footer ul li a {
 }
 
 .scroll-container .slick-slide {
-    padding-right: 5px;
-}
-
-.scroll-container .slick-slide::first-line {
-    padding-right: 0 !important;
+    margin: 5px;
 }
 
 .scroll-container img {
