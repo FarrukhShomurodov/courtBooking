@@ -143,7 +143,7 @@
 
         <div id="courtModal" class="modal">
             <div class="modal-content">
-                <span class="close">&times;</span>
+                <span class="close"><img src="{{ asset('img/findz/icons/close.svg') }}" alt="close btn"/></span>
                 <h2 id="courtName"></h2>
                 <p id="courtDescription"></p>
                 <div id="courtPhotos" class="court-photos"></div>
