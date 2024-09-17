@@ -7,6 +7,9 @@
         .container_mobile{
             margin: 90px auto 0;
         }
+        .date_time{
+            padding: 0 !important;
+        }
     </style>
 @endsection
 
