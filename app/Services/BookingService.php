@@ -30,10 +30,11 @@ class BookingService
                 'full_name' => $validated['full_name'],
                 'phone_number' => $validated['phone_number'],
                 'date' => $validated['date'],
-                'price' => $validated['price'],
+                'price' => $validated['price'] * 100000 ,
                 'start_time' => $startTime->toTimeString(),
                 'end_time' => $endTime->toTimeString(),
                 'source' => $validated['source'],
+                'status' => 'paid',
             ]);
 
             // $this->updateCourtSchedule($courtId, $startTime, $endTime);
