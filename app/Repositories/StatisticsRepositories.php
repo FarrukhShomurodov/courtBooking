@@ -99,11 +99,10 @@ class StatisticsRepositories
     {
         // Получаем все бронирования в заданный период
         $bookings = $court->bookings()->when($dateFrom, function ($query, $dateFrom) {
-            $query->where('status', 'paid');
             $query->whereDate('date', '>=', $dateFrom);
         })->when($dateTo, function ($query, $dateTo) {
             $query->whereDate('date', '<=', $dateTo);
-        })->get();
+        })->where('status', 'paid')->get();
 
         // Считаем забронированные часы
         $totalHoursBooked = $bookings->sum(function ($booking) {
@@ -168,6 +167,7 @@ class StatisticsRepositories
         // Сбор всех бронирований для подсчета незабронированных часов
         $allBookings = $courts->flatMap(function ($court) use ($dateFrom, $dateTo) {
             return $court->bookings()->where(function ($query) use ($dateFrom, $dateTo) {
+                $query->where('status', 'paid');
                 if ($dateFrom) {
                     $query->whereDate('date', '>=', $dateFrom);
                 }
