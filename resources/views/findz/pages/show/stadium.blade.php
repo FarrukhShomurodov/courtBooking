@@ -7,7 +7,7 @@
 
 @section('header')
     <header class="d-flex row align-items-center justify-content-between fixed-header">
-        <a href="{{ route('webapp', ['sportType' => $stadium->sportTypes[0]->id, 'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}">
+        <a href="{{ route('webapp', ['sportType' => $currentSportTypeId, 'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}">
             <img src="{{ asset('img/findz/icons/back.svg') }}" alt="back icon" class="header-icon">
         </a>
 {{--        <img id="favourite" src="{{ asset('img/findz/icons/favourite.svg') }}" alt="favourite icon" class="header-icon">--}}
@@ -30,7 +30,7 @@
 
                 <div class="date_time d-flex row align-items-center gap-12">
                     <div class="d-flex row align-items-center justify-content-center ">
-                        <p>{{ $stadium->sportTypes[0]->name }}</p>
+                        <p>{{ $stadium->sportTypes->where('id', $currentSportTypeId)->first()->name }}</p>
                     </div>
                     <div class="d-flex row align-items-center justify-content-center">
                         <p>от {{ $stadium->getMinimumCourtCost() }}.000 uzs/час</p>

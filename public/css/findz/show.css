@@ -3,10 +3,9 @@
     transform: translateX(0%);
 }
 
-.date_time .price {
-
+.select-lang {
+    padding: 0 !important;
 }
-
 .stadiums {
     margin-top: -50px;
 }
