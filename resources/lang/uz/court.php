@@ -17,7 +17,7 @@ return [
     'upload_images' => 'Rasmlarni yuklash',
     'delete' => 'Oʻchirish',
     'edit' => 'Tahrirlash',
-    'schedule' => 'Jadval',
+    'schedule' => 'Jadval narxi (ming so‘m)',
     'time' => 'Vaqt',
     'cost' => 'Narx',
     'create_court' => 'Kort yaratish',
