@@ -99,6 +99,7 @@ class StatisticsRepositories
     {
         // Получаем все бронирования в заданный период
         $bookings = $court->bookings()->when($dateFrom, function ($query, $dateFrom) {
+            $query->where('status', 'paid');
             $query->whereDate('date', '>=', $dateFrom);
         })->when($dateTo, function ($query, $dateTo) {
             $query->whereDate('date', '<=', $dateTo);
