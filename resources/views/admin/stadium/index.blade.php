@@ -45,7 +45,7 @@
                 @foreach($stadiums as $stadium)
                     <tr>
                         <td>{{ $stadium->id }}</td>
-                        <td>{{ $stadium->name }}</td>
+                        <td>{{ strlen($stadium->name) > 30 ? substr($stadium->name, 0, 30) . "..."  : $stadium->name }}</td>
                         <td>{{ $stadium->address }}</td>
                         <td>{{ $stadium->map_link }}</td>
                         <td>{{ $stadium->coach->user->name ?? '' }}</td>

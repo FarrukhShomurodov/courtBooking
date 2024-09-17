@@ -35,7 +35,7 @@ class CourtRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:200',
+            'name' => 'required|string|max:100',
             'description' => 'required|string|max:400',
             'photos' => 'sometimes|array|max:25',
             'photos.*' => 'image|mimes:jpg,png',

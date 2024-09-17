@@ -23,7 +23,7 @@ class SportTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:200',
+            'name' => 'required|string|max:100',
             'description' => 'required|string|max:200',
             'photos' => 'sometimes|array',
             'photos.*' => 'image|mimes:jpg,png',

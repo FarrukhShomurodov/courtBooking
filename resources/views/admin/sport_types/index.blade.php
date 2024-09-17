@@ -8,7 +8,8 @@
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-header">@lang('sportType.sport_types')</h5>
-            <a href="{{ route('sport-types.create') }}" class="btn btn-primary" style="margin-right: 22px;">@lang('sportType.create')</a>
+            <a href="{{ route('sport-types.create') }}" class="btn btn-primary"
+               style="margin-right: 22px;">@lang('sportType.create')</a>
         </div>
         @if ($errors->any())
             <div class="alert alert-solid-danger" role="alert">
@@ -33,13 +34,15 @@
                 @foreach($spotTypes as $spotType)
                     <tr>
                         <td>{{ $spotType->id }}</td>
-                        <td>{{ $spotType->name }}</td>
+                        <td>{{ strlen($spotType->name) > 30 ? substr($spotType->name, 0, 30) . "..."  : $spotType->name }}</td>
+
                         <td>
                             <div class="main__td">
                                 @if($spotType->photos)
                                     @foreach(json_decode($spotType->photos) as $photo)
                                         <div class="td__img">
-                                            <img src="storage/{{ $photo }}" alt="@lang('sportType.sport_type_photo')" class="popup-img"
+                                            <img src="storage/{{ $photo }}" alt="@lang('sportType.sport_type_photo')"
+                                                 class="popup-img"
                                                  width="100px"/>
                                         </div>
                                     @endforeach

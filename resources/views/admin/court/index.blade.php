@@ -48,7 +48,7 @@
                                data-court-description="{{ $court->description }}"
                                data-court-photos='{{ json_encode($court->photos) }}'
                             >
-                                {{ $court->name }}
+                                {{ strlen($court->name) > 30 ? substr($court->name, 0, 30) . "..."  : $court->name }}
                             </a>
                         </td>
                         <td>{{ $court->sportTypes->name }}</td>
@@ -63,7 +63,7 @@
                             </label>
                         </td>
                         @role('admin')
-                            <td>{{ $court->stadium->name }}</td>
+                        <td>{{ $court->stadium->name }}</td>
                         @endrole
                         <td>
                             <div class="main__td">
@@ -158,7 +158,6 @@
             });
 
 
-
             // Initialize tooltips if needed
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -171,8 +170,8 @@
                     <div class="popup-overlay" onclick="$(this).remove()">
                         <img src="${src}" class="popup-img-expanded">
                     </div>`
-            ;
-            $('body').append(popup);
+                ;
+                $('body').append(popup);
             });
         });
     </script>

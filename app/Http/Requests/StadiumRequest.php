@@ -29,7 +29,7 @@ class StadiumRequest extends FormRequest
         $sportTypeIds = $this->input('sport_types');
 
         return [
-            'name' => 'required|string|max:200',
+            'name' => 'required|string|max:100',
             'description' => 'required|string|max:400',
             'address' => 'required|string',
             'map_link' => 'required|string',
