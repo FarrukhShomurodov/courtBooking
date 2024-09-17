@@ -168,7 +168,6 @@ class TelegramController extends Controller
                         'chat_id' => $chatId,
                         'text' => __('telegram.auth_success')
                     ]);
-                    $this->sendMainMenu($chatId, $user);
                     break;
                 case 'change_language_ru':
                     Session::put('locale', 'ru');
