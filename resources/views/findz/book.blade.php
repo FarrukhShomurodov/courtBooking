@@ -181,14 +181,13 @@
 
                         if (response.photos) {
                             const photos = JSON.parse(response.photos);
+                            let img = '';
                             photos.forEach(function (photo) {
-                                $('#courtPhotos').append(`
-                            <div class="court_images">
-                                <div class="scroll-container">
-                                    <div><img class="stadium_image" src="/storage/${photo}" alt="court photo"/></div>
-                                </div>
-                            </div>`);
+                                img += `<div><img class="stadium_image" src="/storage/${photo}" alt="court photo"/></div>`
                             });
+                            let imgCont = `<div class="court_images"><div class="scroll-container">${img}</div></div>`
+
+                            $('#courtPhotos').append(imgCont);
                             $('.scroll-container').slick({
                                 infinite: true,
                                 slidesToShow: 1,
