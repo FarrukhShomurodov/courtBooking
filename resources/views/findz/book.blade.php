@@ -797,7 +797,7 @@
                     });
 
                     function initiatePaycomPayment(bookingId, amount) {
-                        let formattedAmount = parseFloat(amount).toFixed(2);
+                        let formattedAmount = parseFloat(amount).toFixed(2) * 100000;
 
                         let paycomForm = `
                         <form id="form-payme" method="POST" action="https://checkout.paycom.uz">
