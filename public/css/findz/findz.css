@@ -12,7 +12,7 @@ body {
 .container_mobile {
     /*width: 342px;*/
     width: 100%;
-    padding: 5px;
+    padding: 10px;
     position: relative;
     min-height: 100vh;
     margin: 122px auto 0;
@@ -23,7 +23,7 @@ header, nav, .date_time, .select-lang {
     position: fixed;
     /*width: 343px;*/
     width: 100%;
-    padding: 5px;
+    padding: 10px;
     left: 50%;
     transform: translateX(-50%);
     background-color: #111115;
@@ -143,7 +143,6 @@ footer {
     z-index: 10000;
     color: #CED1DD;
     font-size: 14px;
-    padding: 5px;
 }
 
 .footer_active {
@@ -214,7 +213,7 @@ footer ul li a {
 }
 
 .scroll-container .slick-slide {
-    margin: 5px;
+    padding: 5px;
 }
 
 .scroll-container img {
