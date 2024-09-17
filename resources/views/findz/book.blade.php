@@ -808,7 +808,7 @@
                             <input type="hidden" name="lang" value="{{app()->getLocale()}}">
                             <input type="hidden" name="callback" value="${callback}">
                             <input type="hidden" name="button" data-type="svg" value="colored">
-                            <input type="submit" value="btn">
+                            <input type="submit" value="">
                         </form>
                     `;
 
