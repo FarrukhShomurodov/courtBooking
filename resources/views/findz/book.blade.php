@@ -797,7 +797,7 @@
                     });
 
                     function initiatePaycomPayment(bookingId, amount) {
-                        let formattedAmount = parseFloat(amount).toFixed(2) * 100;
+                        let formattedAmount = parseFloat(amount).toFixed(2);
                         console.log(formattedAmount);
 
                         let paycomForm = `
