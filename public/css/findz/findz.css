@@ -214,7 +214,7 @@ footer ul li a {
 }
 
 .scroll-container .slick-slide {
-    padding: 0 10px;
+    padding-right: 5px;
 }
 
 .scroll-container img {
