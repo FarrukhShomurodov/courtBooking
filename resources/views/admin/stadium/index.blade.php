@@ -46,7 +46,7 @@
                     <tr>
                         <td>{{ $stadium->id }}</td>
                         <td>{{ strlen($stadium->name) > 30 ? substr($stadium->name, 0, 30) . "..."  : $stadium->name }}</td>
-                        <td>{{ $stadium->address }}</td>
+                        <td>{{ strlen($stadium->address) > 50 ? substr($stadium->address, 0, 50) . "..."  : $stadium->address }}</td>
                         <td>{{ $stadium->map_link }}</td>
                         <td>{{ $stadium->coach->user->name ?? '' }}</td>
                         <td>{{ $stadium->owner->name }}</td>
