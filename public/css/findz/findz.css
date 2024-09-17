@@ -15,7 +15,8 @@ body {
     padding: 10px;
     position: relative;
     min-height: 100vh;
-    margin: 122px auto 0;
+    /*margin: 122px auto 0;*/
+    margin: 80px auto 0;
     /*if date time active - margin: 182px auto 0;*/
 }
 
