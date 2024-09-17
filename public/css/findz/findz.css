@@ -217,6 +217,10 @@ footer ul li a {
     padding-right: 5px;
 }
 
+.scroll-container .slick-slide::first-line {
+    padding-right: 0 !important;
+}
+
 .scroll-container img {
     border-radius: 12px;
     width: 100%;
