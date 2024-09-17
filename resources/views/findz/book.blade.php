@@ -80,7 +80,7 @@
                                     class="slot @if($hasBooking) slot_booked @endif @if($court->id == $selectedCourt && (substr($schedule->start_time, 0, 5) == $selectedStartTime || substr($schedule->start_time, 0, 5) == $selectedEndTime)) selected @endif"
                                     data-time="{{ substr($schedule->start_time, 0, 5) }}"
                                     data-field="{{ $court->name }}"
-                                    data-price="{{ $schedule->cost }}"
+                                    data-price="{{ round($schedule->cost, 2) }}"
                                     data-court-id="{{$court->id}}"
                                     data-booking-id="{{$bookingId}}">{{ substr($schedule->start_time, 0, 5) }}<br>
                                     <span>{{ $schedule->cost }} т.с/ч</span>
