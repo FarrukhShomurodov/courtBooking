@@ -30,22 +30,7 @@ class TelegramController extends Controller
         // Retrieve or create a BotUser instance
         $user = BotUser::query()->firstOrCreate(['chat_id' => $chatId]);
 
-        if (!$user->isactive && $user->step !== 'PHONE_REQUEST') {
-            $this->telegram->sendMessage([
-                'chat_id' => $chatId,
-                'text' => __('telegram.user_isnt_active'),
-            ]);
-            return;
-        }
-        if (!$user->isactive && $user->step !== 'LANG_SELECTION') {
-            $this->telegram->sendMessage([
-                'chat_id' => $chatId,
-                'text' => __('telegram.user_isnt_active'),
-            ]);
-            return;
-        }
-
-        if (!$user->isactive && $user->step !== 'VERIFY_PHONE') {
+        if (!$user->isactive && !in_array($user->step, ['PHONE_REQUEST', 'LANG_SELECTION', 'VERIFY_PHONE'])) {
             $this->telegram->sendMessage([
                 'chat_id' => $chatId,
                 'text' => __('telegram.user_isnt_active'),
