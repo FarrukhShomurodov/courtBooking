@@ -125,7 +125,7 @@
                             <tr>
                                 <td>{{ sprintf('%02d:00 - %02d:00', $i, ($i + 1) % 24) }}</td>
                                 <td><input type="number" name="schedule[{{ $i }}][cost]" class="form-control"
-                                           placeholder="Стоимость" value="{{ $schedule ? $schedule->cost : '0' }}"></td>
+                                           placeholder="Стоимость" value="{{ $schedule ? $schedule->cost / 1000: '0' }}"></td>
                                 <input type="hidden" name="schedule[{{ $i }}][start_time]"
                                        value="{{ sprintf('%02d:00', $i) }}">
                                 <input type="hidden" name="schedule[{{ $i }}][end_time]"

@@ -37,7 +37,7 @@ class PaycomService
                     ]
                 ];
                 return $response;
-            } else if ($booking->price != $amount) {
+            } else if ($booking->price * 100 != $amount) {
                 $response = [
                     'error' => [
                         'code' => -31001,
@@ -89,7 +89,7 @@ class PaycomService
                     ]
                 ];
                 return $response;
-            } else if ($booking->price != $amount) {
+            } else if ($booking->price * 100 != $amount) {
                 $response = [
                     'error' => [
                         'code' => -31001,

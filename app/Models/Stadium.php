@@ -93,7 +93,7 @@ class Stadium extends Model
 
         // Рассчитываем общую выручку и разделение на ручные и бот-бронирования
         $totalRevenue = $bookings->sum('price');
-        $manualRevenue = $bookings->where('source', 'manual')->sum('price');
+        $manualRevenue = $bookings->where('source', 'manual')->sum('price') / 10;
         $botRevenue = $totalRevenue - $manualRevenue;
 
         // Возвращаем данные

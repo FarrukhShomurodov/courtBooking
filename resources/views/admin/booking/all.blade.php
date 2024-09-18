@@ -48,7 +48,7 @@
                         <td>{{ $booking->date }}</td>
                         <td>{{ $booking->start_time }} - {{ $booking->end_time }}</td>
                         <td>{{ $diff->h }} ч</td>
-                        <td>{{ $booking->price }}</td>
+                        <td>{{ $booking->price / 1000 }}</td>
                         <td>{{ $booking->source == 'manual' ? 'Manual' : 'Findz' }}</td>
                         <td>{{ $booking->status }}</td>
                     </tr>
