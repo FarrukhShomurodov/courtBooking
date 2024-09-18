@@ -78,9 +78,9 @@ class Stadium extends Model
 
             // Рассчитываем рабочие часы для каждого расписания
             foreach ($schedules as $schedule) {
-                $start = \Carbon\Carbon::parse($schedule->start_time);
-                $end = \Carbon\Carbon::parse($schedule->end_time);
-                $totalHours += $end->diffInHours($start);
+//                $start = \Carbon\Carbon::parse($schedule->start_time);
+//                $end = \Carbon\Carbon::parse($schedule->end_time);
+                $totalHours += 1;
             }
 
             // Добавляем часы этого корта к общей сумме
