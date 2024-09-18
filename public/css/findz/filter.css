@@ -90,7 +90,6 @@
         color: black !important;
     }
 }
-
 @media (hover: none) {
     .flatpickr-day:hover {
         background-color: #48c774 !important;
