@@ -413,7 +413,7 @@
                                 _token: $('meta[name="csrf-token"]').attr('content')
                             },
                             success: function (response) {
-                                row.find('.cost').val(Math.round(response.total_cost) || 0);
+                                row.find('.cost').val(Math.round(response.total_cost / 1000) || 0);
                             },
                             error: function (err) {
                                 let errors = err.responseJSON.message;
