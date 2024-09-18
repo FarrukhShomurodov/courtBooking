@@ -12,7 +12,7 @@ class OtpService
     public function getToken()
     {
         try {
-            $res = Http::retry(3, 100)->timeout(30)->post('notify.eskiz.uz/api/auth/login', [
+            $res = Http::timeout(30)->post('notify.eskiz.uz/api/auth/login', [
                 'email' => 'volmir.kim01@gmail.com',
                 'password' => 'lxIk91uC6ESSoOgtmzmFNkqhqZa4dCuBYu259ClY'
             ]);
