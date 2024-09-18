@@ -90,14 +90,14 @@
         color: black !important;
     }
 }
-@media (hover: none) {
-    .flatpickr-day:hover {
-        background-color: #48c774 !important;
-        border: none !important;
-        border-radius: 50% !important;
-        color: black !important;
-    }
-}
+/*@media (hover: none) {*/
+/*    .flatpickr-day:hover {*/
+/*        background-color: #48c774 !important;*/
+/*        border: none !important;*/
+/*        border-radius: 50% !important;*/
+/*        color: black !important;*/
+/*    }*/
+/*}*/
 
 .flatpickr-day.selected {
     background-color: #48c774 !important;
