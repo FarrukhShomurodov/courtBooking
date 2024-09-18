@@ -11,20 +11,25 @@ class OtpService
 {
     public function getToken()
     {
-        $res = Http::post('notify.eskiz.uz/api/auth/login', [
-            'email' => 'volmir.kim01@gmail.com',
-            'password' => 'lxIk91uC6ESSoOgtmzmFNkqhqZa4dCuBYu259ClY'
-        ]);
+        try {
+            $res = Http::post('notify.eskiz.uz/api/auth/login', [
+                'email' => 'volmir.kim01@gmail.com',
+                'password' => 'lxIk91uC6ESSoOgtmzmFNkqhqZa4dCuBYu259ClY'
+            ]);
 
-        if ($res->ok()) {
-            if (isset($res['data']['token'])) {
-                return $res['data']['token'];
+            if ($res->ok()) {
+                if (isset($res['data']['token'])) {
+                    return $res['data']['token'];
+                } else {
+                    abort(400, 'Token not found in response');
+                }
             } else {
-                abort(400, 'Token not found in response');
+                Log::error('Authentication failed', ['response' => $res->body()]);
+                abort(400, 'Authentication failed');
             }
-        } else {
-            Log::error('Authentication failed', ['response' => $res->body()]);
-            abort(400, 'Authentication failed');
+        } catch (ConnectException $e) {
+            Log::error('Ошибка соединения: ' . $e->getMessage());
+            return false;
         }
     }
 
