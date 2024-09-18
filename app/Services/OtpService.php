@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use GuzzleHttp\Exception\ConnectException;
-use Illuminate\Http\Client\Response;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -12,23 +12,22 @@ class OtpService
     public function getToken()
     {
         try {
-            $res = Http::post('notify.eskiz.uz/api/auth/login', [
+            $res = Http::retry(3, 100)->timeout(30)->post('notify.eskiz.uz/api/auth/login', [
                 'email' => 'volmir.kim01@gmail.com',
                 'password' => 'lxIk91uC6ESSoOgtmzmFNkqhqZa4dCuBYu259ClY'
             ]);
 
-            if ($res->ok()) {
-                if (isset($res['data']['token'])) {
-                    return $res['data']['token'];
-                } else {
-                    abort(400, 'Token not found in response');
-                }
+            if ($res->ok() && isset($res['data']['token'])) {
+                return $res['data']['token'];
             } else {
-                Log::error('Authentication failed', ['response' => $res->body()]);
+                Log::error('Ошибка аутентификации на Eskiz', ['response' => $res->body()]);
                 abort(400, 'Authentication failed');
             }
         } catch (ConnectException $e) {
             Log::error('Ошибка соединения: ' . $e->getMessage());
+            return false;
+        } catch (RequestException $e) {
+            Log::error('Ошибка запроса: ' . $e->getMessage());
             return false;
         }
     }
@@ -36,16 +35,21 @@ class OtpService
     public function sendMessage($phoneNumber, $message): string
     {
         try {
-            $response = Http::withToken($this->getToken())->post('https://notify.eskiz.uz/api/message/sms/send', [
-                'mobile_phone' => $phoneNumber,
-                'message' => $message,
-                'from' => 4546,
-                'callback_url' => '',
-            ]);
+            $response = Http::timeout(30)
+                ->withToken($this->getToken())
+                ->post('https://notify.eskiz.uz/api/message/sms/send', [
+                    'mobile_phone' => $phoneNumber,
+                    'message' => $message,
+                    'from' => 4546,
+                    'callback_url' => '',
+                ]);
 
             return true;
         } catch (ConnectException $e) {
             Log::error('Ошибка соединения: ' . $e->getMessage());
+            return false;
+        } catch (RequestException $e) {
+            Log::error('Ошибка запроса: ' . $e->getMessage());
             return false;
         }
     }
