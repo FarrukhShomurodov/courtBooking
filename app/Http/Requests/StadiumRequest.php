@@ -44,7 +44,7 @@ class StadiumRequest extends FormRequest
                 new UniqueOwner($stadiumId)
             ],
             'manager_id' => [
-                'required',
+                'nullable',
                 'exists:users,id',
                 new UniqueManager($stadiumId)
             ],
