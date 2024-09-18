@@ -56,7 +56,7 @@ class CourtService
                 if (isset($schedule['cost']) && $schedule['cost'] != 0) {
                     $data = [
                         'court_id' => $court->id,
-                        'cost' => $schedule['cost'],
+                        'cost' => $schedule['cost'] * 1000,
                         'start_time' => $schedule['start_time'],
                         'end_time' => $schedule['end_time'],
                     ];
