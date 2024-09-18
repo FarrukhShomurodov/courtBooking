@@ -16,10 +16,10 @@
             let tg = window.Telegram.WebApp;
             tg.expand();
             let userData = tg.initDataUnsafe;
-            let chatID = userData.user.id;
 
-            if(chatID){
-                // Функция для проверки наличия пользователя на сервере
+            if(userData.user){
+                let chatID = userData.user.id;
+
                 async function checkUser() {
                     try {
                         let response = await fetch('/api/has-bot-user', {
