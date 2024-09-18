@@ -114,9 +114,7 @@ class StatisticsRepositories
 
         // Рассчитываем доступные рабочие часы на основе расписаний
         $totalAvailableHours = $schedules->reduce(function ($carry, $schedule) {
-            $start = \Carbon\Carbon::parse($schedule->start_time);
-            $end = \Carbon\Carbon::parse($schedule->end_time);
-            return $carry + $end->diffInHours($start);
+            return $carry + 1;
         }, 0);
 
         // Рассчитываем незабронированные часы
