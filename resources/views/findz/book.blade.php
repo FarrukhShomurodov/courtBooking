@@ -80,10 +80,10 @@
                                     class="slot @if($hasBooking) slot_booked @endif @if($court->id == $selectedCourt && (substr($schedule->start_time, 0, 5) == $selectedStartTime || substr($schedule->start_time, 0, 5) == $selectedEndTime)) selected @endif"
                                     data-time="{{ substr($schedule->start_time, 0, 5) }}"
                                     data-field="{{ $court->name }}"
-                                    data-price="{{ round($schedule->cost, 2) }}"
+                                    data-price="{{ round($schedule->cost, 2) / 1000 }}"
                                     data-court-id="{{$court->id}}"
                                     data-booking-id="{{$bookingId}}">{{ substr($schedule->start_time, 0, 5) }}<br>
-                                    <span>{{ round($schedule->cost, 2) }} т.с/ч</span>
+                                    <span>{{ round($schedule->cost, 2) / 1000 }} т.с/ч</span>
                                 </div>
 
                             @endforeach
@@ -402,10 +402,10 @@
                             <div class="slot next_slot"
                                 data-time="${schedule.start_time.slice(0, 5)}"
                                 data-field="${court.name}"
-                                data-price="${Math.round(schedule.cost)}"
+                                data-price="${Math.round(schedule.cost) / 1000}"
                                 data-court-id="${court.id}">
                                 ${schedule.start_time.slice(0, 5)}<br>
-                                <span>${Math.round(schedule.cost)} т.с/ч</span>
+                                <span>${Math.round(schedule.cost) / 1000} т.с/ч</span>
                             </div>
                         `;
                         } else {
@@ -413,10 +413,10 @@
                             <div class="slot ${slotClass} ${selectedClass}"
                                 data-time="${schedule.start_time.slice(0, 5)}"
                                 data-field="${court.name}"
-                                data-price="${Math.round(schedule.cost)}"
+                                data-price="${Math.round(schedule.cost) / 1000}"
                                 data-court-id="${court.id}">
                                 ${schedule.start_time.slice(0, 5)}<br>
-                                <span>${Math.round(schedule.cost)} т.с/ч</span>
+                                <span>${Math.round(schedule.cost) / 1000} т.с/ч</span>
                             </div>
                         `;
                         }
