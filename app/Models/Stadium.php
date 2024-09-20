@@ -55,13 +55,15 @@ class Stadium extends Model
     {
         // Получаем все бронирования в заданный период
         $bookings = $this->courts()->with(['bookings' => function ($query) use ($dateFrom, $dateTo) {
-            $query->where('status', 'paid');
             if ($dateFrom) {
                 $query->whereDate('date', '>=', $dateFrom);
             }
             if ($dateTo) {
                 $query->whereDate('date', '<=', $dateTo);
             }
+
+            $query->where('status', 'paid');
+
         }])->get()->pluck('bookings')->flatten();
 
         // Суммируем забронированные часы
