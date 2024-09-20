@@ -35,9 +35,14 @@
                 </tr>
                 </thead>
                 <tbody>
+
+                @php
+                    $userCount = 1
+                @endphp
+
                 @foreach($botUsers as $user)
                     <tr>
-                        <td>{{ $user->id }}</td>
+                        <td>{{ $userCount++ }}</td>
                         <td>{{ $user->chat_id }}</td>
                         <td>{{ $user->first_name }}</td>
                         <td>{{ $user->second_name }}</td>
