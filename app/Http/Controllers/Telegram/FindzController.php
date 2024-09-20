@@ -11,6 +11,7 @@ use App\Models\SportType;
 use App\Models\Stadium;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
@@ -21,6 +22,7 @@ class FindzController extends Controller
     {
         $language = Session::get('bot_locale');
 
+        Log::info('bot lang'.$language);
         App::setLocale($language);
 
         session(['locale' => $language]);

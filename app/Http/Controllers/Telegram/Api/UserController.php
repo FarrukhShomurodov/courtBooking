@@ -46,5 +46,4 @@ class UserController extends Controller
             return response()->json(['exists' => false], 200);
         }
     }
-
 }
