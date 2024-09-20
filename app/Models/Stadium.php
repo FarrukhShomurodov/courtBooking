@@ -66,7 +66,7 @@ class Stadium extends Model
 
         // Суммируем забронированные часы
         $totalHoursBooked = $bookings->where('status', 'paid')->sum(function ($booking) {
-            return $booking->where('status', 'paid')->getHours();
+            return $booking->getHours();
         });
 
         // Рассчитываем доступные рабочие часы на основе расписаний кортов
@@ -103,7 +103,7 @@ class Stadium extends Model
                 return $booking->getHours();
             }),
             'bot_hours' => $bookings->where('source', 'bot')->sum(function ($booking) {
-                return $booking->where('status', 'paid')->getHours();
+                return $booking->getHours();
             }),
             'total_revenue' => $totalRevenue,
             'manual_revenue' => $manualRevenue,
