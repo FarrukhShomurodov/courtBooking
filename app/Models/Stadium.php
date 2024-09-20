@@ -102,7 +102,7 @@ class Stadium extends Model
             'manual_hours' => $bookings->where('source', 'manual')->sum(function ($booking) {
                 return $booking->getHours();
             }),
-            'bot_hours' => $bookings->where('source', 'bot')->sum(function ($booking) {
+            'bot_hours' => $bookings->where('source', 'bot')->where('status', 'paid')->sum(function ($booking) {
                 return $booking->getHours();
             }),
             'total_revenue' => $totalRevenue,
