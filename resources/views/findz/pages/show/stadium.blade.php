@@ -41,7 +41,7 @@
                         <p>{{ $stadium->sportTypes->where('id', $currentSportTypeId)->first()->name }}</p>
                     </div>
                     <div class="d-flex row align-items-center justify-content-center">
-                        <p>от {{ $stadium->getMinimumCourtCost() }}.000 uzs/час</p>
+                        <p>от {{ $stadium->getMinimumCourtCost() /1000 }}.000 uzs/час</p>
                     </div>
                 </div>
 
