@@ -106,7 +106,7 @@
                     <label for="managerDropdown" class="form-label">{{ __('stadium.manager') }}</label>
                     <div class="dropdown">
                         <button class="btn btn-default dropdown-toggle w-100 d-flex justify-content-between"
-                                type="button" id="ownerDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                type="button" id="managerDropdown" data-bs-toggle="dropdown" aria-expanded="false"
                                 style="border: 1px solid #d4d8dd; padding: .535rem 1.375rem .535рем .75рем;">
                             @if($stadium->manager)
                                 {{ $stadium->manager->name }}
@@ -114,7 +114,7 @@
                                 {{ __('stadium.select_manager') }}
                             @endif
                         </button>
-                        <ul class="dropdown-menu w-100" aria-labelledby="ownerDropdown">
+                        <ul class="dropdown-menu w-100" aria-labelledby="managerDropdown">
                             @foreach($managers as $manager)
                                 <li><a class="dropdown-item" href="#"
                                        data-value="{{ $manager->id }}">{{ $manager->name }}</a></li>

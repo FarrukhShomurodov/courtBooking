@@ -28,7 +28,7 @@ class UserService
             $role = Role::findById($validated['role_id']);
             $user->assignRole($role);
 
-            if ($validated['role_id'] == 4) {
+            if ($validated['role_id'] == 3) {
                 $coach = new Coach();
                 $coach->user_id = $user->id;
                 $coach->price_per_hour = $validated['price_for_coach'];
@@ -80,7 +80,7 @@ class UserService
             $role = Role::findById($validated['role_id']);
             $user->syncRoles($role);
 
-            if ($validated['role_id'] == 4) {
+            if ($validated['role_id'] == 3) {
                 $coach = Coach::query()->firstOrCreate(['user_id' => $user->id]);
                 $coach->price_per_hour = $validated['price_for_coach'];
                 $coach->description = $validated['description'];

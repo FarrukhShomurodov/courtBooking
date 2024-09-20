@@ -48,7 +48,7 @@
                         <ul class="dropdown-menu w-100" aria-labelledby="roleDropdown">
                             @foreach($roles as $role)
                                 <li><a class="dropdown-item" href="#"
-                                       data-value="{{ $role->id }}">{{ $role->name }}</a></li>
+                                       data-value="{{ $role->id }}">{{ $role->name == 'stadium manager' ? 'Администратор стадиона' : $role->name }}</a></li>
                             @endforeach
                         </ul>
                         <input type="hidden" name="role_id" id="roleInput">
@@ -150,7 +150,7 @@
 
             $('#roleDropdown').next('.dropdown-menu').on('click', '.dropdown-item', function (e) {
                 e.preventDefault();
-                if ($(this).data('value') === 4) {
+                if ($(this).data('value') === 3) {
                     $('.price_for_coach').show();
                     $('.sport_types_for_coach').show();
                     $('.coach_desc').show();

@@ -21,12 +21,17 @@ class BookingController extends Controller
         $this->bookingService = $bookingService;
     }
 
-    public function index(): View
+    public function index()
     {
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
             $courts = Auth::user()->stadiumOwner()->first()->courts()->where('is_active', true)->get()->load('schedules');
         } elseif (Auth::user()->roles()->first()->name == 'stadium manager') {
-            $courts = Auth::user()->stadiumManager()->first()->courts()->where('is_active', true)->get()->load('schedules');
+            if(Auth::user()->stadiumManager()->count() > 0){
+                $courts = Auth::user()->stadiumManager()->first()->courts()->where('is_active', true)->get()->load('schedules');
+            }else{
+                Auth::logout();
+                return redirect()->route('login')->withErrors(['error' => 'Вы не прикреплены ни к одному стадиону.']);
+            }
         } else {
             $courts = Court::query()->where('is_active', true)->get()->load('schedules');
         }

@@ -27,15 +27,15 @@ class UpdateRequest extends FormRequest
     public function withValidator($validator): void
     {
         $validator->sometimes('price_for_coach', 'required|numeric', function ($input) {
-            return $input->role_id == 4;
+            return $input->role_id == 3;
         });
 
         $validator->sometimes('sport_types', 'required|array', function ($input) {
-            return $input->role_id == 4;
+            return $input->role_id == 3;
         });
 
         $validator->sometimes('description', 'required|string|max:5000', function ($input) {
-            return $input->role_id == 4;
+            return $input->role_id == 3;
         });
     }
 }
