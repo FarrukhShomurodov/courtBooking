@@ -57,7 +57,7 @@
                             </a>
                         @else
                             <a style="color: #585864;  cursor: not-allowed;">
-                                {{ 'Измена Невозможна' }}
+                                {{ __('findz/book.do_not_edit_book') }}
                             </a>
                         @endif
                     </button>
