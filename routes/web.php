@@ -61,7 +61,7 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 // Telegram
-Route::prefix('telegram')->group(function () {
+Route::prefix('telegram')->middleware('locale')->group(function () {
     Route::get('/webhook', function () {
         $telegram = new \Telegram\Bot\Api(config('telegram.bot_token'));
         $hook = $telegram->setWebhook(['url' => env('TELEGRAM_WEBHOOK_URL')]);
@@ -79,7 +79,6 @@ Route::prefix('telegram')->group(function () {
     // Show pages
     Route::get('/show/coach/{coach}', [FindzController::class, 'coachShow'])->name('findz.show.coach');
     Route::get('/show/stadium/{stadium}', [FindzController::class, 'stadiumShow'])->name('findz.show.stadium');
-
 
     Route::get('/book', [FindzController::class, 'book'])->name('findz.book');
     Route::get('/book/edit/{booking}', [FindzController::class, 'bookUpdate'])->name('book.edit');

@@ -35,9 +35,6 @@ class UserController extends Controller
         $user = BotUser::query()->where('chat_id', $userId)->first();
 
         if ($user) {
-            App::setLocale($user->lang);
-            session(['locale' => $user->lang]);
-
             return response()->json([
                 'exists' => true,
                 'isactive' => $user->isactive == 1
