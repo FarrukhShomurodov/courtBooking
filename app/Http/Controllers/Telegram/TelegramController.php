@@ -33,7 +33,7 @@ class TelegramController extends Controller
 
         $botUserInfo = $update->getMessage();
         if (isset($user->lang)) {
-            Session::put('bot_locale', $user->lang);
+            Session::put('locale', $user->lang);
             App::setLocale($user->lang);
         }
 
@@ -100,7 +100,7 @@ class TelegramController extends Controller
             case 'Русский':
             case "O'zbekcha":
                 $locale = $text === 'Русский' ? 'ru' : 'uz';
-                Session::put('bot_locale', $locale);
+                Session::put('locale', $locale);
                 App::setLocale($locale);
                 $user->lang = $locale;
                 $user->save();
@@ -171,7 +171,7 @@ class TelegramController extends Controller
                     ]);
                     break;
                 case 'change_language_ru':
-                    Session::put('bot_locale', 'ru');
+                    Session::put('locale', 'ru');
                     App::setLocale('ru');
 
                     $user->lang = 'ru';
@@ -179,7 +179,7 @@ class TelegramController extends Controller
                     $this->changeLanguage($chatId, 'Русский', $user);
                     break;
                 case 'change_language_uz':
-                    Session::put('bot_locale', 'uz');
+                    Session::put('locale', 'uz');
                     App::setLocale('uz');
 
                     $user->lang = 'uz';

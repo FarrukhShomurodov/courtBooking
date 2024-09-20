@@ -10,9 +10,6 @@ use App\Models\Court;
 use App\Models\SportType;
 use App\Models\Stadium;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
 class FindzController extends Controller
@@ -20,13 +17,6 @@ class FindzController extends Controller
     //Main pages
     public function courts(Request $request): View
     {
-        $language = Session::get('bot_locale');
-
-        Log::info('bot lang'.$language);
-        App::setLocale($language);
-
-        session(['locale' => $language]);
-
         $sportTypeId = $request->input('sportTypeId') ?? SportType::first()->id;
         $sportTypes = SportType::all();
 
