@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BotUser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class UserController extends Controller
 {
@@ -34,6 +35,9 @@ class UserController extends Controller
         $user = BotUser::query()->where('chat_id', $userId)->first();
 
         if ($user) {
+            App::setLocale($user->lang);
+            session(['locale' => $user->lang]);
+
             return response()->json([
                 'exists' => true,
                 'isactive' => $user->isactive == 1
