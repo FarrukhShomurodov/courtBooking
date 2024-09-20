@@ -47,7 +47,7 @@
                         <span>{{ round($booking->price) / 1000 }} {{ __('findz/book.currency') }}</span>
                         <span>{{ $booking->court->stadium->address }}</span>
                         @if($hoursRemaining <= 24)
-                            <i>Перенос брони менее чем за 24 часа невозможен.</i>
+                            <i>{{ __('findz/book.edit_book_info') }}</i>
                         @endif
                     </div>
                     <button class="cancel-btn">

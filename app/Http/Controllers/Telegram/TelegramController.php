@@ -33,7 +33,7 @@ class TelegramController extends Controller
 
         $botUserInfo = $update->getMessage();
         if (isset($user->lang)) {
-            Session::put('locale', $user->lang);
+            Session::put('bot_locale', $user->lang);
             App::setLocale($user->lang);
         }
 
