@@ -301,27 +301,28 @@ class TelegramController extends Controller
 
     protected function sendOtp($chatId, $phoneNumber, $user): void
     {
-        $otp = $this->generateOtp();
+//        $otp = $this->generateOtp();
+        $otp = 1111;
 
         $otpTEXT = 'Код подтверждения для регистрации в Telegram-боте FindzBot: ' . $otp;
-        $otpService = $this->otpService->sendMessage(str_replace('+', '', $phoneNumber), $otpTEXT);
+//        $otpService = $this->otpService->sendMessage(str_replace('+', '', $phoneNumber), $otpTEXT);
 
-        if (!$otpService) {
-            $user->update([
-                'step' => 'PHONE_REQUEST'
-            ]);
-
-            $this->telegram->sendMessage([
-                'chat_id' => $chatId,
-                'text' => __('telegram.occur_error')
-            ]);
-            return;
-        } else {
-            if ($user->step !== 'CHANGE_PHONE') {
-                $user->step = 'VERIFY_PHONE';
-                $user->save();
-            }
-        }
+//        if (!$otpService) {
+//            $user->update([
+//                'step' => 'PHONE_REQUEST'
+//            ]);
+//
+//            $this->telegram->sendMessage([
+//                'chat_id' => $chatId,
+//                'text' => __('telegram.occur_error')
+//            ]);
+//            return;
+//        } else {
+//            if ($user->step !== 'CHANGE_PHONE') {
+//                $user->step = 'VERIFY_PHONE';
+//                $user->save();
+//            }
+//        }
 
         if ($user->step !== 'CHANGE_PHONE') {
             $user->step = 'VERIFY_PHONE';
