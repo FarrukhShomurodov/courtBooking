@@ -65,7 +65,7 @@ class Stadium extends Model
         }])->get()->pluck('bookings')->flatten();
 
         // Суммируем забронированные часы
-        $totalHoursBooked = $bookings->sum(function ($booking) {
+        $totalHoursBooked = $bookings->where('status', 'paid')->sum(function ($booking) {
             return $booking->getHours();
         });
 
@@ -94,7 +94,7 @@ class Stadium extends Model
         // Рассчитываем общую выручку и разделение на ручные и бот-бронирования
         $totalRevenue = $bookings->sum('price');
         $manualRevenue = $bookings->where('source', 'manual')->sum('price');
-        $botRevenue = $bookings->where('source', 'bot')->sum('price');
+        $botRevenue = $bookings->where('source', 'bot')->where('status', 'paid')->sum('price');
 
         // Возвращаем данные
         return [
