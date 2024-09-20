@@ -37,10 +37,10 @@
                     <label class="form-label" for="basic-default-fullname">{{ __('court.name') }}</label>
                     <input type="text" name="name" class="form-control" id="basic-default-fullname" placeholder="{{ __('court.name') }}" required>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label" for="basic-default-message">{{ __('court.description') }}</label>
-                    <textarea id="basic-default-message" name="description" class="form-control" placeholder="{{ __('court.description') }}" required></textarea>
-                </div>
+{{--                <div class="mb-3">--}}
+{{--                    <label class="form-label" for="basic-default-message">{{ __('court.description') }}</label>--}}
+{{--                    <textarea id="basic-default-message" name="description" class="form-control" placeholder="{{ __('court.description') }}" required></textarea>--}}
+{{--                </div>--}}
                 @role('admin')
                 <div class="mb-3">
                     <label for="stadiumDropdown" class="form-label">{{ __('court.stadium') }}</label>
@@ -69,12 +69,11 @@
                         <input type="hidden" name="sport_type_id" id="sportTypeInput">
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label for="imageInput" class="form-label">{{ __('court.upload_images') }}</label>
-                    <input type="file" name="photos[]" id="imageInput" class="form-control" multiple>
-                </div>
-                <div id="imagePreview" class="mb-3 main__td"></div>
-
+{{--                <div class="mb-3">--}}
+{{--                    <label for="imageInput" class="form-label">{{ __('court.upload_images') }}</label>--}}
+{{--                    <input type="file" name="photos[]" id="imageInput" class="form-control" multiple>--}}
+{{--                </div>--}}
+{{--                <div id="imagePreview" class="mb-3 main__td"></div>--}}
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">{{ __('court.schedule') }}</h5>
                 </div>
@@ -186,52 +185,52 @@
             });
 
             // Handle image preview
-            $('#imageInput').on('change', function () {
-                const files = Array.from($(this)[0].files);
-                const imagePreview = $('#imagePreview');
-                imagePreview.empty();
-
-                files.forEach(file => {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const imgElement = $('<img>', {
-                            src: e.target.result,
-                            alt: file.name,
-                            class: 'uploaded-image'
-                        });
-
-                        const imgContainer = $('<div>', { class: 'image-container td__img' });
-                        imgContainer.append(imgElement);
-
-                        const deleteBtn = $('<button>', {
-                            class: 'btn btn-danger btn-sm delete-image',
-                            text: 'Удалить',
-                            click: function () {
-                                imgContainer.remove();
-
-                                const index = files.indexOf(file);
-                                if (index !== -1) {
-                                    files.splice(index, 1);
-                                    updateFileInput(files);
-                                }
-                            }
-                        });
-                        imgContainer.append(deleteBtn);
-
-                        imagePreview.append(imgContainer);
-                    };
-                    reader.readAsDataURL(file);
-                });
-            });
-
-            function updateFileInput(files) {
-                const input = $('#imageInput')[0];
-                const fileList = new DataTransfer();
-                files.forEach(file => {
-                    fileList.items.add(file);
-                });
-                input.files = fileList.files;
-            }
+            // $('#imageInput').on('change', function () {
+            //     const files = Array.from($(this)[0].files);
+            //     const imagePreview = $('#imagePreview');
+            //     imagePreview.empty();
+            //
+            //     files.forEach(file => {
+            //         const reader = new FileReader();
+            //         reader.onload = function (e) {
+            //             const imgElement = $('<img>', {
+            //                 src: e.target.result,
+            //                 alt: file.name,
+            //                 class: 'uploaded-image'
+            //             });
+            //
+            //             const imgContainer = $('<div>', { class: 'image-container td__img' });
+            //             imgContainer.append(imgElement);
+            //
+            //             const deleteBtn = $('<button>', {
+            //                 class: 'btn btn-danger btn-sm delete-image',
+            //                 text: 'Удалить',
+            //                 click: function () {
+            //                     imgContainer.remove();
+            //
+            //                     const index = files.indexOf(file);
+            //                     if (index !== -1) {
+            //                         files.splice(index, 1);
+            //                         updateFileInput(files);
+            //                     }
+            //                 }
+            //             });
+            //             imgContainer.append(deleteBtn);
+            //
+            //             imagePreview.append(imgContainer);
+            //         };
+            //         reader.readAsDataURL(file);
+            //     });
+            // });
+            //
+            // function updateFileInput(files) {
+            //     const input = $('#imageInput')[0];
+            //     const fileList = new DataTransfer();
+            //     files.forEach(file => {
+            //         fileList.items.add(file);
+            //     });
+            //     input.files = fileList.files;
+            // }
         });
     </script>
 @endsection

@@ -39,12 +39,12 @@
                     <input type="text" name="name" class="form-control" id="basic-default-fullname"
                            placeholder="{{ __('court.name') }}" value="{{ $court->name }}" required>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label" for="basic-default-message">{{ __('court.description') }}</label>
-                    <textarea id="basic-default-message" name="description" class="form-control"
-                              placeholder="{{ __('court.description') }}"
-                              required>{{ $court->description }}</textarea>
-                </div>
+{{--                <div class="mb-3">--}}
+{{--                    <label class="form-label" for="basic-default-message">{{ __('court.description') }}</label>--}}
+{{--                    <textarea id="basic-default-message" name="description" class="form-control"--}}
+{{--                              placeholder="{{ __('court.description') }}"--}}
+{{--                              required>{{ $court->description }}</textarea>--}}
+{{--                </div>--}}
                 @role('admin')
                 <div class="mb-3">
                     <label for="stadiumDropdown" class="form-label">{{ __('court.stadium') }}</label>
@@ -89,22 +89,22 @@
                                value="{{ $court->sportTypes->id }}">
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label for="imageInput" class="form-label">{{ __('court.upload_images') }}</label>
-                    <input type="file" name="photos[]" id="imageInput" class="form-control" multiple>
-                </div>
-                <div id="imagePreview" class="mb-3 main__td">
-                    @if($court->photos)
-                        @foreach(json_decode($court->photos) as $photo)
-                            <div class="image-container td__img" data-photo-path="{{ $photo }}">
-                                <img src="{{ asset('storage/' . $photo) }}" alt="Court Image" class="uploaded-image">
-                                <button type="button" class="btn btn-danger btn-sm delete-image"
-                                        data-photo-path="{{ $photo }}"> {{ __('court.delete') }}
-                                </button>
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
+{{--                <div class="mb-3">--}}
+{{--                    <label for="imageInput" class="form-label">{{ __('court.upload_images') }}</label>--}}
+{{--                    <input type="file" name="photos[]" id="imageInput" class="form-control" multiple>--}}
+{{--                </div>--}}
+{{--                <div id="imagePreview" class="mb-3 main__td">--}}
+{{--                    @if($court->photos)--}}
+{{--                        @foreach(json_decode($court->photos) as $photo)--}}
+{{--                            <div class="image-container td__img" data-photo-path="{{ $photo }}">--}}
+{{--                                <img src="{{ asset('storage/' . $photo) }}" alt="Court Image" class="uploaded-image">--}}
+{{--                                <button type="button" class="btn btn-danger btn-sm delete-image"--}}
+{{--                                        data-photo-path="{{ $photo }}"> {{ __('court.delete') }}--}}
+{{--                                </button>--}}
+{{--                            </div>--}}
+{{--                        @endforeach--}}
+{{--                    @endif--}}
+{{--                </div>--}}
 
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">{{ __('court.schedule') }}</h5>
@@ -233,71 +233,71 @@
             });
 
             // Handle new image uploads
-            $('#imageInput').on('change', function () {
-                const files = Array.from($(this)[0].files);
-                const imagePreview = $('#imagePreview');
+        {{--    $('#imageInput').on('change', function () {--}}
+        {{--        const files = Array.from($(this)[0].files);--}}
+        {{--        const imagePreview = $('#imagePreview');--}}
 
-                files.forEach(file => {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const imgElement = $('<img>', {
-                            src: e.target.result,
-                            alt: file.name,
-                            class: 'uploaded-image'
-                        });
+        {{--        files.forEach(file => {--}}
+        {{--            const reader = new FileReader();--}}
+        {{--            reader.onload = function (e) {--}}
+        {{--                const imgElement = $('<img>', {--}}
+        {{--                    src: e.target.result,--}}
+        {{--                    alt: file.name,--}}
+        {{--                    class: 'uploaded-image'--}}
+        {{--                });--}}
 
-                        const imgContainer = $('<div>', {class: 'image-container td__img'});
-                        imgContainer.append(imgElement);
+        {{--                const imgContainer = $('<div>', {class: 'image-container td__img'});--}}
+        {{--                imgContainer.append(imgElement);--}}
 
-                        const deleteBtn = $('<button>', {
-                            class: 'btn btn-danger btn-sm delete-image',
-                            text: 'Удалить',
-                            click: function () {
-                                imgContainer.remove();
-                                const index = files.indexOf(file);
-                                if (index !== -1) {
-                                    files.splice(index, 1);
-                                    updateFileInput(files);
-                                }
-                            }
-                        });
-                        imgContainer.append(deleteBtn);
+        {{--                const deleteBtn = $('<button>', {--}}
+        {{--                    class: 'btn btn-danger btn-sm delete-image',--}}
+        {{--                    text: 'Удалить',--}}
+        {{--                    click: function () {--}}
+        {{--                        imgContainer.remove();--}}
+        {{--                        const index = files.indexOf(file);--}}
+        {{--                        if (index !== -1) {--}}
+        {{--                            files.splice(index, 1);--}}
+        {{--                            updateFileInput(files);--}}
+        {{--                        }--}}
+        {{--                    }--}}
+        {{--                });--}}
+        {{--                imgContainer.append(deleteBtn);--}}
 
-                        imagePreview.append(imgContainer);
-                    };
-                    reader.readAsDataURL(file);
-                });
+        {{--                imagePreview.append(imgContainer);--}}
+        {{--            };--}}
+        {{--            reader.readAsDataURL(file);--}}
+        {{--        });--}}
 
-                function updateFileInput(files) {
-                    const input = $('#imageInput')[0];
-                    const fileList = new DataTransfer();
-                    files.forEach(file => {
-                        fileList.items.add(file);
-                    });
-                    input.files = fileList.files;
-                }
-            });
+        {{--        function updateFileInput(files) {--}}
+        {{--            const input = $('#imageInput')[0];--}}
+        {{--            const fileList = new DataTransfer();--}}
+        {{--            files.forEach(file => {--}}
+        {{--                fileList.items.add(file);--}}
+        {{--            });--}}
+        {{--            input.files = fileList.files;--}}
+        {{--        }--}}
+        {{--    });--}}
 
 
-            $(document).on('click', '.delete-image', function () {
-                const path = $(this).data('photo-path');
-                if (path) {
-                    $.ajax({
-                        url: `/api/delete/${path}/{{ $court->id }}`,
-                        method: 'DELETE',
-                        data: {
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function (res) {
-                            console.log(res);
-                            $(this).closest('.image-container').remove();
-                        }.bind(this),
-                        error: function (error) {
-                            console.error('Error deleting photo:', error);
-                        }
-                    });
-                }
-            });
-        });
+        {{--    $(document).on('click', '.delete-image', function () {--}}
+        {{--        const path = $(this).data('photo-path');--}}
+        {{--        if (path) {--}}
+        {{--            $.ajax({--}}
+        {{--                url: `/api/delete/${path}/{{ $court->id }}`,--}}
+        {{--                method: 'DELETE',--}}
+        {{--                data: {--}}
+        {{--                    _token: '{{ csrf_token() }}'--}}
+        {{--                },--}}
+        {{--                success: function (res) {--}}
+        {{--                    console.log(res);--}}
+        {{--                    $(this).closest('.image-container').remove();--}}
+        {{--                }.bind(this),--}}
+        {{--                error: function (error) {--}}
+        {{--                    console.error('Error deleting photo:', error);--}}
+        {{--                }--}}
+        {{--            });--}}
+        {{--        }--}}
+        {{--    });--}}
+        {{--});--}}
     </script>
 @endsection

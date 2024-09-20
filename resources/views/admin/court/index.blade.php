@@ -32,7 +32,7 @@
                     @role('admin')
                     <th>{{ __('court.stadium') }}</th>
                     @endrole
-                    <th>{{ __('court.photos') }}</th>
+                    {{--                    <th>{{ __('court.photos') }}</th>--}}
                     <th></th>
                 </tr>
                 </thead>
@@ -41,15 +41,7 @@
                     <tr>
                         <td>{{ $court->id }}</td>
                         <td>
-                            <a href="#" class="court-name"
-                               data-bs-toggle="modal"
-                               data-bs-target="#courtModal"
-                               data-court-name="{{ $court->name }}"
-                               data-court-description="{{ $court->description }}"
-                               data-court-photos='{{ json_encode($court->photos) }}'
-                            >
-                                {{ strlen($court->name) > 30 ? substr($court->name, 0, 30) . "..."  : $court->name }}
-                            </a>
+                            {{ strlen($court->name) > 30 ? substr($court->name, 0, 30) . "..."  : $court->name }}
                         </td>
                         <td>{{ $court->sportTypes->name }}</td>
                         <td>
@@ -65,18 +57,18 @@
                         @role('admin')
                         <td>{{ $court->stadium->name }}</td>
                         @endrole
-                        <td>
-                            <div class="main__td">
-                                @if($court->photos)
-                                    @foreach(json_decode($court->photos) as $photo)
-                                        <div class="td__img">
-                                            <img src="storage/{{ $photo }}" alt="Sport type photo" class="popup-img"
-                                                 width="100px"/>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </td>
+                        {{--                        <td>--}}
+                        {{--                            <div class="main__td">--}}
+                        {{--                                @if($court->photos)--}}
+                        {{--                                    @foreach(json_decode($court->photos) as $photo)--}}
+                        {{--                                        <div class="td__img">--}}
+                        {{--                                            <img src="storage/{{ $photo }}" alt="Sport type photo" class="popup-img"--}}
+                        {{--                                                 width="100px"/>--}}
+                        {{--                                        </div>--}}
+                        {{--                                    @endforeach--}}
+                        {{--                                @endif--}}
+                        {{--                            </div>--}}
+                        {{--                        </td>--}}
                         <td>
                             <div class="d-inline-block text-nowrap">
                                 <button class="btn btn-sm btn-icon"
@@ -95,22 +87,6 @@
                 @endforeach
                 </tbody>
             </table>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="courtModal" tabindex="-1" aria-labelledby="courtModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="courtModalLabel"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="court-description"></div>
-                    <div class="court-photos"></div>
-                </div>
-            </div>
         </div>
     </div>
 @endsection
@@ -147,32 +123,21 @@
             });
 
 
-            $('.court-name').on('click', function () {
-                let name = $(this).data('court-name');
-                let description = $(this).data('court-description');
-
-                $('#courtModalLabel').text(name);
-                $('.court-description').html(description ? `<p>${description}</p>` : `<p>No description available.</p>`);
-
-
-            });
-
-
             // Initialize tooltips if needed
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
 
-            $('.popup-img').on('click', function () {
-                var src = $(this).attr('src');
-                var popup = `
-                    <div class="popup-overlay" onclick="$(this).remove()">
-                        <img src="${src}" class="popup-img-expanded">
-                    </div>`
-                ;
-                $('body').append(popup);
-            });
+            // $('.popup-img').on('click', function () {
+            //     var src = $(this).attr('src');
+            //     var popup = `
+            //         <div class="popup-overlay" onclick="$(this).remove()">
+            //             <img src="${src}" class="popup-img-expanded">
+            //         </div>`
+            //     ;
+            //     $('body').append(popup);
+            // });
         });
     </script>
 @endsection
