@@ -239,7 +239,7 @@
 
             let currentMonth = dateObject.getMonth();
             let currentYear = dateObject.getFullYear();
-            let lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
+            let lastDayOfMonth = new Date(currentYear, currentMonth + 30, 0);
 
             flatpickr.localize(flatpickr.l10ns.ru);
             let flatpickrCalendar = flatpickr("#calendar_date", {
