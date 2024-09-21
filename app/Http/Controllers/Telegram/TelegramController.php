@@ -155,6 +155,9 @@ class TelegramController extends Controller
                 $user->save();
                 $this->requestNewName($chatId);
                 break;
+            case __('telegram.my_order_btn'):
+                $this->myBookings($chatId, $user);
+                break;
             default:
                 if ($user->step === 'CHANGE_NAME') {
                     $this->saveNewName($chatId, $text, $user);
