@@ -535,7 +535,7 @@ class TelegramController extends Controller
         if ($bookings->count() < 1) {
             $this->telegram->sendMessage([
                 'chat_id' => $chatId,
-                'text' => 'Кажется, у вас пока нет активных броней. Готовы помочь вам найти идеальное место для вашего занятия!'
+                'text' => __('findz/book.no_book')
             ]);
             return;
         }
@@ -547,14 +547,14 @@ class TelegramController extends Controller
             $hoursRemaining = $now->diffInHours($bookingDateTime, false);
 
             $description = "*Стадион:* {$booking->court->stadium->name}\n"
-                . "*Корт:* {$booking->court->name}\n"
-                . "*Адрес:* {$booking->court->stadium->address}\n"
-                . "*Дата:* {$booking->date}\n"
-                . "*Время:* {$booking->start_time} - {$booking->end_time}\n"
-                . "💵 *Цена:* *" . round($booking->price / 1000) . " " . __('findz/book.currency') . "*\n\n";
+                . "*".__('court.court').":* {$booking->court->name}\n"
+                . "*".__('findz/book.address').":* {$booking->court->stadium->address}\n"
+                . "*".__('findz/book.date').":* {$booking->date}\n"
+                . "*".__('findz/book.time').":* {$booking->start_time} - {$booking->end_time}\n"
+                . "💵 *".__('findz/book.price').":* *" . round($booking->price / 1000) . " " . __('findz/book.currency') . "*\n\n";
 
             if ($hoursRemaining <= 24) {
-                $description .= "_Редактирование доступно в течение ближайших 24 часов._\n";
+                $description .= __('findz/book.edit_book_info')."_\n";
             }
 
             $mediaGroup = [];
