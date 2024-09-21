@@ -546,15 +546,15 @@ class TelegramController extends Controller
             $now = Carbon::now();
             $hoursRemaining = $now->diffInHours($bookingDateTime, false);
 
-            $description = "*Стадион:* {$booking->court->stadium->name}\n"
-//                . "*".__('court.court').":* {$booking->court->name}\n"
-                .__('findz/book.address')." {$booking->court->stadium->address}\n"
-                .__('findz/book.date')." {$booking->date}\n"
-                .__('findz/book.time')." {$booking->start_time} - {$booking->end_time}\n"
-                .__('findz/book.price'). round($booking->price / 1000) . " " . __('findz/book.currency') . "*\n\n";
+            $description = __('stadium.stadium'). "{$booking->court->stadium->name}\n"
+                . __('court.court') . " {$booking->court->name}\n"
+                . __('findz/book.address') . " {$booking->court->stadium->address}\n"
+                . __('findz/book.date') . " {$booking->date}\n"
+                . __('findz/book.time') . " {$booking->start_time} - {$booking->end_time}\n"
+                . __('findz/book.price') . round($booking->price / 1000) . " " . __('findz/book.currency') . "*\n\n";
 
             if ($hoursRemaining <= 24) {
-                $description .= __('findz/book.edit_book_info')."_\n";
+                $description .= __('findz/book.edit_book_info') . "_\n";
             }
 
             $mediaGroup = [];
@@ -567,7 +567,7 @@ class TelegramController extends Controller
                         'type' => 'photo',
                         'media' => $fullPhotoUrl,
                         'caption' => $index === 0 ? $description : '',
-                        'parse_mode' => 'Markdown'
+//                        'parse_mode' => 'Markdown'
                     ]);
                 }
 

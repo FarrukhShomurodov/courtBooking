@@ -22,10 +22,10 @@ return [
     'phone_number' => 'Telefon raqami',
     'user_info' => 'Foydalanuvchi haqida maʼlumot',
 
-    'address' => 'Adres',
-    'date' => 'Sana',
-    'time' => 'Vaqt',
-    '💵 price' => 'Narxi',
+    'address' => 'Adres:',
+    'date' => 'Sana:',
+    'time' => 'Vaqt:',
+    'price' => '💵 Narxi:',
     'no_book' => 'Hozircha sizda faol bronlar yo‘q shekilli. Band qilish uchun mos joyni topishga yordam berishga tayyormiz!',
 
     'Итого:' => 'Jami:',
