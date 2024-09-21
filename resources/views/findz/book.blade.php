@@ -239,7 +239,7 @@
 
             let currentMonth = dateObject.getMonth();
             let currentYear = dateObject.getFullYear();
-            let lastDayOfMonth = new Date(currentYear, currentMonth + 30, 0);
+            let lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
 
             let today = new Date();
             let maxDate = new Date();
@@ -303,7 +303,7 @@
                     $('.prev').removeClass('disabled');
                 }
 
-                if (dateObject.getDate() >= lastDayOfMonth.getDate()) {
+                if (dateObject.getDate() >= maxDate.getDate()) {
                     $('.next').addClass('disabled');
                 } else {
                     $('.next').removeClass('disabled');
