@@ -241,12 +241,16 @@
             let currentYear = dateObject.getFullYear();
             let lastDayOfMonth = new Date(currentYear, currentMonth + 30, 0);
 
+            let today = new Date();
+            let maxDate = new Date();
+            maxDate.setDate(today.getDate() + 30);
+
             flatpickr.localize(flatpickr.l10ns.ru);
             let flatpickrCalendar = flatpickr("#calendar_date", {
                 static: true,
                 disableMobile: true,
                 minDate: "today",
-                maxDate: lastDayOfMonth,
+                maxDate: maxDate,
                 monthSelectorType: "static",
                 defaultDate: selectedDate,
                 onOpen: function () {
