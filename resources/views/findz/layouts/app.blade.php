@@ -97,7 +97,7 @@
 
 @if ($currentRouteName == 'webapp' || $currentRouteName == 'findz.coaches.filter.sport.type' || $currentRouteName == 'findz.stadiums.filter.sport.type' || $currentRouteName == 'findz.mybookings')
     <footer class="w-100">
-        <ul class="d-flex row align-items-center justify-content-between" style="padding: 0px !important;">
+        <ul class="d-flex row align-items-center justify-content-around" style="padding: 0px !important;">
             <li class="d-flex col align-items-center  @if($currentRouteName == 'webapp' || $currentRouteName == 'findz.stadiums.filter.sport.type') footer_active @endif">
                 <img
                     class="pointer"
