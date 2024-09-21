@@ -29,7 +29,7 @@
                     @if($booking->court->stadium->photos)
                         <div class="court_images">
                             <div class="scroll-container">
-                                @foreach(json_decode($booking->court->stadium->photos->photos) as $photo)
+                                @foreach(json_decode($booking->court->stadium->photos) as $photo)
                                     <div><img class="stadium_image"
                                               src="{{\Illuminate\Support\Facades\Storage::url($photo)}}"
                                               alt="court photo"/></div>
