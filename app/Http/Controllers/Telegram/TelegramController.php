@@ -567,7 +567,7 @@ class TelegramController extends Controller
                         'type' => 'photo',
                         'media' => $fullPhotoUrl,
                         'caption' => $index === 0 ? $description : '',
-                        'parse_mode' => 'Markdown'
+//                        'parse_mode' => 'Markdown'
                     ]);
                 }
 
