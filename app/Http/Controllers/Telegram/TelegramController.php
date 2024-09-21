@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\Telegram;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminAssembly;
+use App\Models\Booking;
 use App\Models\BotUser;
 use App\Services\OtpService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Telegram\Bot\Api;
 use Telegram\Bot\Keyboard\Keyboard;
+use Telegram\Bot\Objects\InputMedia\InputMediaPhoto;
 
 class TelegramController extends Controller
 {
@@ -401,7 +406,7 @@ class TelegramController extends Controller
         ]);
     }
 
-    protected function sendMainMenu($chatId, $user): void
+    protected function sendMainMenu($chatId): void
     {
         $keyboard = [
             [
@@ -514,5 +519,63 @@ class TelegramController extends Controller
 
         $this->sendSettings($chatId, $user);
 
+    }
+
+    protected function myBookings($chatId, $user)
+    {
+        $bookings = Booking::query()
+            ->where('source', 'bot')
+            ->where('status', 'paid')
+            ->where('bot_user_id', $user->id)
+            ->get();
+
+        if ($bookings->count() < 1) {
+            $this->telegram->sendMessage([
+                'chat_id' => $chatId,
+                'text' => 'Кажется, у вас пока нет активных броней. Готовы помочь вам найти идеальное место для вашего занятия!'
+            ]);
+            return;
+        }
+
+        foreach ($bookings as $booking) {
+            $photos = json_decode($booking->court->stadium->photos, true);
+            $bookingDateTime = Carbon::parse($booking->date . ' ' . $booking->start_time);
+            $now = Carbon::now();
+            $hoursRemaining = $now->diffInHours($bookingDateTime, false);
+
+            $description = "*Стадион:* {$booking->court->stadium->name}\n"
+                . "*Корт:* {$booking->court->name}\n"
+                . "*Адрес:* {$booking->court->stadium->address}\n"
+                . "*Дата:* {$booking->date}\n"
+                . "*Время:* {$booking->start_time} - {$booking->end_time}\n"
+                . "💵 *Цена:* *" . round($booking->price / 1000) . " " . __('findz/book.currency') . "*\n\n";
+
+            if ($hoursRemaining <= 24) {
+                $description .= "_Редактирование доступно в течение ближайших 24 часов._\n";
+            }
+
+            $mediaGroup = [];
+            if (!empty($photos) && is_array($photos)) {
+                foreach ($photos as $index => $photo) {
+                    $photoPath = Storage::url('public/' . $photo);
+                    $fullPhotoUrl = env('APP_URL') . $photoPath;
+
+                    $mediaGroup[] = InputMediaPhoto::make([
+                        'type' => 'photo',
+                        'media' => $fullPhotoUrl,
+                        'caption' => $index === 0 ? $description : '',
+                        'parse_mode' => 'Markdown'
+                    ]);
+                }
+
+                // Отправка группы медиа
+                $this->telegram->sendMediaGroup([
+                    'chat_id' => $chatId,
+                    'media' => json_encode($mediaGroup)
+                ]);
+            }
+        }
+
+        $this->sendMainMenu($chatId);
     }
 }

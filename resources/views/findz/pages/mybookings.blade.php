@@ -26,15 +26,18 @@
         <div class="content">
             @foreach($bookings as $booking)
                 <div class="stadiums mt-30">
-                    @if($booking->court->photos)
+                    @if($booking->court->stadium->photos)
                         <div class="court_images">
                             <div class="scroll-container">
-                                @foreach(json_decode($booking->court->photos) as $photo)
-                                    <img src="../storage/{{ $photo }}" alt="Sport type photo"/>
+                                @foreach(json_decode($booking->court->stadium->photos->photos) as $photo)
+                                    <div><img class="stadium_image"
+                                              src="{{\Illuminate\Support\Facades\Storage::url($photo)}}"
+                                              alt="court photo"/></div>
                                 @endforeach
                             </div>
                         </div>
                     @endif
+
                     @php
                         $bookingDateTime = Carbon\Carbon::parse($booking->date . ' ' . $booking->start_time);
                         $now = Carbon\Carbon::now();
@@ -65,4 +68,33 @@
             @endforeach
         </div>
     </div>
+@endsection
+@section('extra-scripts')
+    <script>
+        $(document).ready(function () {
+            $('.scroll-container').slick({
+                infinite: true,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                dots: true,
+                arrows: true,
+                adaptiveHeight: true
+            });
+
+            $('.scroll-wrapper').on('wheel', function (event) {
+                if (event.originalEvent.deltaY !== 0) {
+                    this.scrollLeft += event.originalEvent.deltaY;
+                    event.preventDefault();
+                }
+            });
+
+            $('.scroll-wrapper').on('wheel', function (event) {
+                if (event.originalEvent.deltaY !== 0) {
+                    this.scrollLeft += event.originalEvent.deltaY;
+                    event.preventDefault();
+                }
+            });
+
+        });
+    </script>
 @endsection
