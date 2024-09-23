@@ -5,7 +5,7 @@
 }
 /* Cursor */
 .pointer {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 /* Margin */
 .mt-30 {

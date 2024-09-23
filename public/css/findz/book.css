@@ -141,8 +141,21 @@
     text-align: center;
     width: 80px;
     height: 44px;
+    position: relative;
+    overflow: hidden;
+    cursor: not-allowed;
 }
 
+.with-triangle::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-top: 10px solid #111115;
+}
 
 .slot {
     text-align: center;
@@ -157,13 +170,15 @@
     border: 1px solid #111115;
 }
 
-.slot span{
+.slot span {
     font-weight: 500 !important;
 }
-.slot_booked{
+
+.slot_booked {
     background-color: #111115 !important;
     cursor: not-allowed;
 }
+
 .slot.selected {
     background: #B2F888;
     color: #111115;
@@ -229,11 +244,12 @@
     z-index: 19999;
     display: none;
 }
+
 .show-overlay {
     display: block;
 }
 
-.court_stadium{
+.court_stadium {
     background-color: #29292C;
     text-align: center;
     height: 44px;
@@ -261,7 +277,7 @@
     z-index: 1000;
 }
 
-.numInputWrapper{
+.numInputWrapper {
     display: none !important;
 }
 
@@ -279,7 +295,7 @@
     padding: 10px !important;
 }
 
-.user-info-form{
+.user-info-form {
     margin-top: 5px;
     margin-bottom: 5px;
     padding: 7px 16px;

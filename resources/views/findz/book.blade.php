@@ -41,7 +41,12 @@
                 <thead>
                 <tr>
                     @foreach($courts as $court)
-                        <th class="court_name pointer" data-court-id="{{ $court->id }}">{{ $court->name }}</th>
+                        @php $isAllowedClick = is_null($court->photos) && is_null($court->description); @endphp
+                        <th @class([
+                           'court_name',
+                           'pointer' => !$isAllowedClick,
+                           'with-triangle' => !$isAllowedClick
+                          ]) data-court-id="{{ $court->id }}" >{{ $court->name }}</th>
                     @endforeach
                 </tr>
                 </thead>
@@ -164,72 +169,76 @@
 @section('extra-scripts')
     <script>
         $(document).ready(function () {
-            // const modal = $('#courtModal');
-            // const closeBtn = $('.close');
+            const modal = $('#courtModal');
+            const closeBtn = $('.close');
 
-            // $('.court_name').on('click', function () {
-            //     const courtId = $(this).data('court-id');
-            //
-            //     $.ajax({
-            //         url: `/api/court-show/${courtId}`,
-            //         method: 'GET',
-            //         success: function (response) {
-            //             $('#courtName').text(response.name);
-            //             $('#courtDescription').text(response.description);
-            //
-            //             $('#courtPhotos').empty();
-            //
-            //             if (response.photos) {
-            //                 const photos = JSON.parse(response.photos);
-            //                 let img = '';
-            //                 photos.forEach(function (photo) {
-            //                     img += `<div><img class="stadium_image" src="/storage/${photo}" alt="court photo"/></div>`
-            //                 });
-            //                 let imgCont = `<div class="court_images"><div class="scroll-container">${img}</div></div>`
-            //
-            //                 $('#courtPhotos').append(imgCont);
-            //                 $('.scroll-container').slick({
-            //                     infinite: true,
-            //                     slidesToShow: 1,
-            //                     slidesToScroll: 1,
-            //                     dots: true,
-            //                     arrows: true,
-            //                     adaptiveHeight: true
-            //                 });
-            //
-            //                 $('.scroll-wrapper').on('wheel', function(event) {
-            //                     if (event.originalEvent.deltaY !== 0) {
-            //                         this.scrollLeft += event.originalEvent.deltaY;
-            //                         event.preventDefault();
-            //                     }
-            //                 });
-            //
-            //                 $('.scroll-wrapper').on('wheel', function (event) {
-            //                     if (event.originalEvent.deltaY !== 0) {
-            //                         this.scrollLeft += event.originalEvent.deltaY;
-            //                         event.preventDefault();
-            //                     }
-            //                 });
-            //             }
-            //
-            //             modal.show();
-            //         },
-            //         error: function (error) {
-            //             alert('Ошибка при загрузке данных корта');
-            //         }
-            //     });
-            // });
-            //
-            //
-            // closeBtn.on('click', function () {
-            //     modal.hide();
-            // });
-            //
-            // $(window).on('click', function (event) {
-            //     if ($(event.target).is(modal)) {
-            //         modal.hide();
-            //     }
-            // });
+            $('.court_name').on('click', function () {
+                if ($(this).css('cursor') === 'not-allowed') {
+                    return;
+                }
+
+                const courtId = $(this).data('court-id');
+
+                $.ajax({
+                    url: `/api/court-show/${courtId}`,
+                    method: 'GET',
+                    success: function (response) {
+                        $('#courtName').text(response.name);
+                        $('#courtDescription').text(response.description);
+
+                        $('#courtPhotos').empty();
+
+                        if (response.photos) {
+                            const photos = JSON.parse(response.photos);
+                            let img = '';
+                            photos.forEach(function (photo) {
+                                img += `<div><img class="stadium_image" src="/storage/${photo}" alt="court photo"/></div>`
+                            });
+                            let imgCont = `<div class="court_images"><div class="scroll-container">${img}</div></div>`
+
+                            $('#courtPhotos').append(imgCont);
+                            $('.scroll-container').slick({
+                                infinite: true,
+                                slidesToShow: 1,
+                                slidesToScroll: 1,
+                                dots: true,
+                                arrows: true,
+                                adaptiveHeight: true
+                            });
+
+                            $('.scroll-wrapper').on('wheel', function (event) {
+                                if (event.originalEvent.deltaY !== 0) {
+                                    this.scrollLeft += event.originalEvent.deltaY;
+                                    event.preventDefault();
+                                }
+                            });
+
+                            $('.scroll-wrapper').on('wheel', function (event) {
+                                if (event.originalEvent.deltaY !== 0) {
+                                    this.scrollLeft += event.originalEvent.deltaY;
+                                    event.preventDefault();
+                                }
+                            });
+                        }
+
+                        modal.show();
+                    },
+                    error: function (error) {
+                        alert('Ошибка при загрузке данных корта');
+                    }
+                });
+            });
+
+
+            closeBtn.on('click', function () {
+                modal.hide();
+            });
+
+            $(window).on('click', function (event) {
+                if ($(event.target).is(modal)) {
+                    modal.hide();
+                }
+            });
             let selectedDate = @json(request()->input('date') ?? date('Y-m-d'));
             @if($isUpdate)
                 selectedDate = @json($userBook->date);

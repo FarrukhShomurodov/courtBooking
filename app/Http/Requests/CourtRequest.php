@@ -36,9 +36,9 @@ class CourtRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:100',
-//            'description' => 'required|string|max:400',
-//            'photos' => 'sometimes|array|max:25',
-//            'photos.*' => 'image|mimes:jpg,png',
+            'description' => 'nullable|string|max:400',
+            'photos' => 'sometimes|array|max:25',
+            'photos.*' => 'image|mimes:jpg,png',
             'is_active' => 'nullable|boolean',
             'stadium_id' => [
                 'required',

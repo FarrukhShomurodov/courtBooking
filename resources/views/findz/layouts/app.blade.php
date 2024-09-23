@@ -17,7 +17,7 @@
             tg.expand();
             let userData = tg.initDataUnsafe;
 
-            if(userData.user){
+            // if(userData.user){
                 let chatID = userData.user.id;
 
                 async function checkUser() {
@@ -76,9 +76,9 @@
                     };
                 }
                 @endif
-            }else{
-                window.location.href = 'https://t.me/cuourts_bokking_bot';
-            }
+            // }else{
+            //     window.location.href = 'https://t.me/cuourts_bokking_bot';
+            // }
         });
     </script>
 
