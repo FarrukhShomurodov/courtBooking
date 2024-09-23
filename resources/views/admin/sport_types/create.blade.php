@@ -30,16 +30,16 @@
                            placeholder="@lang('sportType.name')"
                            required>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label" for="basic-default-message">@lang('sportType.description')</label>
-                    <textarea id="basic-default-message" name="description" class="form-control"
-                              placeholder="@lang('sportType.description')" required></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="imageInput" class="form-label">@lang('sportType.upload_image')</label>
-                    <input type="file" name="photos[]" id="imageInput" class="form-control" multiple>
-                </div>
-                <div id="imagePreview" class="mb-3 main__td"></div>
+{{--                <div class="mb-3">--}}
+{{--                    <label class="form-label" for="basic-default-message">@lang('sportType.description')</label>--}}
+{{--                    <textarea id="basic-default-message" name="description" class="form-control"--}}
+{{--                              placeholder="@lang('sportType.description')" required></textarea>--}}
+{{--                </div>--}}
+{{--                <div class="mb-3">--}}
+{{--                    <label for="imageInput" class="form-label">@lang('sportType.upload_image')</label>--}}
+{{--                    <input type="file" name="photos[]" id="imageInput" class="form-control" multiple>--}}
+{{--                </div>--}}
+{{--                <div id="imagePreview" class="mb-3 main__td"></div>--}}
                 <button type="submit" class="btn btn-primary">@lang('sportType.save')</button>
             </form>
         </div>

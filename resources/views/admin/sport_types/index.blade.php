@@ -25,7 +25,7 @@
                 <tr>
                     <th>@lang('sportType.id')</th>
                     <th>@lang('sportType.name')</th>
-                    <th>@lang('sportType.photo')</th>
+{{--                    <th>@lang('sportType.photo')</th>--}}
                     <th></th>
                 </tr>
                 </thead>
@@ -35,20 +35,19 @@
                     <tr>
                         <td>{{ $spotType->id }}</td>
                         <td>{{ strlen($spotType->name) > 30 ? substr($spotType->name, 0, 30) . "..."  : $spotType->name }}</td>
-
-                        <td>
-                            <div class="main__td">
-                                @if($spotType->photos)
-                                    @foreach(json_decode($spotType->photos) as $photo)
-                                        <div class="td__img">
-                                            <img src="storage/{{ $photo }}" alt="@lang('sportType.sport_type_photo')"
-                                                 class="popup-img"
-                                                 width="100px"/>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </td>
+{{--                        <td>--}}
+{{--                            <div class="main__td">--}}
+{{--                                @if($spotType->photos)--}}
+{{--                                    @foreach(json_decode($spotType->photos) as $photo)--}}
+{{--                                        <div class="td__img">--}}
+{{--                                            <img src="storage/{{ $photo }}" alt="@lang('sportType.sport_type_photo')"--}}
+{{--                                                 class="popup-img"--}}
+{{--                                                 width="100px"/>--}}
+{{--                                        </div>--}}
+{{--                                    @endforeach--}}
+{{--                                @endif--}}
+{{--                            </div>--}}
+{{--                        </td>--}}
                         <td>
                             <div class="d-inline-block text-nowrap">
                                 <button class="btn btn-sm btn-icon"
