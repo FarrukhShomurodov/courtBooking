@@ -39,9 +39,13 @@
                 </tr>
                 </thead>
                 <tbody>
+                @php
+                    $count = 1
+                @endphp
+
                 @foreach($courts as $court)
                     <tr>
-                        <td>{{ $court->id }}</td>
+                        <td>{{ $count++ }}</td>
                         <td>
                             {{ strlen($court->name) > 30 ? substr($court->name, 0, 30) . "..."  : $court->name }}
                         </td>

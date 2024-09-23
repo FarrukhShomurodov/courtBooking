@@ -30,10 +30,12 @@
                 </tr>
                 </thead>
                 <tbody>
-
+                @php
+                    $count = 1
+                @endphp
                 @foreach($spotTypes as $spotType)
                     <tr>
-                        <td>{{ $spotType->id }}</td>
+                        <td>{{ $count++ }}</td>
                         <td>{{ strlen($spotType->name) > 30 ? substr($spotType->name, 0, 30) . "..."  : $spotType->name }}</td>
 {{--                        <td>--}}
 {{--                            <div class="main__td">--}}

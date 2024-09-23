@@ -33,7 +33,9 @@
                 </tr>
                 </thead>
                 <tbody>
-
+                @php
+                    $count = 1
+                @endphp
                 @foreach($bookings as $booking)
 
                     @php
@@ -42,7 +44,7 @@
                         $diff = $start_time->diff($end_time);
                     @endphp
                     <tr>
-                        <td>{{ $booking->id }}</td>
+                        <td>{{ $count++ }}</td>
                         <td>{{ $booking->court->name }}</td>
                         <td>{{ $booking->court->stadium->name }}</td>
                         <td>{{ $booking->date }}</td>

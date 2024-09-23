@@ -8,7 +8,8 @@
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-header">{{  __('user.Пользователи') }}</h5>
-            <a href="{{ route('users.create') }}" class="btn btn-primary " style="margin-right: 22px;">{{  __('user.Создать') }}</a>
+            <a href="{{ route('users.create') }}" class="btn btn-primary "
+               style="margin-right: 22px;">{{  __('user.Создать') }}</a>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-users table border-top">
@@ -24,15 +25,20 @@
                 </tr>
                 </thead>
                 <tbody>
+                @php
+                    $count = 1
+                @endphp
+
                 @foreach($users as $user)
                     <tr>
-                        <td>{{ $user->id }}</td>
+                        <td>{{ $count++ }}</td>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->second_name }}</td>
                         <td>
                             @if($user->avatar)
                                 <img class="rounded-circle"
-                                     src="{{ \Illuminate\Support\Facades\Storage::url($user->avatar) }}" width="50px" height="50px">
+                                     src="{{ \Illuminate\Support\Facades\Storage::url($user->avatar) }}" width="50px"
+                                     height="50px">
                             @endif
                         </td>
                         <td>{{ $user->login }}</td>
