@@ -10,7 +10,8 @@
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-header">@lang('stadium.stadium')</h5>
             @can('manage stadiums')
-                <a href="{{ route('stadiums.create') }}" class="btn btn-primary" style="margin-right: 22px;">@lang('stadium.create')</a>
+                <a href="{{ route('stadiums.create') }}" class="btn btn-primary"
+                   style="margin-right: 22px;">@lang('stadium.create')</a>
             @endcan
         </div>
 
@@ -29,15 +30,17 @@
                 <tr>
                     <th>@lang('stadium.id')</th>
                     <th>@lang('stadium.name')</th>
-{{--                    <th>@lang('stadium.address')</th>--}}
-{{--                    <th>@lang('stadium.map_link')</th>--}}
-{{--                    <th>@lang('stadium.coach')</th>--}}
+                    {{--                    <th>@lang('stadium.address')</th>--}}
+                    {{--                    <th>@lang('stadium.map_link')</th>--}}
+                    {{--                    <th>@lang('stadium.coach')</th>--}}
                     <th>@lang('stadium.owner')</th>
-{{--                    <th>@lang('stadium.manager')</th>--}}
+                    {{--                    <th>@lang('stadium.manager')</th>--}}
                     <th>@lang('stadium.sport_types')</th>
                     <th>@lang('stadium.is_active')</th>
-{{--                    <th>@lang('stadium.photos')</th>--}}
-                    <th></th>
+                    {{--                    <th>@lang('stadium.photos')</th>--}}
+                    @can('manage stadiums')
+                        <th></th>
+                    @endcan
                 </tr>
                 </thead>
                 <tbody>
@@ -46,14 +49,15 @@
                     <tr>
                         <td>{{ $stadium->id }}</td>
                         <td>{{ strlen($stadium->name) > 30 ? substr($stadium->name, 0, 30) . "..."  : $stadium->name }}</td>
-{{--                        <td>{{ strlen($stadium->address) > 50 ? substr($stadium->address, 0, 50) . "..."  : $stadium->address }}</td>--}}
-{{--                        <td>{{ $stadium->map_link }}</td>--}}
-{{--                        <td>{{ $stadium->coach->user->name ?? '' }}</td>--}}
+                        {{--                        <td>{{ strlen($stadium->address) > 50 ? substr($stadium->address, 0, 50) . "..."  : $stadium->address }}</td>--}}
+                        {{--                        <td>{{ $stadium->map_link }}</td>--}}
+                        {{--                        <td>{{ $stadium->coach->user->name ?? '' }}</td>--}}
                         <td>{{ $stadium->owner->name }}</td>
-{{--                        <td>{{ $stadium->manager->name ?? ''}}</td>--}}
+                        {{--                        <td>{{ $stadium->manager->name ?? ''}}</td>--}}
                         <td>
                             @foreach($stadium->sportTypes as $sportType)
-                                <span>{{ $sportType->name }} {{ count($stadium->sportTypes) !== $sportType->id ? (count($stadium->sportTypes) > 1 ? ',' : ''): '' }}</span><br>
+                                <span>{{ $sportType->name }} {{ count($stadium->sportTypes) !== $sportType->id ? (count($stadium->sportTypes) > 1 ? ',' : ''): '' }}</span>
+                                <br>
                             @endforeach
                         </td>
                         <td>
@@ -66,18 +70,18 @@
                                 </span>
                             </label>
                         </td>
-{{--                        <td>--}}
-{{--                            <div class="main__td">--}}
-{{--                                @if($stadium->photos)--}}
-{{--                                    @foreach(json_decode($stadium->photos) as $photo)--}}
-{{--                                        <div class="td__img">--}}
-{{--                                            <img src="storage/{{ $photo }}" alt="@lang('stadium.sport_type_photo')" class="popup-img"--}}
-{{--                                                 width="100px"/>--}}
-{{--                                        </div>--}}
-{{--                                    @endforeach--}}
-{{--                                @endif--}}
-{{--                            </div>--}}
-{{--                        </td>--}}
+                        {{--                        <td>--}}
+                        {{--                            <div class="main__td">--}}
+                        {{--                                @if($stadium->photos)--}}
+                        {{--                                    @foreach(json_decode($stadium->photos) as $photo)--}}
+                        {{--                                        <div class="td__img">--}}
+                        {{--                                            <img src="storage/{{ $photo }}" alt="@lang('stadium.sport_type_photo')" class="popup-img"--}}
+                        {{--                                                 width="100px"/>--}}
+                        {{--                                        </div>--}}
+                        {{--                                    @endforeach--}}
+                        {{--                                @endif--}}
+                        {{--                            </div>--}}
+                        {{--                        </td>--}}
                         @can('manage stadiums')
                             <td>
                                 <div class="d-inline-block text-nowrap">

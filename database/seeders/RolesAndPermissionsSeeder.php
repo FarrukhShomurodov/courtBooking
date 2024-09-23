@@ -31,9 +31,9 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
         $ownerRole = Role::create(['name' => 'owner stadium']);
-        $ownerRole->givePermissionTo([
-            'manage courts'
-        ]);
+//        $ownerRole->givePermissionTo([
+//            'manage courts'
+//        ]);
 
         Role::create(['name' => 'trainer']);
         Role::create(['name' => 'stadium manager']);

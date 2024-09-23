@@ -33,7 +33,9 @@
                     <th>{{ __('court.stadium') }}</th>
                     @endrole
                     {{--                    <th>{{ __('court.photos') }}</th>--}}
-                    <th></th>
+                    @can('manage courts')
+                        <th></th>
+                    @endcan
                 </tr>
                 </thead>
                 <tbody>
@@ -69,20 +71,22 @@
                         {{--                                @endif--}}
                         {{--                            </div>--}}
                         {{--                        </td>--}}
-                        <td>
-                            <div class="d-inline-block text-nowrap">
-                                <button class="btn btn-sm btn-icon"
-                                        onclick="location.href='{{ route('courts.edit', $court->id) }}'"><i
-                                        class="bx bx-edit"></i></button>
-                                <form action="{{ route('courts.destroy', $court->id) }}" method="POST"
-                                      style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-icon delete-record"><i class="bx bx-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
+                        @can('manage courts')
+                            <td>
+                                <div class="d-inline-block text-nowrap">
+                                    <button class="btn btn-sm btn-icon"
+                                            onclick="location.href='{{ route('courts.edit', $court->id) }}'"><i
+                                            class="bx bx-edit"></i></button>
+                                    <form action="{{ route('courts.destroy', $court->id) }}" method="POST"
+                                          style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-icon delete-record"><i class="bx bx-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        @endcan
                     </tr>
                 @endforeach
                 </tbody>

@@ -9,7 +9,7 @@ class CoachHasSportType implements Rule
 {
     protected $sportTypeIds;
 
-    public function __construct(array $sportTypeIds)
+    public function __construct( $sportTypeIds)
     {
         $this->sportTypeIds = $sportTypeIds;
     }
