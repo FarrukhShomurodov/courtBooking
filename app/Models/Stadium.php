@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -66,26 +67,33 @@ class Stadium extends Model
 
         }])->get()->pluck('bookings')->flatten();
 
-        // Суммируем забронированные часы
         $totalHoursBooked = $bookings->where('status', 'paid')->count();
 
-        // Рассчитываем доступные рабочие часы на основе расписаний кортов
         $totalAvailableHours = $this->courts()->get()->reduce(function ($carry, $court) use ($dateFrom, $dateTo) {
             $totalHours = 0;
 
-            // Получаем расписания для заданного периода
-            $schedules = $court->schedules()->get();
+            $from = Carbon::parse($dateFrom);
+            $to = Carbon::parse($dateTo);
 
-            // Рассчитываем рабочие часы для каждого расписания
-            foreach ($schedules as $schedule) {
-//                $start = \Carbon\Carbon::parse($schedule->start_time);
-//                $end = \Carbon\Carbon::parse($schedule->end_time);
-                $totalHours += 1;
+            if ($dateFrom && $dateTo) {
+                $interval = $from->diffInDays($to);
+            } elseif ($dateFrom) {
+                $interval = $from->diffInDays(Carbon::now());
+            } elseif ($dateTo) {
+                $interval = Carbon::now()->diffInDays($to);
+            } else {
+                $interval = 1;
             }
+            $interval = $interval === 0 ? 1 : $interval;
 
-            // Добавляем часы этого корта к общей сумме
+
+            // Получаем количество расписаний
+            $schedulesCount = $court->schedules()->count();
+            $totalHours += $schedulesCount * $interval;
+
             return $carry + $totalHours;
         }, 0);
+
 
 
         // Рассчитываем незабронированные часы
@@ -107,7 +115,6 @@ class Stadium extends Model
             'unbooked_hours' => $unbookedHours,
         ];
     }
-
 
 
     public function getMinimumCourtCost(): ?int

@@ -47,22 +47,41 @@
                             @endforeach
                         </select>
                     </div>
-                    @can('manage stadiums')
-                        <div>
-                            <select id="select22"
-                                    class="select2 form-select"
-                                    name="owner-id"
-                                    onchange="this.form.submit()"
-                                    tabindex="-1" aria-hidden="true" style="margin-right: 10px">
-                                @foreach($ownerStadium as $owner)
-                                    <option value="{{ $owner->id }}"
-                                        {{ request('owner-id') == $owner->id ? 'selected' : '' }}>
-                                        {{ $owner->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    @endcan
+                    @role('admin')
+                    <div class="me-2">
+                        <select id="select2"
+                                class="select2 form-select"
+                                name="stadium-id"
+                                onchange="this.form.submit()"
+                                tabindex="-1" aria-hidden="true" style="margin-right: 10px">
+                            <option value="all" {{ request('stadium-id-id') == 'all' ? 'selected' : '' }}>
+                                {{ __('court.select_stadium') }}
+                            </option>
+                            @foreach($stadiums as $stadium)
+                                <option value="{{ $stadium->id }}"
+                                    {{ request('stadium-id') == $stadium->id ? 'selected' : '' }}>
+                                    {{ $stadium->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endrole
+{{--                    @can('manage stadiums')--}}
+{{--                        <div>--}}
+{{--                            <select id="select22"--}}
+{{--                                    class="select2 form-select"--}}
+{{--                                    name="owner-id"--}}
+{{--                                    onchange="this.form.submit()"--}}
+{{--                                    tabindex="-1" aria-hidden="true" style="margin-right: 10px">--}}
+{{--                                @foreach($ownerStadium as $owner)--}}
+{{--                                    <option value="{{ $owner->id }}"--}}
+{{--                                        {{ request('owner-id') == $owner->id ? 'selected' : '' }}>--}}
+{{--                                        {{ $owner->name }}--}}
+{{--                                    </option>--}}
+{{--                                @endforeach--}}
+{{--                            </select>--}}
+{{--                        </div>--}}
+{{--                    @endcan--}}
                 </div>
             </form>
         </div>

@@ -9,6 +9,7 @@ use App\Models\Court;
 use App\Models\SportType;
 use App\Models\Stadium;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -109,13 +110,26 @@ class StatisticsRepositories
             return $booking->getHours();
         });
 
-        // Получаем расписания корта для заданного периода
-        $schedules = $court->schedules()->get();
 
-        // Рассчитываем доступные рабочие часы на основе расписаний
-        $totalAvailableHours = $schedules->reduce(function ($carry, $schedule) {
-            return $carry + 1;
-        }, 0);
+        $schedulesCount = $court->schedules()->count();
+
+        $from = Carbon::parse($dateFrom);
+        $to = Carbon::parse($dateTo);
+
+        if ($dateFrom && $dateTo) {
+            $interval = $from->diffInDays($to);
+        } elseif ($dateFrom) {
+            $interval = $from->diffInDays(Carbon::now());
+        } elseif ($dateTo) {
+            $interval = Carbon::now()->diffInDays($to);
+        } else {
+            $interval = 1;
+        }
+
+        $interval = $interval === 0 ? 1 : $interval;
+
+        $totalAvailableHours = $schedulesCount * $interval;
+
 
         // Рассчитываем незабронированные часы
         $unbookedHours = $totalAvailableHours - $totalHoursBooked;
@@ -180,15 +194,27 @@ class StatisticsRepositories
             return $booking->getHours();
         });
 
-        // Получение расписаний для всех кортов
-        $schedules = $courts->flatMap(function ($court) use ($dateFrom, $dateTo) {
+
+        $from = Carbon::parse($dateFrom);
+        $to = Carbon::parse($dateTo);
+
+        if ($dateFrom && $dateTo) {
+            $interval = $from->diffInDays($to);
+        } elseif ($dateFrom) {
+            $interval = $from->diffInDays(Carbon::now());
+        } elseif ($dateTo) {
+            $interval = Carbon::now()->diffInDays($to);
+        } else {
+            $interval = 1;
+        }
+
+        $interval = $interval === 0 ? 1 : $interval;
+
+        $schedules = $courts->flatMap(function ($court) {
             return $court->schedules()->get();
         });
 
-        // Подсчет доступных рабочих часов на основе расписаний
-        $totalAvailableHours = $schedules->reduce(function ($carry, $schedule) {;
-            return $carry + 1;
-        }, 0);
+        $totalAvailableHours = $schedules->count() * $interval;
 
         // Рассчитываем незабронированные часы
         $unbookedHours = $totalAvailableHours - $totalHoursBooked;

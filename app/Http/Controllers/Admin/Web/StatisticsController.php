@@ -100,26 +100,32 @@ class StatisticsController extends Controller
 
     public function courts(Request $request): View|\Illuminate\Foundation\Application|Factory|Application
     {
+
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
             $courts = Auth::user()->stadiumOwner()->first()->courts()->get();
         } else {
             $courts = Court::all();
-        }
 
-        if ($request->get('owner-id')) {
-            $owner = User::query()->find($request->get('owner-id'));
+            $stadiumId = $request->input('stadium-id') ?? 'all';
 
-            if ($owner && $owner->hasRole('owner stadium')) {
-                $courts = $owner->stadiumOwner()->first()->courts()->get();
+            if ($stadiumId && $stadiumId !== 'all') {
+                $courts = Stadium::query()->find($stadiumId)->courts()->get();
             }
         }
+
+//        if ($request->get('owner-id')) {
+//            $owner = User::query()->find($request->get('owner-id'));
+//
+//            if ($owner && $owner->hasRole('owner stadium')) {
+//                $courts = $owner->stadiumOwner()->first()->courts()->get();
+//            }
+//        }
 
         if ($request->get('sport-type-id') && $request->get('sport-type-id') !== 'all') {
             $courts = $courts->filter(function ($court) use ($request) {
                 return $court->sport_type_id == $request->get('sport-type-id');
             });
         }
-
 
         $dateFrom = null;
         $dateTo = null;
@@ -166,7 +172,9 @@ class StatisticsController extends Controller
             $query->where('name', 'user')
                 ->orWhere('name', 'trainer');
         })->get();
-        return view('admin.statistics.courts', compact('statistics', 'sportTypes', 'ownerStadium', 'totalStatistics'));
+
+        $stadiums = Stadium::all();
+        return view('admin.statistics.courts', compact('statistics', 'sportTypes', 'ownerStadium','stadiums', 'totalStatistics'));
     }
 
     public function sportType(Request $request): View|\Illuminate\Foundation\Application|Factory|Application

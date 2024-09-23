@@ -50,20 +50,20 @@
                             </select>
                         </div>
                         {{--    Owners  --}}
-                        <div>
-                            <select id="select22"
-                                    class="select2 form-select"
-                                    name="owner-id"
-                                    onchange="this.form.submit()"
-                                    tabindex="-1" aria-hidden="true" style="margin-right: 10px">
-                                @foreach($ownerStadium as $owner)
-                                    <option value="{{ $owner->id }}"
-                                        {{ request('owner-id') == $owner->id ? 'selected' : '' }}>
-                                        {{ $owner->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+{{--                        <div>--}}
+{{--                            <select id="select22"--}}
+{{--                                    class="select2 form-select"--}}
+{{--                                    name="owner-id"--}}
+{{--                                    onchange="this.form.submit()"--}}
+{{--                                    tabindex="-1" aria-hidden="true" style="margin-right: 10px">--}}
+{{--                                @foreach($ownerStadium as $owner)--}}
+{{--                                    <option value="{{ $owner->id }}"--}}
+{{--                                        {{ request('owner-id') == $owner->id ? 'selected' : '' }}>--}}
+{{--                                        {{ $owner->name }}--}}
+{{--                                    </option>--}}
+{{--                                @endforeach--}}
+{{--                            </select>--}}
+{{--                        </div>--}}
                     </div>
                 </form>
             @endcan
