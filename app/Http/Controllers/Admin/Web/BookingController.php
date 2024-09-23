@@ -26,9 +26,9 @@ class BookingController extends Controller
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
             $courts = Auth::user()->stadiumOwner()->first()->courts()->where('is_active', true)->get()->load('schedules');
         } elseif (Auth::user()->roles()->first()->name == 'stadium manager') {
-            if(Auth::user()->stadiumManager()->count() > 0){
+            if (Auth::user()->stadiumManager()->count() > 0) {
                 $courts = Auth::user()->stadiumManager()->first()->courts()->where('is_active', true)->get()->load('schedules');
-            }else{
+            } else {
                 Auth::logout();
                 return redirect()->route('login')->withErrors(['error' => 'Вы не прикреплены ни к одному стадиону.']);
             }
@@ -73,5 +73,62 @@ class BookingController extends Controller
     {
         $this->bookingService->store($request->validated());
         return redirect()->route('bookings.index');
+    }
+
+    public function destroy(Booking $booking): RedirectResponse
+    {
+        $role = Auth::user()->roles()->first()->name;
+
+        if ($booking->source === 'manual') {
+            switch ($role) {
+                case 'admin':
+                    $this->bookingService->delete($booking);
+                    break;
+
+                case 'owner stadium':
+                    $owner = Auth::user()->stadiumOwner()->first();
+                    if ($owner) {
+                        $hasBooking = Booking::query()
+                            ->whereIn('court_id', $owner->courts->pluck('id'))
+                            ->where('id', $booking->id)
+                            ->exists();
+
+                        if ($hasBooking) {
+                            $this->bookingService->delete($booking);
+                        } else {
+                            return redirect()->route('all-bookings')->withErrors('Booking not found for this stadium.');
+                        }
+                    } else {
+                        return redirect()->route('all-bookings')->withErrors('Unauthorized to delete booking.');
+                    }
+                    break;
+
+                case 'stadium manager':
+                    $stadiumManager = Auth::user()->stadiumManager()->first();
+                    if ($stadiumManager) {
+                        $hasBooking = Booking::query()
+                            ->whereIn('court_id', $stadiumManager->courts->pluck('id'))
+                            ->where('id', $booking->id)
+                            ->exists();
+
+                        if ($hasBooking) {
+                            $this->bookingService->delete($booking);
+                        } else {
+                            return redirect()->route('all-bookings')->withErrors('Booking not found for this manager.');
+                        }
+                    } else {
+                        return redirect()->route('all-bookings')->withErrors('Unauthorized to delete booking.');
+                    }
+                    break;
+
+                default:
+                    return redirect()->route('all-bookings')->withErrors('Invalid role.');
+            }
+
+            return redirect()->route('all-bookings')->with('success', 'Booking deleted successfully.');
+        } else {
+            return redirect()->route('all-bookings')->withErrors('You cannot delete a bot user\'s booking.');
+        }
+
     }
 }

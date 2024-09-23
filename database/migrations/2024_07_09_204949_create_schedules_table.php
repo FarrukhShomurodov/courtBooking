@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('court_id')->constrained('courts')->onDelete('cascade');
             $table->time('start_time');
             $table->time('end_time');
-            $table->decimal('cost')->nullable();
+            $table->decimal('cost', 10, 2)->nullable();
             $table->timestamps();
         });
     }

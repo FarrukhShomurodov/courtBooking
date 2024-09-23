@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('bot_user_id')->nullable()->constrained('bot_users')->onDelete('cascade');
             $table->string('full_name');
             $table->string('phone_number');
-            $table->decimal('price');
+            $table->decimal('price', 10, 2);
             $table->date('date');
             $table->time('start_time');
             $table->time('end_time');

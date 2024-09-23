@@ -18,6 +18,13 @@
             <h5 class="card-header">{{__('book.all_book')}}</h5>
         </div>
         <div class="card-datatable table-responsive">
+            @if ($errors->any())
+                <div class="alert alert-solid-danger" role="alert">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </div>
+            @endif
             <table class="datatables-users table border-top">
                 <thead>
                 <tr>
@@ -30,6 +37,7 @@
                     <th>{{__('book.sum')}}</th>
                     <th>{{__('book.source')}}</th>
                     <th>{{__('book.status')}}</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -53,6 +61,19 @@
                         <td>{{ $booking->price }}</td>
                         <td>{{ $booking->source == 'manual' ? 'Manual' : 'Findz' }}</td>
                         <td>{{ $booking->status }}</td>
+                        @if($booking->source === 'manual')
+                            <td>
+                                <div class="d-inline-block text-nowrap">
+                                    <form action="{{ route('bookings.destroy', $booking->id) }}" method="POST"
+                                          style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-icon delete-record"><i class="bx bx-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        @endif
                     </tr>
                 @endforeach
                 </tbody>

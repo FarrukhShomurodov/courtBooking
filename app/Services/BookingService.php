@@ -42,4 +42,9 @@ class BookingService
             return $booking;
         });
     }
+
+    public function delete(Booking $booking): void
+    {
+        $booking->delete();
+    }
 }
