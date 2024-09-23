@@ -58,7 +58,8 @@
                 <div class="mb-3 price_for_coach">
                     <label for="price_for_coach" class="form-label">{{  __('user.Цена за час') }} *</label>
                     <input type="number" name="price_for_coach" id="price_for_coach" class="form-control"
-                           placeholder="Цена за час">
+                           placeholder="Цена за час"
+                           max="9999" min="0" maxlength="4" oninput="this.value = this.value.slice(0, 4);">
                 </div>
 
                 {{-- Sport type --}}

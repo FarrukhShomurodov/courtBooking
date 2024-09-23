@@ -89,7 +89,7 @@
                         @for ($i = 0; $i < 24; $i++)
                             <tr>
                                 <td>{{ sprintf('%02d:00 - %02d:00', $i, ($i + 1) % 24) }}</td>
-                                <td><input type="number" name="schedule[{{ $i }}][cost]" class="form-control" placeholder="Стоимость" value="0"></td>
+                                <td><input type="number" name="schedule[{{ $i }}][cost]" class="form-control" placeholder="Стоимость"  max="9999" min="0" maxlength="4" value="0" oninput="this.value = this.value.slice(0, 4);"></td>
                                 <input type="hidden" name="schedule[{{ $i }}][start_time]" value="{{ sprintf('%02d:00', $i) }}">
                                 <input type="hidden" name="schedule[{{ $i }}][end_time]" value="{{ sprintf('%02d:00', ($i + 1) % 24) }}">
                             </tr>
