@@ -46,56 +46,13 @@
                            'court_name',
                            'pointer' => !$isAllowedClick,
                            'with-triangle' => !$isAllowedClick
-                          ]) data-court-id="{{ $court->id }}" >{{ $court->name }}</th>
+                          ]) data-court-id="{{ $court->id }}">{{ $court->name }}</th>
                     @endforeach
                 </tr>
                 </thead>
 
                 <tbody class="table-border-bottom-0">
-                <tr>
-                    @foreach($courts as $court)
-                        <td style="padding: 0px !important;" data-court-id="{{$court->id}}">
-                            @foreach($court->schedules as $schedule)
-                                @php
-                                    $bookingId = 0;
-                                    $hasBooking = false;
-                                    $currentTime = Carbon::parse($schedule->start_time);
-
-                                    $date = Carbon::parse(request('date'));
-
-
-                                    foreach($court->bookings as $booking) {
-                                        $bookingId = $booking->id;
-
-                                        $bookingDate =  Carbon::parse($booking->date);
-                                        $hasDate = ($date == $bookingDate) ?? $bookingDate->isToday();
-
-                                        if ($hasDate) {
-                                            $bookingStartTime = Carbon::parse($booking->start_time);
-                                            $bookingEndTime = Carbon::parse($booking->end_time);
-                                            if ($currentTime->between($bookingStartTime, $bookingEndTime)) {
-                                                $hasBooking = true;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                @endphp
-
-                                <div
-                                    class="slot @if($hasBooking) slot_booked @endif @if($court->id == $selectedCourt && (substr($schedule->start_time, 0, 5) == $selectedStartTime || substr($schedule->start_time, 0, 5) == $selectedEndTime)) selected @endif"
-                                    data-time="{{ substr($schedule->start_time, 0, 5) }}"
-                                    data-field="{{ $court->name }}"
-                                    data-price="{{ round($schedule->cost, 2) / 1000 }}"
-                                    data-court-id="{{$court->id}}"
-                                    data-booking-id="{{$bookingId}}">{{ substr($schedule->start_time, 0, 5) }}<br>
-                                    <span>{{ round($schedule->cost, 2) / 1000 }} т.с/ч</span>
-                                </div>
-
-                            @endforeach
-
-                        </td>
-                    @endforeach
-                </tr>
+                <tr></tr>
                 </tbody>
             </table>
         </div>
@@ -122,15 +79,15 @@
             </div>
         </div>
 
-        @if(!$isUpdate)
-            <div class="payment-method mt-30">
-                <h3>{{ __('findz/book.Способ Оплаты') }}</h3>
-                <div class="payment-options">
-                    <button class="active-payment" data-payment="payme">{{ __('PayMe') }}</button>
-                    <button data-payment="uzum">{{ __('Uzum') }}</button>
-                </div>
-            </div>
-        @endif
+{{--        @if(!$isUpdate)--}}
+{{--            <div class="payment-method mt-30">--}}
+{{--                <h3>{{ __('findz/book.Способ Оплаты') }}</h3>--}}
+{{--                <div class="payment-options">--}}
+{{--                    <button class="active-payment" data-payment="payme">{{ __('PayMe') }}</button>--}}
+{{--                    <button data-payment="uzum">{{ __('Uzum') }}</button>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        @endif--}}
 
         <div class="booking-rules mt-30">
             <p>{{ __('findz/book.Правила брони') }}</p>
@@ -169,13 +126,12 @@
 @section('extra-scripts')
     <script>
         $(document).ready(function () {
+            // date and show court
             const modal = $('#courtModal');
             const closeBtn = $('.close');
 
             $('.court_name').on('click', function () {
-                if ($(this).css('cursor') === 'not-allowed') {
-                    return;
-                }
+                if ($(this).css('cursor') === 'not-allowed') return;
 
                 const courtId = $(this).data('court-id');
 
@@ -185,16 +141,12 @@
                     success: function (response) {
                         $('#courtName').text(response.name);
                         $('#courtDescription').text(response.description);
-
                         $('#courtPhotos').empty();
 
                         if (response.photos) {
                             const photos = JSON.parse(response.photos);
-                            let img = '';
-                            photos.forEach(function (photo) {
-                                img += `<div><img class="stadium_image" src="/storage/${photo}" alt="court photo"/></div>`
-                            });
-                            let imgCont = `<div class="court_images"><div class="scroll-container">${img}</div></div>`
+                            const images = photos.map(photo => `<div><img class="stadium_image" src="/storage/${photo}" alt="court photo"/></div>`).join('');
+                            const imgCont = `<div class="court_images"><div class="scroll-container">${images}</div></div>`;
 
                             $('#courtPhotos').append(imgCont);
                             $('.scroll-container').slick({
@@ -220,7 +172,6 @@
                                 }
                             });
                         }
-
                         modal.show();
                     },
                     error: function (error) {
@@ -228,7 +179,6 @@
                     }
                 });
             });
-
 
             closeBtn.on('click', function () {
                 modal.hide();
@@ -239,6 +189,7 @@
                     modal.hide();
                 }
             });
+
             let selectedDate = @json(request()->input('date') ?? date('Y-m-d'));
             @if($isUpdate)
                 selectedDate = @json($userBook->date);
@@ -311,7 +262,7 @@
                     $('.prev').removeClass('disabled');
                 }
 
-                if (dateObject.getDate() >= maxDate.getDate()) {
+                if (dateObject >= maxDate) {
                     $('.next').addClass('disabled');
                 } else {
                     $('.next').removeClass('disabled');
@@ -376,23 +327,34 @@
                     return daysOfWeek[date.getDay()];
             }
 
+            // slots
             function updateSlots(data) {
+                const savedSlots = JSON.parse(localStorage.getItem('selectedSlots')) || [];
+
                 $('.slots-table tbody tr').empty();
                 data.courts.forEach(court => {
                     let row = `<td style="padding: 0px !important;" data-court-id="${court.id}">`;
 
-                    court.schedules.forEach(schedule => {
+                    let timeSlots = [];
+                    for (let h = 0; h < 24; h++) {
+                        let time = ('0' + h).slice(-2) + ':00';
+                        timeSlots.push(time);
+                    }
+
+                    timeSlots.forEach(timeSlot => {
+                        let schedule = court.schedules.find(s => s.start_time.slice(0, 5) === timeSlot);
+
                         let hasBooking = false;
 
                         @if($isUpdate)
-                        let oldSelectedSlot = (court.id === {{ $userBook->court_id }} && schedule.start_time >= "{{ $userBook->start_time }}" && schedule.start_time <= "{{ $userBook->end_time }}");
+                        let oldSelectedSlot = (court.id === {{ $userBook->court_id }} && schedule?.start_time >= "{{ $userBook->start_time }}" && schedule?.start_time <= "{{ $userBook->end_time }}");
                         hasBooking = false;
-                        let endTime = "{{ $userBook->end_time }}"
-                        endTime = endTime.slice(0, 5)
+                        let endTime = "{{ $userBook->end_time }}";
+                        endTime = endTime.slice(0, 5);
                         @else
                             hasBooking = data.bookings.some(booking => {
                             let bookingDate = new Date(booking.date).toISOString().slice(0, 10);
-                            return court.id == booking.court_id && bookingDate === selectedDate && schedule.start_time >= booking.start_time && schedule.start_time <= booking.end_time;
+                            return court.id == booking.court_id && bookingDate === selectedDate && schedule?.start_time >= booking.start_time && schedule?.start_time <= booking.end_time;
                         });
                         @endif
 
@@ -401,517 +363,203 @@
                         @if($isUpdate)
                             selected = oldSelectedSlot;
                         @else
-                            selected = (court.id == {{ request('stadium') }} && (schedule.start_time.slice(0, 5) >= "{{ $selectedStartTime }}" && schedule.start_time.slice(0, 5) <= "{{ $selectedEndTime }}"));
-                        let endTime = "{{ $selectedEndTime }}"
+                            selected = (court.id == {{ request('stadium') }} && (schedule?.start_time.slice(0, 5) >= "{{ $selectedStartTime }}" && schedule?.start_time.slice(0, 5) <= "{{ $selectedEndTime }}"));
+                        let endTime = "{{ $selectedEndTime }}";
                         @endif
+
+                        savedSlots.forEach(slot => {
+                            if (slot.court_id === court.id && slot.start === timeSlot && slot.date === selectedDate) {
+                                selected = true;
+                            }
+                        });
 
                         let selectedClass = selected ? 'selected' : '';
                         let slotClass = hasBooking ? 'slot_booked' : '';
 
-                        if (schedule.start_time.slice(0, 5) == endTime) {
-                            console.log("=-")
-                            row += `
-                            <div class="slot next_slot"
-                                data-time="${schedule.start_time.slice(0, 5)}"
-                                data-field="${court.name}"
-                                data-price="${Math.round(schedule.cost) / 1000}"
-                                data-court-id="${court.id}">
-                                ${schedule.start_time.slice(0, 5)}<br>
-                                <span>${Math.round(schedule.cost) / 1000} т.с/ч</span>
-                            </div>
-                        `;
-                        } else {
-                            row += `
-                            <div class="slot ${slotClass} ${selectedClass}"
-                                data-time="${schedule.start_time.slice(0, 5)}"
-                                data-field="${court.name}"
-                                data-price="${Math.round(schedule.cost) / 1000}"
-                                data-court-id="${court.id}">
-                                ${schedule.start_time.slice(0, 5)}<br>
-                                <span>${Math.round(schedule.cost) / 1000} т.с/ч</span>
-                            </div>
-                        `;
+                        function formatCost(cost) {
+                            if (cost >= 1000000) {
+                                return (cost / 1000000).toLocaleString('ru-RU', { minimumFractionDigits: 1 }) + ' M'; // Форматируем миллионы
+                            } else {
+                                return (cost / 1000).toLocaleString('ru-RU') + ' ' + `{{ __('findz/book.currency') }}`;
+                            }
                         }
 
-
+                        if (schedule) {
+                            row += `
+                            <div class="slot ${slotClass} ${selectedClass}"
+                                data-start-time="${schedule.start_time.slice(0, 5)}"
+                                data-end-time="${schedule.end_time.slice(0, 5)}"
+                                data-field="${court.name}"
+                                data-price="${Math.round(schedule.cost) / 1000}"
+                                data-court-id="${court.id}">
+                                ${schedule.start_time.slice(0, 5)}<br>
+                                <span>${ formatCost(Math.round(schedule.cost)) }</span>
+                            </div>
+                            `;
+                        } else {
+                            row += `
+                            <div class="slot inactive"
+                                data-start-time="${timeSlot}"
+                                data-court-id="${court.id}">
+                                ${timeSlot}<br>
+                                <span>{{ __('findz/book.no_slot') }}</span>
+                            </div>
+                            `;
+                        }
                     });
-
 
                     row += '</td>';
                     $('.slots-table tbody tr').append(row);
                 });
-
-
-                @if (request('start_time'))
-                $('.slot.selected').each(function () {
-                    const field = $(this).data('field');
-                    const time = $(this).data('time');
-
-                    initialSelectedSlots = $('.slot.selected');
-                    previousSelectedSlot = initialSelectedSlots.first();
-                    autoSelectSlotsInRange(previousSelectedSlot, $(this));
-                });
-                @endif
-
-                restoreSlotsFromLocalStorage()
             }
 
-
-            function getNextTime(time) {
-                const [hour, minute] = time.split(':').map(Number);
-                const nextHour = hour + 1;
-                return `${nextHour < 10 ? '0' : ''}${nextHour}:${minute < 10 ? '0' : ''}${minute}`;
-            }
-
-            function autoSelectSlotsInRange(startSlot, endSlot) {
-                const startTime = startSlot.data('time');
-                const endTime = endSlot.data('time');
-                const courtName = startSlot.data('field');
-                const isSelectingBackward = new Date(`1970-01-01T${startTime}:00Z`) > new Date(`1970-01-01T${endTime}:00Z`);
-
-                let selecting = false;
-
-                startSlot.siblings('.slot').addBack().each(function () {
-                    const slotTime = $(this).data('time');
-                    const slotCourtName = $(this).data('field');
-
-                    if (slotCourtName === courtName) {
-                        if (!isSelectingBackward && slotTime === startTime || isSelectingBackward && slotTime === endTime) {
-                            selecting = true;
-                        }
-
-                        if (selecting && !$(this).hasClass('slot_booked') && !$(this).hasClass('selected')) {
-                            $(this).addClass('selected');
-                        }
-
-                        if (!isSelectingBackward && slotTime === endTime || isSelectingBackward && slotTime === startTime) {
-                            selecting = false;
-                        }
-                    }
-                });
-            }
-
-
-            let isFirstSlot = false;
-
-            function updateSelectedSlots(restored = false) {
-                const selectedSlots = [];
+            function updateSelectedSlots() {
+                let selectedSlots = [];
 
                 $('.slot.selected').each(function () {
-                    selectedSlots.push({
+                    const selectedSlot = {
                         field: $(this).data('field'),
                         court_id: $(this).data('court-id'),
-                        time: $(this).data('time'),
+                        start: $(this).data('start-time'),
+                        end: $(this).data('end-time'),
                         price: parseFloat($(this).data('price')),
-                    });
-
+                        date: selectedDate
+                    };
+                    selectedSlots.push(selectedSlot);
                 });
 
-                $('.slot.next_slot').each(function () {
-                    selectedSlots.push({
-                        field: $(this).data('field'),
-                        court_id: $(this).data('court-id'),
-                        time: $(this).data('time'),
-                        price: 0,
-                    });
-                });
-
-
-                if (selectedSlots.length > 1 && !restored) {
-                    saveSlotsToLocalStorage(selectedSlots);
-                }
-
-                if (selectedSlots.length >= 1) {
+                if (selectedSlots.length > 0) {
                     $('.book').removeClass('disabled');
                 } else {
                     $('.book').addClass('disabled');
                 }
 
-                const groupedSlots = selectedSlots.reduce((groups, slot) => {
-                    if (!groups[slot.field]) {
-                        groups[slot.field] = [];
-                    }
-                    groups[slot.field].push(slot);
-                    return groups;
-                }, {});
-
-                $('.selected-slots').empty();
                 let total = 0;
+                $('.selected-slots').empty();
                 $('.total-price').text(`${total} т.с`);
 
-                for (const field in groupedSlots) {
-                    const fieldSlots = groupedSlots[field];
+                let savedSlots = JSON.parse(localStorage.getItem('selectedSlots')) || [];
 
-                    fieldSlots.sort((a, b) => a.time.localeCompare(b.time));
+                // Добавление новых выбранных слотов
+                selectedSlots.forEach(slot => {
+                    if (!savedSlots.some(s => s.court_id === slot.court_id && s.start === slot.start && s.end === slot.end && s.date === slot.date)) {
+                        savedSlots.push(slot);
+                    }
+                });
 
-                    let combinedSlots = [];
-                    let currentSlot = null;
+                // Обновление localStorage
+                localStorage.setItem('selectedSlots', JSON.stringify(savedSlots));
 
-                    fieldSlots.forEach((slot, index) => {
-                        if (!currentSlot) {
-                            currentSlot = {
-                                start: slot.time,
-                                court_id: slot.court_id,
-                                end: slot.time,
-                                price: slot.price
-                            };
-                        } else if (new Date(`1970-01-01T${currentSlot.end}:00Z`) >= new Date(`1970-01-01T${slot.time}:00Z`)) {
-                            // currentSlot.end = getNextTime(slot.time);
-                            currentSlot.price += slot.price;
-                        } else {
-                            combinedSlots.push(currentSlot);
-                            currentSlot = {
-                                start: slot.time,
-                                court_id: slot.court_id,
-                                end: slot.time,
-                                price: slot.price
-                            };
+                savedSlots.forEach(slot => {
+                    const dayOfWeek = getRussianDayOfWeek(new Date(slot.date));
+
+                    const slotDiv = $(`
+            <div class="selected-slot">
+                <div>
+                    <h2 data-field="${slot.field}" data-court-id="${slot.court_id}">${slot.field}</h2>
+                    <div>
+                        <span>
+                            <span data-start-time="${slot.start}">${slot.start}</span> -
+                            <span data-end-time="${slot.end}">${slot.end}</span>
+                        </span>
+                        <span class="selected_date">${slot.date}, ${dayOfWeek}</span>
+                    </div>
+                </div>
+                <div class="cost_cancel_section">
+                    <h2>${slot.price} т.с</h2>
+                    <button class="delete-btn" data-court-id="${slot.court_id}" data-start="${slot.start}" data-end="${slot.end}">
+                        <img src="../../../img/findz/icons/delete_selected_time.svg" alt="delete selected time icon">
+                    </button>
+                </div>
+            </div>
+        `);
+
+                    $('.selected-slots').append(slotDiv);
+
+                    total += slot.price;
+                });
+
+                let formatTotal = total * 1000;
+
+                $('.total-price').text(`${formatTotal.toLocaleString('ru-RU')}`);
+
+                // Удаление слотов при нажатии кнопки удаления
+                $('.selected-slots').off('click', '.delete-btn').on('click', '.delete-btn', function () {
+                    const court_id = $(this).data('court-id');
+                    const start = $(this).data('start');
+                    const end = $(this).data('end');
+
+                    // Удаляем из savedSlots
+                    savedSlots = savedSlots.filter(slot => !(slot.court_id === court_id && slot.start === start && slot.end === end));
+                    localStorage.setItem('selectedSlots', JSON.stringify(savedSlots));
+
+                    $(this).closest('.selected-slot').remove();
+
+                    // Снимаем выделение с удаленных слотов
+                    $('.slot.selected').each(function () {
+                        if ($(this).data('court-id') == court_id && $(this).data('start-time') == start && $(this).data('end-time') == end) {
+                            $(this).removeClass('selected');
                         }
                     });
 
-                    if (currentSlot) {
-                        combinedSlots.push(currentSlot);
-                    }
+                    updateSelectedSlots();
+                });
+            }
 
-                    if (combinedSlots.length > 1) {
-                        let result = combinedSlots.reduce((acc, slot) => {
-                            acc.start = acc.start ? (acc.start < slot.start ? acc.start : slot.start) : slot.start;
-                            acc.end = acc.end ? (acc.end > slot.end ? acc.end : slot.end) : slot.end;
-                            acc.price += slot.price;
-                            acc.court_id = slot.court_id;
-                            return acc;
-                        }, {start: null, end: null, price: 0});
-
-                        const slotDiv = $(`
-                            <div class="selected-slot">
-                                <div>
-                                    <h2  data-field="${field}" data-court-id="${result.court_id}">${field}</h2>
-                                    <div>
-                                        <span>
-                                            <span data-start-time="${result.start}"> ${result.start} </span>
-                                            -
-                                            <span data-end-time="${result.end}"> ${result.end} </span>
-                                            </span>
-                                        <span class="selected_date">${selectedDate}, ${dayOfWeek}</span>
-                                    </div>
-                                </div>
-                                <div class="cost_cancel_section">
-                                    <h2>${result.price} т.с</h2>
-                                    <button class="delete-btn" data-field="${field}" data-start="${result.start}" data-end="${result.end}">
-                                        <img src="../../../img/findz/icons/delete_selected_time.svg" alt="delete selected time icon">
-                                    </button>
-                                </div>
-                            </div>
-                        `);
-
-                        total += result.price;
-
-                        $('.selected-slots').append(slotDiv);
-                    }
-
-                    $('.total-price').text(`${total} т.с`);
-
-                    $('.selected-slots').off('click', '.delete-btn').on('click', '.delete-btn', function () {
-                        const field = $(this).data('field');
-                        const start = $(this).data('start');
-                        const end = $(this).data('end');
-
-                        $('.slot.selected').each(function () {
-                            if ($(this).data('field') === field && ($(this).data('time') >= start || $(this).data('time') < end)) {
-                                $(this).removeClass('selected');
-                                previousSelectedSlot = null;
-                            }
-                        });
-
-                        $('.slot.next_slot').each(function () {
-                            if ($(this).data('field') === field && ($(this).data('time') >= start || $(this).data('time') < end)) {
-                                $(this).removeClass('next_slot');
-                                previousSelectedSlot = null;
-                            }
-                        });
-
-                        $('.total-price').text(`0 т.с`);
-
-                        updateSelectedSlots();
-                    });
-                }
+            if (localStorage.getItem('selectedSlots')) {
+                updateSelectedSlots();
             }
 
             @if($isUpdate)
-            setTimeout(() => updateSelectedSlots(true), 1000);
+            setTimeout(() => updateSelectedSlots(), 1000);
             @endif
-
-            let previousSelectedSlot = null;
 
             $(document).on('click', '.slot', function () {
                 const $this = $(this);
-                const isSelected = $this.hasClass('selected');
                 const isBooked = $this.hasClass('slot_booked');
-                const isFirstSlot = $this.siblings('.selected').length === 0;
-                const isNextSlot = $this.hasClass('next_slot');
 
                 if (!isBooked) {
-                    // Toggle 'selected' class
                     $this.toggleClass('selected');
 
-                    // Determine the next time slot
-                    const nextTime = getNextTime($this.data('time'));
-                    const $nextSlot = $this.siblings(`.slot[data-time="${nextTime}"]`);
+                    const courtId = $this.data('court-id');
+                    const startTime = $this.data('start-time');
+                    const endTime = $this.data('end-time');
+                    let savedSlots = JSON.parse(localStorage.getItem('selectedSlots')) || [];
 
-                    if ($nextSlot.length && !($nextSlot.hasClass('slot_booked') || $nextSlot.hasClass('selected'))) {
-                        $nextSlot.toggleClass('next_slot');
-                    }
-
-                    // Handle the logic for selecting and deselecting slots
-                    if (!isSelected) {
-                        if (previousSelectedSlot && previousSelectedSlot.data('field') === $this.data('field')) {
-                            autoSelectSlotsInRange(previousSelectedSlot, $this);
-                        } else {
-                            previousSelectedSlot = $this;
-                        }
+                    if ($this.hasClass('selected')) {
+                        const newSlot = {
+                            field: $this.data('field'),
+                            court_id: courtId,
+                            start: startTime,
+                            end: endTime,
+                            price: parseFloat($this.data('price')),
+                            date: selectedDate
+                        };
+                        savedSlots.push(newSlot);
                     } else {
-                        previousSelectedSlot = null;
+                        savedSlots = savedSlots.filter(slot => !(slot.court_id === courtId && slot.start === startTime && slot.end === endTime && slot.date === selectedDate));
                     }
 
+                    localStorage.setItem('selectedSlots', JSON.stringify(savedSlots));
                     updateSelectedSlots();
                 }
-
-                // Update book button state
-                const selectedSlots = [];
-                $('.selected-slots .selected-slot').each(function () {
-                    selectedSlots.push({
-                        court_id: $(this).find('h2').data('court-id'),
-                        start_time: $(this).find('span[data-start-time]').data('start-time'),
-                        end_time: $(this).find('span[data-end-time]').data('end-time'),
-                        price: parseInt($(this).find('.cost_cancel_section h2').text().replace('т.с', '').trim(), 10)
-                    });
-                });
-
-                if (selectedSlots.length >= 1) {
-                    $('.book').removeClass('disabled');
-                } else {
-                    saveSlotsToLocalStorage([]);
-                    $('.book').addClass('disabled');
-                }
             });
 
+            // Payment
+            {{--$('.payment-options button').click(function () {--}}
 
-            function saveSlotsToLocalStorage(selectedSlots) {
-                localStorage.setItem('selectedSlots', JSON.stringify(selectedSlots));
-            }
+            {{--    const paymentMethod = $(this).data('payment');--}}
 
-            function restoreSlotsFromLocalStorage() {
-                let savedSlots = JSON.parse(localStorage.getItem('selectedSlots'));
+            {{--    $('.payment-options button').removeClass('active-payment');--}}
+            {{--    $(this).addClass('active-payment');--}}
 
-                if (savedSlots && savedSlots.length > 0) {
-                    // Объединяем слоты по court_id
-                    const groupedSlots = savedSlots.reduce((acc, slot) => {
-                        if (!acc[slot.court_id]) {
-                            acc[slot.court_id] = [];
-                        }
-                        acc[slot.court_id].push(slot);
-                        return acc;
-                    }, {});
-
-                    // Обрабатываем каждый court_id
-                    Object.keys(groupedSlots).forEach(court_id => {
-                        const slots = groupedSlots[court_id];
-
-                        // Добавляем классы ко всем слотам court_id
-                        slots.forEach((slot, index) => {
-                            const slotElement = $(`.slot[data-court-id="${slot.court_id}"][data-time="${slot.time}"]`);
-                            slotElement.addClass('selected').addClass('next_slot');
-
-                            // Если это первый слот, убираем класс 'next_slot'
-                            if (index === 0) {
-                                slotElement.removeClass('next_slot');
-                            }
-                        });
-
-                        // Убираем класс 'selected' у последнего слота
-                        const lastSlot = slots.at(-1);
-                        if (lastSlot) {
-                            const lastSlotElement = $(`.slot[data-court-id="${lastSlot.court_id}"][data-time="${lastSlot.time}"]`);
-                            lastSlotElement.removeClass('selected');
-                        }
-                    });
-
-                    // Обновляем выбранные слоты
-                    updateSelectedSlots(true);
-                }
-            }
-
-
-            $(document).ready(function () {
-                restoreSlotsFromLocalStorage();
-            });
-
-            function clearSlotsFromLocalStorage() {
-                localStorage.removeItem('selectedSlots');
-            }
-
-
-            $('.payment-options button').click(function () {
-                const paymentMethod = $(this).data('payment');
-
-                $('.payment-options button').removeClass('active-payment');
-                $(this).addClass('active-payment');
-
-                @if ( app()->getLocale() == 'ru')
-                $('#close-btn').text(`Оплатить через ${paymentMethod.charAt(0).toUpperCase() + paymentMethod.slice(1)}`);
-                @else
-                $('#close-btn').text(`${paymentMethod.charAt(0).toUpperCase() + paymentMethod.slice(1)} orqali to\'lash`);
-                @endif
-            });
-
-
-            let tg = window.Telegram.WebApp;
-            let userData = tg.initDataUnsafe;
-            let chat_id = userData.user.id;
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $.ajax({
-                url: `/api/bot-user/${chat_id}`,
-                method: 'GET',
-                success: function (response) {
-                    if (response.success) {
-                        const user = response.data;
-
-                        $('#user_name').val(`${user.first_name} ${user.second_name || ''}`.trim())
-                        $('#user_phone').val(user.phone)
-                    }
-                }
-            });
-
-            $(document).on('click', '.book', function () {
-                const selectedSlots = [];
-                $('.selected-slots .selected-slot').each(function () {
-                    selectedSlots.push({
-                        court_id: $(this).find('h2').data('court-id'),
-                        start_time: $(this).find('span[data-start-time]').data('start-time'),
-                        end_time: $(this).find('span[data-end-time]').data('end-time'),
-                        price: parseInt($(this).find('.cost_cancel_section h2').text().replace('т.с', '').trim(), 10)
-                    });
-                });
-
-                if (selectedSlots.length > 1) {
-                    console.log("Пожалуйста, выберите один из доступных кортов.")
-                    let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>Пожалуйста, выберите один из доступных кортов.</li></div>`;
-                    $('.res_error').empty();
-                    $('.res_error').append(errorHtml);
-                    $('#error_modal').fadeIn().delay(5000).fadeOut();
-                } else {
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-
-                    $.ajax({
-                        url: `/api/bot-user/${chat_id}`,
-                        method: 'GET',
-                        success: function (response) {
-                            if (response.success) {
-                                const user = response.data;
-
-                                const bookingData = {
-                                    bot_user_id: user.id,
-                                    full_name: $('#user_name').val(),
-                                    phone_number: $('#user_phone').val(),
-                                    slots: selectedSlots,
-                                    date: selectedDate,
-                                    source: 'bot'
-                                };
-
-                                @if($isUpdate)
-                                    bookingData.date = @json($userBook->date);
-                                $.ajax({
-                                    url: '/api/booking/{{$userBook->id}}',
-                                    method: 'PUT',
-                                    data: bookingData,
-                                    success: function (response) {
-                                        window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
-                                    },
-                                    error: function (err) {
-                                        let errors = err.responseJSON.message;
-                                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
-                                        $('.res_error').empty();
-                                        $('.res_error').append(errorHtml);
-                                        $('#error_modal').fadeIn().delay(5000).fadeOut();
-                                    }
-                                });
-                                @else
-                                $.ajax({
-                                    url: '/api/booking',
-                                    method: 'POST',
-                                    data: bookingData,
-                                    success: function (response) {
-                                        clearSlotsFromLocalStorage();
-                                        @if (!$isUpdate)
-                                        initiatePaycomPayment(response.booking_ids, response.total_sum);
-                                        @else
-                                            window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
-                                        @endif
-                                    },
-                                    error: function (err) {
-                                        let errors = err.responseJSON.message;
-                                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
-                                        $('.res_error').empty();
-                                        $('.res_error').append(errorHtml);
-                                        $('#error_modal').fadeIn().delay(5000).fadeOut();
-                                    }
-                                });
-                                @endif
-                            } else {
-                                console.log('Ошибка: пользователь не найден');
-                                let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>Ошибка: пользователь не найден</li></div>`;
-                                $('.res_error').empty();
-                                $('.res_error').append(errorHtml);
-                                $('#error_modal').fadeIn().delay(5000).fadeOut();
-                            }
-                        },
-                        error: function (err) {
-                            console.log('Ошибка при получении данных пользователя', err);
-                            let errors = err.responseJSON.message;
-                            let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>Ошибка при получении данных пользователя</li></div>`;
-                            $('.res_error').empty();
-                            $('.res_error').append(errorHtml);
-                            $('#error_modal').fadeIn().delay(5000).fadeOut();
-                        }
-                    });
-
-                    function initiatePaycomPayment(bookingId, amount) {
-                        let formattedAmount = Math.round(amount);
-                        let callback = `https://st40.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chat_id}`;
-
-                        let paycomForm = `
-                        <form id="form-payme" method="POST" action="https://checkout.paycom.uz">
-                            <input type="hidden" name="merchant" value="66cdfb052f8d5ff4746f8435">
-                            <input type="hidden" name="account[book_id]" value="${bookingId[0]}">
-                            <input type="hidden" name="amount" value="${formattedAmount * 100}">
-                            <input type="hidden" name="lang" value="{{app()->getLocale()}}">
-                            <input type="hidden" name="callback" value="${callback}">
-                            <input type="hidden" name="button" data-type="svg" value="colored">
-                            <input type="submit" value="">
-                        </form>
-                    `;
-
-                        $('body').append(paycomForm);
-                        $('#form-payme').submit();
-                    }
-
-                    $('#error_modal img').click(function () {
-                        $('.error_modal').hide();
-                    });
-                }
-            });
-        })
-        ;
+            {{--    @if(app() -> getLocale() == 'ru')--}}
+            {{--        $('#close-btn').text(`Оплатить через ${paymentMethod.charAt(0).toUpperCase() + paymentMethod.slice(1)}`);--}}
+            {{--    @else--}}
+            {{--        $('#close-btn').text(`${paymentMethod.charAt(0).toUpperCase() + paymentMethod.slice(1)} orqali to\'lash`);--}}
+            {{--    @endif--}}
+            {{--});--}}
+        });
     </script>
 @endsection
 

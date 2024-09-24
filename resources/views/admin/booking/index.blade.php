@@ -66,7 +66,7 @@
                                                         if (Carbon::parse($booking->date)->isToday()) {
                                                             $bookingStartTime = Carbon::parse($booking->start_time);
                                                             $bookingEndTime = Carbon::parse($booking->end_time);
-                                                            if ($currentTime->between($bookingStartTime, $bookingEndTime)) {
+                                                            if ($currentTime->equalTo($bookingStartTime)) {
                                                                 $hasBooking = true;
                                                                 $bookingId = $booking->id;
                                                                 $isPaid = $booking->status === 'paid';
@@ -348,11 +348,11 @@
                     const startTime = booking.start_time;
                     const endTime = booking.end_time;
                     const bookingId = booking.id;
-                    const fullName = booking.full_name; // Ensure this property exists
+                    const fullName = booking.full_name;
                     const isPaid = booking.status === 'paid';
 
                     const startHour = parseInt(startTime.split(':')[0], 10);
-                    const endHour = parseInt(endTime.split(':')[0], 10);
+                    const endHour = parseInt(endTime.split(':')[0], 10) - 1;
 
                     const courtColumn = $(`th[data-court-id="${courtId}"]`).index();
 
@@ -363,7 +363,7 @@
                             const cellDiv = cell.find('div');
                             cellDiv.addClass('booking-cell').data('booking-id', bookingId)
                                 .attr('data-bs-toggle', 'tooltip')
-                                .attr('title', fullName); // Set tooltip title
+                                .attr('title', fullName);
                         }
                     }
                 });

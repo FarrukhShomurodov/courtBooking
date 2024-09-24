@@ -347,3 +347,9 @@
 .court-photos img {
     margin-top: 10px;
 }
+
+.slot.inactive {
+    background-color: #111115;
+    pointer-events: none;
+    cursor: not-allowed;
+}

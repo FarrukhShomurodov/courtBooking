@@ -38,4 +38,5 @@ return [
     'т.с' => 'so\'m',
     'do_not_edit_book' => 'O\'zgartirish mumkin emas',
     'edit_book_info' => 'Zirhni 24 soatdan kamroq vaqt ichida ko\'chirish mumkin emas.',
+    'no_slot' => 'Uyasi yo\'q',
 ];
