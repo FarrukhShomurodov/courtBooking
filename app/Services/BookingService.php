@@ -25,8 +25,11 @@ class BookingService
 
         return DB::transaction(function () use ($validated, $startTime, $endTime, $courtId) {
             $booking = Booking::query()->create([
-                'court_id' => $courtId,
                 'user_id' => $validated['user_id'],
+            ]);
+
+            $booking->bookingItems()->create([
+                'court_id' => $courtId,
                 'full_name' => $validated['full_name'],
                 'phone_number' => $validated['phone_number'],
                 'date' => $validated['date'],
@@ -36,8 +39,6 @@ class BookingService
                 'source' => $validated['source'],
                 'status' => 'paid',
             ]);
-
-            // $this->updateCourtSchedule($courtId, $startTime, $endTime);
 
             return $booking;
         });

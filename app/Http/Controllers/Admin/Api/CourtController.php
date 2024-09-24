@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\BookingItem;
 use App\Models\Court;
 use App\Models\Booking;
 use App\Models\Stadium;
@@ -25,7 +26,7 @@ class CourtController extends Controller
         $courts = $stadium->courts()->with(['schedules', 'stadium'])->where('is_active', true)->where('sport_type_id', $request->get('sportTypeId'))
             ->get();
 
-        $bookings = Booking::whereDate('date', $date)->where('status', 'paid')
+        $bookings = BookingItem::whereDate('date', $date)->where('status', 'paid')
             ->get();
 
         // Prepare the response data

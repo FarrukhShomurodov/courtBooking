@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Telegram\BookingRequest;
 use App\Http\Requests\Telegram\UpdateBookingRequest;
 use App\Models\Booking;
+use App\Models\BookingItem;
 use App\Repositories\BookingRepository;
 use App\Services\BookingService;
 use App\Traits\ScheduleHelper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
@@ -25,7 +27,7 @@ class BookingController extends Controller
         $this->bookingRepository = $bookingRepository;
     }
 
-    public function show(Booking $booking): JsonResponse
+    public function show(BookingItem $booking): JsonResponse
     {
         return response()->json($booking);
     }
@@ -43,47 +45,54 @@ class BookingController extends Controller
     {
         $validated = $request->validated();
 
-        if (count($validated['slots']) > 1) {
-            return response()->json(['message' => 'Пожалуйста, выберите только один слот.'], 422);
-        }
-
-        $date = $validated['date'];
-        $fullName = $validated['full_name'];
-        $phoneNumber = $validated['phone_number'];
         $slots = $validated['slots'];
 
-
         $totalSum = 0;
-        $bookingIds = [];
-        foreach ($slots as $slot) {
-            $isAvailable = $this->checkCourtAvailability($slot['court_id'], $slot['start_time'], $slot['end_time'], $date);
 
-            if ($isAvailable) {
-                return response()->json(['message' => 'В указанное время корт недоступен.'], 422);
+        $bookingId = DB::transaction(function () use ($slots, $validated, &$totalSum) {
+            $booking = Booking::create([
+                'bot_user_id' => $validated['bot_user_id'],
+            ]);
+
+            foreach ($slots as $slot) {
+                $isAvailable = $this->checkCourtAvailability($slot['court_id'], $slot['start'], $slot['end'], $slot['date']);
+
+//                $isAvailable = BookingItem::query()
+//                    ->where('court_id', $slot['court_id'])
+//                    ->where('status', 'paid')
+//                    ->where('start_time', $slot['start'].':00')
+//                    ->where('end_time', $slot['end'].':00')
+//                    ->where('date', $slot['date'])
+//                    ->exists();
+
+                if ($isAvailable) {
+                    throw new \Exception('В указанное время корт недоступен.');
+                }
+
+                $bookItem = $booking->bookingItems()->create([
+                    'court_id' => $slot['court_id'],
+                    'full_name' => $validated['full_name'],
+                    'phone_number' => $validated['phone_number'],
+                    'price' => $slot['price'] * 1000,
+                    'date' => $slot['date'],
+                    'start_time' => $slot['start'],
+                    'end_time' => $slot['end'],
+                    'source' => $validated['source'],
+                ]);
+
+                $totalSum += $bookItem->price;
             }
 
-            $booking = Booking::create([
-                'court_id' => $slot['court_id'],
-                'bot_user_id' => $validated['bot_user_id'],
-                'full_name' => $fullName,
-                'phone_number' => $phoneNumber,
-                'price' => $slot['price'] * 1000,
-                'date' => $date,
-                'start_time' => $slot['start_time'],
-                'end_time' => $slot['end_time'],
-                'source' => $validated['source'],
-            ]);
-            $bookingIds[] = $booking->id;
-            $totalSum += $booking->price;
-        }
-
+            return $booking->id;
+        });
 
         return response()->json([
             'message' => 'Booking successful',
             'total_sum' => $totalSum,
-            'booking_ids' => $bookingIds
+            'booking_id' => $bookingId
         ], 200);
     }
+
 
     public function update(Booking $booking, UpdateBookingRequest $request): JsonResponse
     {

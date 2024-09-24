@@ -26,12 +26,12 @@ class BookingRequest extends FormRequest
             'bot_user_id' => 'required|exists:bot_users,id',
             'full_name' => 'required|string:max:500',
             'phone_number' => 'required|regex:/^\+?[0-9]{10,}$/',
-            'date' => 'required|date|after_or_equal:today',
             'slots' => 'required|array',
             'slots.*.court_id' => 'required|exists:courts,id',
-            'slots.*.start_time' => 'required|date_format:H:i',
-            'slots.*.end_time' => 'required|date_format:H:i|after:start_time',
+            'slots.*.start' => 'required|date_format:H:i',
+            'slots.*.end' => 'required|date_format:H:i|after:start_time',
             'slots.*.price' => 'required|integer',
+            'slots.*.date' => 'required|date|after_or_equal:today',
             'source' => 'required|string|in:bot',
         ];
     }

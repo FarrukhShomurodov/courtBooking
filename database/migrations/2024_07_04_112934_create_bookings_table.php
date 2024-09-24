@@ -13,17 +13,8 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('court_id')->constrained('courts')->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->foreignId('bot_user_id')->nullable()->constrained('bot_users')->onDelete('cascade');
-            $table->string('full_name');
-            $table->string('phone_number');
-            $table->decimal('price', 10, 2);
-            $table->date('date');
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->string('source');
-            $table->enum('status', ['pending', 'paid', 'canceled'])->default('pending');
             $table->timestamps();
         });
     }

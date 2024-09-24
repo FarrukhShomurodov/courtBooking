@@ -79,15 +79,15 @@
             </div>
         </div>
 
-{{--        @if(!$isUpdate)--}}
-{{--            <div class="payment-method mt-30">--}}
-{{--                <h3>{{ __('findz/book.Способ Оплаты') }}</h3>--}}
-{{--                <div class="payment-options">--}}
-{{--                    <button class="active-payment" data-payment="payme">{{ __('PayMe') }}</button>--}}
-{{--                    <button data-payment="uzum">{{ __('Uzum') }}</button>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        @endif--}}
+        {{--        @if(!$isUpdate)--}}
+        {{--            <div class="payment-method mt-30">--}}
+        {{--                <h3>{{ __('findz/book.Способ Оплаты') }}</h3>--}}
+        {{--                <div class="payment-options">--}}
+        {{--                    <button class="active-payment" data-payment="payme">{{ __('PayMe') }}</button>--}}
+        {{--                    <button data-payment="uzum">{{ __('Uzum') }}</button>--}}
+        {{--                </div>--}}
+        {{--            </div>--}}
+        {{--        @endif--}}
 
         <div class="booking-rules mt-30">
             <p>{{ __('findz/book.Правила брони') }}</p>
@@ -347,14 +347,14 @@
                         let hasBooking = false;
 
                         @if($isUpdate)
-                        let oldSelectedSlot = (court.id === {{ $userBook->court_id }} && schedule?.start_time >= "{{ $userBook->start_time }}" && schedule?.start_time <= "{{ $userBook->end_time }}");
+                        let oldSelectedSlot = (court.id === {{ $userBook->court_id }} && schedule?.start_time >= "{{ $userBook->start_time }}" && schedule?.end_time <= "{{ $userBook->end_time }}");
                         hasBooking = false;
                         let endTime = "{{ $userBook->end_time }}";
                         endTime = endTime.slice(0, 5);
                         @else
                             hasBooking = data.bookings.some(booking => {
                             let bookingDate = new Date(booking.date).toISOString().slice(0, 10);
-                            return court.id == booking.court_id && bookingDate === selectedDate && schedule?.start_time >= booking.start_time && schedule?.start_time <= booking.end_time;
+                            return court.id == booking.court_id && bookingDate === selectedDate && schedule?.start_time >= booking.start_time && schedule?.end_time <= booking.end_time;
                         });
                         @endif
 
@@ -363,7 +363,7 @@
                         @if($isUpdate)
                             selected = oldSelectedSlot;
                         @else
-                            selected = (court.id == {{ request('stadium') }} && (schedule?.start_time.slice(0, 5) >= "{{ $selectedStartTime }}" && schedule?.start_time.slice(0, 5) <= "{{ $selectedEndTime }}"));
+                            selected = (court.id == {{ request('stadium') }} && (schedule?.start_time.slice(0, 5) >= "{{ $selectedStartTime }}" && schedule?.end_time.slice(0, 5) <= "{{ $selectedEndTime }}"));
                         let endTime = "{{ $selectedEndTime }}";
                         @endif
 
@@ -378,7 +378,7 @@
 
                         function formatCost(cost) {
                             if (cost >= 1000000) {
-                                return (cost / 1000000).toLocaleString('ru-RU', { minimumFractionDigits: 1 }) + ' M'; // Форматируем миллионы
+                                return (cost / 1000000).toLocaleString('ru-RU', {minimumFractionDigits: 1}) + ' M'; // Форматируем миллионы
                             } else {
                                 return (cost / 1000).toLocaleString('ru-RU') + ' ' + `{{ __('findz/book.currency') }}`;
                             }
@@ -393,7 +393,7 @@
                                 data-price="${Math.round(schedule.cost) / 1000}"
                                 data-court-id="${court.id}">
                                 ${schedule.start_time.slice(0, 5)}<br>
-                                <span>${ formatCost(Math.round(schedule.cost)) }</span>
+                                <span>${formatCost(Math.round(schedule.cost))}</span>
                             </div>
                             `;
                         } else {
@@ -428,11 +428,6 @@
                     selectedSlots.push(selectedSlot);
                 });
 
-                if (selectedSlots.length > 0) {
-                    $('.book').removeClass('disabled');
-                } else {
-                    $('.book').addClass('disabled');
-                }
 
                 let total = 0;
                 $('.selected-slots').empty();
@@ -450,29 +445,35 @@
                 // Обновление localStorage
                 localStorage.setItem('selectedSlots', JSON.stringify(savedSlots));
 
+                if (savedSlots.length > 0) {
+                    $('.book').removeClass('disabled');
+                } else {
+                    $('.book').addClass('disabled');
+                }
+
                 savedSlots.forEach(slot => {
                     const dayOfWeek = getRussianDayOfWeek(new Date(slot.date));
 
                     const slotDiv = $(`
-            <div class="selected-slot">
-                <div>
-                    <h2 data-field="${slot.field}" data-court-id="${slot.court_id}">${slot.field}</h2>
-                    <div>
-                        <span>
-                            <span data-start-time="${slot.start}">${slot.start}</span> -
-                            <span data-end-time="${slot.end}">${slot.end}</span>
-                        </span>
-                        <span class="selected_date">${slot.date}, ${dayOfWeek}</span>
-                    </div>
-                </div>
-                <div class="cost_cancel_section">
-                    <h2>${slot.price} т.с</h2>
-                    <button class="delete-btn" data-court-id="${slot.court_id}" data-start="${slot.start}" data-end="${slot.end}">
-                        <img src="../../../img/findz/icons/delete_selected_time.svg" alt="delete selected time icon">
-                    </button>
-                </div>
-            </div>
-        `);
+                            <div class="selected-slot">
+                                <div>
+                                    <h2 data-field="${slot.field}" data-court-id="${slot.court_id}">${slot.field}</h2>
+                                    <div>
+                                        <span>
+                                            <span data-start-time="${slot.start}">${slot.start}</span> -
+                                            <span data-end-time="${slot.end}">${slot.end}</span>
+                                        </span>
+                                        <span class="selected_date">${slot.date}, ${dayOfWeek}</span>
+                                    </div>
+                                </div>
+                                <div class="cost_cancel_section">
+                                    <h2>${slot.price} т.с</h2>
+                                    <button class="delete-btn" data-court-id="${slot.court_id}" data-start="${slot.start}" data-end="${slot.end}">
+                                        <img src="../../../img/findz/icons/delete_selected_time.svg" alt="delete selected time icon">
+                                    </button>
+                                </div>
+                            </div>
+                        `);
 
                     $('.selected-slots').append(slotDiv);
 
@@ -545,7 +546,7 @@
                 }
             });
 
-            // Payment
+            // Payment method select
             {{--$('.payment-options button').click(function () {--}}
 
             {{--    const paymentMethod = $(this).data('payment');--}}
@@ -559,6 +560,155 @@
             {{--        $('#close-btn').text(`${paymentMethod.charAt(0).toUpperCase() + paymentMethod.slice(1)} orqali to\'lash`);--}}
             {{--    @endif--}}
             {{--});--}}
+
+
+            // Book
+            let tg = window.Telegram.WebApp;
+            let userData = tg.initDataUnsafe;
+            let chat_id = userData.user.id;
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url: `/api/bot-user/${chat_id}`,
+                method: 'GET',
+                success: function (response) {
+                    if (response.success) {
+                        const user = response.data;
+
+                        $('#user_name').val(`${user.first_name} ${user.second_name || ''}`.trim())
+                        $('#user_phone').val(user.phone)
+                    }
+                }
+            });
+
+            $(document).on('click', '.book', function () {
+                let savedSlots = JSON.parse(localStorage.getItem('selectedSlots')) || [];
+
+                const bookingData = {
+                    bot_user_id: 1,
+                    full_name: $('#user_name').val(),
+                    phone_number: $('#user_phone').val(),
+                    slots: savedSlots,
+                    source: 'bot'
+                };
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    url: `/api/bot-user/${chat_id}`,
+                    method: 'GET',
+                    success: function (response) {
+                        if (response.success) {
+                            const user = response.data;
+
+                            const bookingData = {
+                                bot_user_id: user.id,
+                                full_name: $('#user_name').val(),
+                                phone_number: $('#user_phone').val(),
+                                slots: selectedSlots,
+                                date: selectedDate,
+                                source: 'bot'
+                            };
+
+                            @if($isUpdate)
+                                bookingData.date = @json($userBook->date);
+                            $.ajax({
+                                url: '/api/booking/{{$userBook->id}}',
+                                method: 'PUT',
+                                data: bookingData,
+                                success: function (response) {
+                                    window.location.href = '{{ route('
+                            findz.mybookings
+                            ', ['
+                            sportType
+                            ' => $currentSportTypeId]) }}';
+                                },
+                                error: function (err) {
+                                    let errors = err.responseJSON.message;
+                                    let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
+                                    $('.res_error').empty();
+                                    $('.res_error').append(errorHtml);
+                                    $('#error_modal').fadeIn().delay(5000).fadeOut();
+                                }
+                            });
+                            @else
+                            $.ajax({
+                                url: '/api/booking',
+                                method: 'POST',
+                                data: bookingData,
+                                success: function (response) {
+                                    clearSlotsFromLocalStorage();
+                                    @if
+                                        (!$isUpdate)
+                                    initiatePaycomPayment(response.booking_ids, response.total_sum);
+                                    @else
+                                        window.location.href = '{{ route('
+                            findz.mybookings
+                            ', ['
+                            sportType
+                            ' => $currentSportTypeId]) }}';
+                                    @endif
+                                },
+                                error: function (err) {
+                                    let errors = err.responseJSON.message;
+                                    let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
+                                    $('.res_error').empty();
+                                    $('.res_error').append(errorHtml);
+                                    $('#error_modal').fadeIn().delay(5000).fadeOut();
+                                }
+                            });
+                            @endif
+                        } else {
+                            console.log('Ошибка: пользователь не найден');
+                            let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>Ошибка: пользователь не найден</li></div>`;
+                            $('.res_error').empty();
+                            $('.res_error').append(errorHtml);
+                            $('#error_modal').fadeIn().delay(5000).fadeOut();
+                        }
+                    },
+                    error: function (err) {
+                        console.log('Ошибка при получении данных пользователя', err);
+                        let errors = err.responseJSON.message;
+                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>Ошибка при получении данных пользователя</li></div>`;
+                        $('.res_error').empty();
+                        $('.res_error').append(errorHtml);
+                        $('#error_modal').fadeIn().delay(5000).fadeOut();
+                    }
+                });
+
+                function initiatePaycomPayment(bookingId, amount) {
+                    let formattedAmount = Math.round(amount);
+                    let callback = `https://st40.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chat_id}`;
+
+                    let paycomForm = `
+                        <form id="form-payme" method="POST" action="https://checkout.paycom.uz">
+                            <input type="hidden" name="merchant" value="66cdfb052f8d5ff4746f8435">
+                            <input type="hidden" name="account[book_id]" value="${bookingId}">
+                            <input type="hidden" name="amount" value="${formattedAmount * 100}">
+                            <input type="hidden" name="lang" value="{{app()->getLocale()}}">
+                            <input type="hidden" name="callback" value="${callback}">
+                            <input type="hidden" name="button" data-type="svg" value="colored">
+                            <input type="submit" value="">
+                        </form>
+                    `;
+
+                    $('body').append(paycomForm);
+                    $('#form-payme').submit();
+                }
+
+                $('#error_modal img').click(function () {
+                    $('.error_modal').hide();
+                });
+            });
         });
     </script>
 @endsection

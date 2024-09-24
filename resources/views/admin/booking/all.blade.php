@@ -58,7 +58,7 @@
                         <td>{{ $booking->date }}</td>
                         <td>{{ $booking->start_time }} - {{ $booking->end_time }}</td>
                         <td>{{ $diff->h }} ч</td>
-                        <td>{{ $booking->price }}</td>
+                        <td>{{ number_format(round($booking->price), 0 , ' ', ' ') }}</td>
                         <td>{{ $booking->source == 'manual' ? 'Manual' : 'Findz' }}</td>
                         <td>{{ $booking->status }}</td>
                         @if($booking->source === 'manual')

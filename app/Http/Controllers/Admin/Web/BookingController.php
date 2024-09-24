@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Web;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookingRequest;
 use App\Models\Booking;
+use App\Models\BookingItem;
 use App\Models\Court;
 use App\Models\User;
 use App\Services\BookingService;
@@ -46,12 +47,12 @@ class BookingController extends Controller
 
         switch ($role) {
             case 'admin':
-                $bookings = Booking::query()->get()->load('court');
+                $bookings = BookingItem::query()->get()->load('court');
                 break;
             case 'owner stadium':
                 $owner = Auth::user()->stadiumOwner()->first();
                 if ($owner) {
-                    $bookings = Booking::whereIn('court_id', $owner->courts->pluck('id'))->get()->load('court');
+                    $bookings = BookingItem::whereIn('court_id', $owner->courts->pluck('id'))->get()->load('court');
                 } else {
                     $bookings = collect();
                 }
@@ -59,7 +60,7 @@ class BookingController extends Controller
             case 'stadium manager':
                 $stadiumManager = Auth::user()->stadiumManager()->first();
                 if ($stadiumManager) {
-                    $bookings = Booking::whereIn('court_id', $stadiumManager->courts->pluck('id'))->get()->load('court');
+                    $bookings = BookingItem::whereIn('court_id', $stadiumManager->courts->pluck('id'))->get()->load('court');
                 } else {
                     $bookings = collect();
                 }
@@ -79,7 +80,7 @@ class BookingController extends Controller
     {
         $role = Auth::user()->roles()->first()->name;
 
-        if ($booking->source === 'manual') {
+        if ($booking->bookingItems->first()->source === 'manual') {
             switch ($role) {
                 case 'admin':
                     $this->bookingService->delete($booking);
