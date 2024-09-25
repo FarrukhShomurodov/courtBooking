@@ -13,6 +13,11 @@
     <link rel="stylesheet" href="{{ asset('css/findz/filter.css') }}"/>
     <link rel="stylesheet" href="{{ asset('/css/findz/book.css') }}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        #courtDescription{
+            overflow-wrap: break-word;
+        }
+    </style>
 @endsection
 
 @section('header')
