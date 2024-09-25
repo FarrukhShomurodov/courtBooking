@@ -18,6 +18,10 @@ class FindzController extends Controller
     //Main pages
     public function courts(Request $request): View
     {
+        if (is_null(SportType::first())){
+            return view('findz.pages.stadiums');
+        }
+
         $sportTypeId = $request->input('sportTypeId') ?? SportType::first()->id;
         $sportTypes = SportType::all();
 

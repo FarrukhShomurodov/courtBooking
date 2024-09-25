@@ -62,7 +62,7 @@
                 let myBookingsLink = document.getElementById('myBookingsLink');
                 if (myBookingsLink) {
                     @if($currentSportTypeId)
-                        myBookingsLink.href = `http://127.0.0.1:8000/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chatID}`;
+                        myBookingsLink.href = `https://st40.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chatID}`;
                     @endif
                 }
 
@@ -72,7 +72,7 @@
                 let myBookingsImg = document.getElementById('myBookingsImg');
                 if (myBookingsImg) {
                     myBookingsImg.onclick = function () {
-                        location.href = `http://127.0.0.1:8000/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chatID}`;
+                        location.href = `https://st40.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chatID}`;
                     };
                 }
                 @endif
