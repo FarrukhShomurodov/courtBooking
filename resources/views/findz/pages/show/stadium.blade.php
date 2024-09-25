@@ -134,10 +134,11 @@
             LlfromAddress('{{$stadium->address}}')
 
             function truncateText(selector, maxChars) {
-                var element = $(selector);
-                var originalText = element.text();
+                let element = $(selector);
+                let originalText = element.text().trim();
+                console.log(selector)
                 if (originalText.length > maxChars) {
-                    var truncatedText = originalText.slice(0, maxChars) + '...';
+                    let truncatedText = originalText.slice(0, maxChars) + '...';
                     element.data('original-text', originalText);
                     element.data('truncated-text', truncatedText);
                     element.text(truncatedText);
@@ -145,7 +146,7 @@
             }
 
             $('#read-more').click(function () {
-                var description = $('#description');
+                let description = $('#description');
                 if (description.hasClass('expanded')) {
                     description.text(description.data('truncated-text'));
                     $(this).text('Читать полностью');
@@ -159,8 +160,8 @@
             truncateText('#description', 300);
 
             $('#copy-icon').click(function () {
-                var addressText = $('#address-text').text();
-                var $temp = $('<textarea>');
+                let addressText = $('#address-text').text();
+                let $temp = $('<textarea>');
                 $('body').append($temp);
                 $temp.val(addressText).select();
                 document.execCommand('copy');
@@ -172,18 +173,18 @@
                 $('.copy-modal').hide();
             })
 
-            $('#favourite').click(function () {
-                if ($(this).attr('src') === '{{ asset('img/findz/icons/active_favourite.svg') }}') {
-                    $(this).attr('src', '{{ asset('img/findz/icons/favourite.svg') }}');
-                } else {
-                    $(this).attr('src', '{{ asset('img/findz/icons/active_favourite.svg') }}');
-                    $('#favourite-modal').fadeIn().delay(2000).fadeOut();
-                }
-            });
+            {{--$('#favourite').click(function () {--}}
+            {{--    if ($(this).attr('src') === '{{ asset('img/findz/icons/active_favourite.svg') }}') {--}}
+            {{--        $(this).attr('src', '{{ asset('img/findz/icons/favourite.svg') }}');--}}
+            {{--    } else {--}}
+            {{--        $(this).attr('src', '{{ asset('img/findz/icons/active_favourite.svg') }}');--}}
+            {{--        $('#favourite-modal').fadeIn().delay(2000).fadeOut();--}}
+            {{--    }--}}
+            {{--});--}}
 
-            $('.favourite_modal img').click(function () {
-                $('.favourite_modal').hide();
-            });
+            // $('.favourite_modal img').click(function () {
+            //     $('.favourite_modal').hide();
+            // });
 
 
             function LlfromAddress(address) {
