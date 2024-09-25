@@ -284,13 +284,13 @@
 
 
             $('.prev').click(function () {
-                dateObject.setDate(dateObject.getDate() - 1);
+                dateObject.setDate(dateObject.getDate());
                 selectedDate = formatDate(dateObject);
                 updateButtonState();
             });
 
             $('.next').click(function () {
-                dateObject.setDate(dateObject.getDate() + 1);
+                dateObject.setDate(dateObject.getDate());
                 selectedDate = formatDate(dateObject);
 
                 updateButtonState();
