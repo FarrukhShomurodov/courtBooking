@@ -11,6 +11,8 @@ use App\Models\Court;
 use App\Models\SportType;
 use App\Models\Stadium;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
 class FindzController extends Controller
@@ -21,6 +23,9 @@ class FindzController extends Controller
         if (is_null(SportType::first())){
             abort(500);
         }
+        $locale = Session::get('locale', config('app.locale'));
+
+        App::setLocale($locale);
 
         $sportTypeId = $request->input('sportTypeId') ?? SportType::first()->id;
         $sportTypes = SportType::all();
