@@ -273,6 +273,19 @@
                     $('.selected_date').html(`${dateStr}, ${dayOfWeek}`);
                     dateObject = new Date(dateStr);
                     selectedDate = new Date(dateStr);
+
+                    if (dateObject <= today) {
+                        $('.prev').addClass('disabled');
+                    } else {
+                        $('.prev').removeClass('disabled');
+                    }
+
+                    if (dateObject >= maxDate) {
+                        $('.next').addClass('disabled');
+                    } else {
+                        $('.next').removeClass('disabled');
+                    }
+
                     const url = new URL(window.location.href);
                     url.searchParams.set('date', dateStr);
                     window.history.replaceState(null, null, url);
