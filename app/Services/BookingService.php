@@ -41,7 +41,7 @@ class BookingService
             ]);
 
             $booking->update([
-                'total_price' => $booking->price,
+                'total_price' => $validated['price'] * 1000,
             ]);
 
             return $booking;
