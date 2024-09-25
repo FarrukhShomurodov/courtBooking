@@ -37,8 +37,6 @@
                     <th>{{__('book.sum')}}</th>
                     <th>{{__('book.source')}}</th>
                     <th>{{__('book.status')}}</th>
-                    <th></th>
-                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
