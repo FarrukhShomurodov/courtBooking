@@ -48,7 +48,9 @@
                 <div class="stadium_desc mt-15">
                     <h1>{{ $stadium->name }}</h1>
                     <span id="description" style="white-space: pre-wrap;">{{ $stadium->description }}</span>
-                    <p class="pointer mt-15" id="read-more">{{ __('findz/book.read_more') }}</p>
+                    @if(strlen($stadium->description) > 100)
+                        <p class="pointer mt-15" id="read-more">{{ __('findz/book.read_more') }}</p>
+                    @endif
                     <div class="w-100 mt-30">
                             <div class="d-flex justify-content-between align-items-center address">
                                 <h2 id="address-text">{{ $stadium->address }}</h2>
