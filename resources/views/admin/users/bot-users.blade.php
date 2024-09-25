@@ -61,7 +61,7 @@
                                 </span>
                             </label>
                         </td>
-                        <td>{{ $user->bookings->count() }}</td>
+                        <td>{{ $user->bookings->where('status','paid')->count() }}</td>
                         <td>{{ $user->created_at}}</td>
                     </tr>
                 @endforeach
