@@ -37,6 +37,7 @@
                     <th>{{__('book.sum')}}</th>
                     <th>{{__('book.source')}}</th>
                     <th>{{__('book.status')}}</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -60,8 +61,9 @@
                         <td>{{ number_format(round($booking->price), 0 , ' ', ' ') }}</td>
                         <td>{{ $booking->source == 'manual' ? 'Manual' : 'Findz' }}</td>
                         <td>{{ $booking->status }}</td>
-                        @if($booking->source === 'manual')
                             <td>
+                                @if($booking->source === 'manual')
+
                                 <div class="d-inline-block text-nowrap">
                                     <form action="{{ route('bookings.destroy', $booking->id) }}" method="POST"
                                           style="display:inline;">
@@ -71,8 +73,9 @@
                                         </button>
                                     </form>
                                 </div>
+                                @endif
+
                             </td>
-                        @endif
                     </tr>
                 @endforeach
                 </tbody>
