@@ -35,7 +35,6 @@
                         if (result.exists) {
                             if (result.isactive) {
                                 setLocale(result.lang)
-                                tg.expand();
                             } else {
                                 tg.sendData('Пройдите регистрацию.');
                                 tg.close()
