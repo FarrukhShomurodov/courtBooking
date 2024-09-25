@@ -273,7 +273,9 @@
                     $('.date').html(`${dateStr}, ${dayOfWeek}`);
 
                     dateObject = new Date(dateStr);
-                    selectedDate = new Date(dateStr);
+
+                    dateObject.setDate(dateObject.getDate() - 1);
+                    selectedDate = formatDate(dateObject);
 
                     updateButtonState()
 
