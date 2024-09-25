@@ -311,7 +311,7 @@
                     $('.prev').removeClass('disabled');
                 }
 
-                if (dateObject >= maxDate) {
+                if (dateObject >= maxDate - 1) {
                     $('.next').addClass('disabled');
                 } else {
                     $('.next').removeClass('disabled');
