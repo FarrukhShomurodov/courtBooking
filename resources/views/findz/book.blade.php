@@ -275,6 +275,8 @@
                     dateObject = new Date(dateStr);
                     selectedDate = new Date(dateStr);
 
+                    updateButtonState()
+
                     const url = new URL(window.location.href);
                     url.searchParams.set('date', dateStr);
                     window.history.replaceState(null, null, url);
