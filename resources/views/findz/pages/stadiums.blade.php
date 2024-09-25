@@ -46,7 +46,7 @@
                     @endif
                     <div class="stadium_desc mt-15">
                         <p>{{ $stadium->name }}</p>
-                        <span>{{ __('findz/book.from_minimum_cost', ['cost' => $stadium->getMinimumCourtCost() / 1000]) }}.000 uzs/{{ __('findz/book.per_hour') }}</span>
+                        <span>{{ __('findz/book.from_minimum_cost', ['cost' => number_format($stadium->getMinimumCourtCost(), 0, '.', '.') ]) }} uzs/{{ __('findz/book.per_hour') }}</span>
                         <span>{{ $stadium->address }}</span>
                     </div>
                 </div>
