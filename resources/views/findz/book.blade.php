@@ -580,11 +580,9 @@
 
 
             // Book
-            //Todo вернуть бот
-            // let tg = window.Telegram.WebApp;
-            // let userData = tg.initDataUnsafe;
-            // let chat_id = userData.user.id;
-            let chat_id = 1;
+            let tg = window.Telegram.WebApp;
+            let userData = tg.initDataUnsafe;
+            let chat_id = userData.user.id;
 
             $.ajaxSetup({
                 headers: {
