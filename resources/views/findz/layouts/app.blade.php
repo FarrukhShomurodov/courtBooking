@@ -32,7 +32,11 @@
                         .then(result => {
                             if (result.exists) {
                                 if (result.isactive) {
-                                    setLocale(result.lang);
+
+                                    if(localStorage.getItem('locale') !== result.lang){
+                                        setLocale(result.lang);
+                                    }
+
                                     tg.expand();
                                 } else {
                                     tg.sendData('Пройдите регистрацию.');
@@ -50,6 +54,7 @@
                 }
 
                 function setLocale(locale) {
+                    localStorage.setItem('locale', locale);
                     window.location.href = `/set-lang/${locale}`;
                 }
 
