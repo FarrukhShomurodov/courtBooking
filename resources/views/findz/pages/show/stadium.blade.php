@@ -134,7 +134,7 @@
             LlfromAddress('{{$stadium->address}}')
 
             function truncateText(selector, maxChars) {
-                let element = $(selector);
+                let element = selector;
                 let originalText = element.text().trim();
                 console.log(selector)
                 if (originalText.length > maxChars) {
@@ -157,7 +157,8 @@
                 description.toggleClass('expanded');
             });
 
-            truncateText($('#description'), 300);
+            console.log($('#description'));
+            truncateText($('#description').textContent, 300);
 
             $('#copy-icon').click(function () {
                 let addressText = $('#address-text').text();
