@@ -132,7 +132,7 @@
             const closeBtn = $('.close');
 
             function truncateText(maxChars) {
-                let element = $('#description');
+                let element = $('#courtDescription');
 
                 if (element.length === 0) {
                     console.error("Элемент с ID 'description' не найден.");
