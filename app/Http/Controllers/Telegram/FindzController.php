@@ -19,7 +19,7 @@ class FindzController extends Controller
     public function courts(Request $request): View
     {
         if (is_null(SportType::first())){
-            return view('findz.pages.stadiums');
+            abort(500);
         }
 
         $sportTypeId = $request->input('sportTypeId') ?? SportType::first()->id;
@@ -55,6 +55,10 @@ class FindzController extends Controller
 
     public function courtsBySportType(SportType $sportType, Request $request): View
     {
+        if (is_null(SportType::first())){
+            abort(500);
+        }
+
         $sportTypes = SportType::all();
 
         $sportTypeId = $sportType->id ?? SportType::first()->id;
@@ -91,6 +95,10 @@ class FindzController extends Controller
 
     public function coachesBySportType(SportType $sportType, Request $request): View
     {
+        if (is_null(SportType::first())){
+            abort(500);
+        }
+
         $sportTypes = SportType::whereHas('coaches')->get();
 
         $date = $request->input('date');
