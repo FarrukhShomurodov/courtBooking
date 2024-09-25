@@ -47,7 +47,7 @@
 
                 <div class="stadium_desc mt-15">
                     <h1>{{ $stadium->name }}</h1>
-                    <span id="description">{{ $stadium->description }}</span>
+                    <span id="description" style="white-space: pre-wrap;">{{ $stadium->description }}</span>
                     <p class="pointer mt-15" id="read-more">Читать полностью</p>
                     <div class="w-100 mt-30">
                             <div class="d-flex justify-content-between align-items-center address">
@@ -136,7 +136,6 @@
             function truncateText(maxChars) {
                 let element = $('#description');
 
-                // Проверяем, существует ли элемент
                 if (element.length === 0) {
                     console.error("Элемент с ID 'description' не найден.");
                     return;
@@ -144,17 +143,11 @@
 
                 let originalText = element.text().trim();
 
-                // Логирование оригинального текста и его длины
-                console.log("Оригинальный текст:", originalText);
-                console.log("Длина оригинального текста:", originalText.length);
-
-                // Если длина оригинального текста больше максимального значения
                 if (originalText.length > maxChars) {
                     let truncatedText = originalText.slice(0, maxChars) + '...';
                     element.data('original-text', originalText);
                     element.data('truncated-text', truncatedText);
                     element.text(truncatedText);
-                    console.log("Текст после усечения:", truncatedText);
                 } else {
                     console.log("Текст не превышает максимальную длину. Урезка не требуется.");
                 }
