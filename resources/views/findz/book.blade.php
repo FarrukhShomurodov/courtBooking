@@ -700,7 +700,7 @@
                         <form id="form-payme" method="POST" action="https://checkout.paycom.uz">
                             <input type="hidden" name="merchant" value="66cdfb052f8d5ff4746f8435">
                             <input type="hidden" name="account[book_id]" value="${bookingId}">
-                            <input type="hidden" name="amount" value="${formattedAmount}">
+                            <input type="hidden" name="amount" value="${formattedAmount * 100}">
                             <input type="hidden" name="lang" value="{{app()->getLocale()}}">
                             <input type="hidden" name="callback" value="${callback}">
                             <input type="submit" value="">
