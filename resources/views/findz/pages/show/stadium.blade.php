@@ -48,7 +48,7 @@
                 <div class="stadium_desc mt-15">
                     <h1>{{ $stadium->name }}</h1>
                     <span id="description" style="white-space: pre-wrap;">{{ $stadium->description }}</span>
-                    <p class="pointer mt-15" id="read-more">Читать полностью</p>
+                    <p class="pointer mt-15" id="read-more">{{ __('findz/book.read_more') }}</p>
                     <div class="w-100 mt-30">
                             <div class="d-flex justify-content-between align-items-center address">
                                 <h2 id="address-text">{{ $stadium->address }}</h2>
@@ -109,27 +109,27 @@
                 }
             });
 
-            $('#lang-icon').on('click', function() {
-                $('.select-lang').css('display', 'block');
-                $('.container_mobile').css('margin', '152px auto 0', 'important');
+            {{--$('#lang-icon').on('click', function() {--}}
+            {{--    $('.select-lang').css('display', 'block');--}}
+            {{--    $('.container_mobile').css('margin', '152px auto 0', 'important');--}}
 
-                @if(request('date') || request('start_time') || request('end_time'))
-                $('.date_time ').css('top', '136px');
-                $('.container_mobile').css('margin', '202px  auto 0', 'important');
-                @endif
-            });
+            {{--    @if(request('date') || request('start_time') || request('end_time'))--}}
+            {{--    $('.date_time ').css('top', '136px');--}}
+            {{--    $('.container_mobile').css('margin', '202px  auto 0', 'important');--}}
+            {{--    @endif--}}
+            {{--});--}}
 
-            $(window).on('click', function(event) {
-                if (!$(event.target).closest('.select-lang, #lang-icon').length) {
-                    $('.select-lang').hide();
-                    $('.container_mobile').css('margin', '122px auto 0', 'important');
+            {{--$(window).on('click', function(event) {--}}
+            {{--    if (!$(event.target).closest('.select-lang, #lang-icon').length) {--}}
+            {{--        $('.select-lang').hide();--}}
+            {{--        $('.container_mobile').css('margin', '122px auto 0', 'important');--}}
 
-                    @if(request('date') || request('start_time') || request('end_time'))
-                    $('.date_time ').css('top', '95px');
-                    $('.container_mobile').css('margin', '182px auto 0', 'important');
-                    @endif
-                }
-            });
+            {{--        @if(request('date') || request('start_time') || request('end_time'))--}}
+            {{--        $('.date_time ').css('top', '95px');--}}
+            {{--        $('.container_mobile').css('margin', '182px auto 0', 'important');--}}
+            {{--        @endif--}}
+            {{--    }--}}
+            {{--});--}}
 
             LlfromAddress('{{$stadium->address}}')
 
@@ -157,7 +157,7 @@
                 let description = $('#description');
                 if (description.hasClass('expanded')) {
                     description.text(description.data('truncated-text'));
-                    $(this).text('Читать полностью');
+                    $(this).text({{ __('findz/book.read_more')}});
                 } else {
                     description.text(description.data('original-text'));
                     $(this).text('Свернуть');

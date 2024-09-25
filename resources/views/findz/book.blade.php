@@ -131,6 +131,40 @@
             const modal = $('#courtModal');
             const closeBtn = $('.close');
 
+            function truncateText(maxChars) {
+                let element = $('#description');
+
+                if (element.length === 0) {
+                    console.error("Элемент с ID 'description' не найден.");
+                    return;
+                }
+
+                let originalText = element.text().trim();
+
+                if (originalText.length > maxChars) {
+                    let truncatedText = originalText.slice(0, maxChars) + '...';
+                    element.data('original-text', originalText);
+                    element.data('truncated-text', truncatedText);
+                    element.text(truncatedText);
+                } else {
+                    console.log("Текст не превышает максимальную длину. Урезка не требуется.");
+                }
+            }
+
+            $('#read-more').click(function () {
+                let description = $('#courtDescription');
+                if (description.hasClass('expanded')) {
+                    description.text(description.data('truncated-text'));
+                    $(this).text({{ __('findz/book.read_more')}});
+                } else {
+                    description.text(description.data('original-text'));
+                    $(this).text('Свернуть');
+                }
+                description.toggleClass('expanded');
+            });
+
+
+
             $('.court_name').on('click', function () {
                 if ($(this).css('cursor') === 'not-allowed') return;
 
@@ -142,6 +176,7 @@
                     success: function (response) {
                         $('#courtName').text(response.name);
                         $('#courtDescription').text(response.description);
+                        $('#read-more').text({{ __('findz/book.read_more')}});
                         $('#courtPhotos').empty();
 
                         if (response.photos) {
@@ -173,6 +208,7 @@
                                 }
                             });
                         }
+                        truncateText(100);
                         modal.show();
                     },
                     error: function (error) {
