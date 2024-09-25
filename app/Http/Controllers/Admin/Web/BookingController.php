@@ -76,11 +76,11 @@ class BookingController extends Controller
         return redirect()->route('bookings.index');
     }
 
-    public function destroy(Booking $booking): RedirectResponse
+    public function destroy(BookingItem $booking): RedirectResponse
     {
         $role = Auth::user()->roles()->first()->name;
 
-        if ($booking->bookingItems->first()->source === 'manual') {
+        if ($booking->source === 'manual') {
             switch ($role) {
                 case 'admin':
                     $this->bookingService->delete($booking);
@@ -89,7 +89,7 @@ class BookingController extends Controller
                 case 'owner stadium':
                     $owner = Auth::user()->stadiumOwner()->first();
                     if ($owner) {
-                        $hasBooking = Booking::query()
+                        $hasBooking = BookingItem::query()
                             ->whereIn('court_id', $owner->courts->pluck('id'))
                             ->where('id', $booking->id)
                             ->exists();
@@ -107,7 +107,7 @@ class BookingController extends Controller
                 case 'stadium manager':
                     $stadiumManager = Auth::user()->stadiumManager()->first();
                     if ($stadiumManager) {
-                        $hasBooking = Booking::query()
+                        $hasBooking = BookingItem::query()
                             ->whereIn('court_id', $stadiumManager->courts->pluck('id'))
                             ->where('id', $booking->id)
                             ->exists();

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Booking;
+use App\Models\BookingItem;
 use App\Traits\ScheduleHelper;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +49,7 @@ class BookingService
         });
     }
 
-    public function delete(Booking $booking): void
+    public function delete(BookingItem $booking): void
     {
         $booking->delete();
     }
