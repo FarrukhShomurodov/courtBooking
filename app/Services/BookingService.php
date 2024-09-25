@@ -51,6 +51,7 @@ class BookingService
 
     public function delete(BookingItem $booking): void
     {
+        $booking->booking()->delete();
         $booking->delete();
     }
 }
