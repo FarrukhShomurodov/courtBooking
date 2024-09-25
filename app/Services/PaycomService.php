@@ -165,9 +165,12 @@ class PaycomService
             $transaction->perform_time = $ldate;
             $transaction->perform_time_unix = str_replace('.', '', $currentMillis);
             $transaction->update();
-            $completed_book = Booking::where('id', $transaction->book_id)->first();
-            $completed_book->status = 'paid';
-            $completed_book->update();
+            $completed_book = Booking::query()->find($transaction->book_id)->bookingItems;
+            foreach ($completed_book as $booking){
+                $booking->status = 'paid';
+                $booking->update();
+
+            }
             $response = [
                 'result' => [
                     'transaction' => "{$transaction->id}",
@@ -207,8 +210,12 @@ class PaycomService
             $transaction->state = -1;
             $transaction->update();
 
-            $booking = Booking::query()->find($transaction->book_id);
-            $booking->status = 'canceled';
+            $bookings = Booking::query()->find($transaction->book_id)->bookingItems;
+            foreach ($bookings as $booking){
+                $booking->status = 'canceled';
+                $booking->save();
+            }
+
             $response = [
                 'result' => [
                     "state" => intval($transaction->state),
@@ -224,7 +231,11 @@ class PaycomService
             $transaction->state = -2;
             $transaction->update();
 
-            $booking = Booking::query()->find($transaction->book_id);
+            $bookings = Booking::query()->find($transaction->book_id)->bookingItems;
+            foreach ($bookings as $booking){
+                $booking->status = 'canceled';
+                $booking->save();
+            }
             $booking->status = 'canceled';
             $response = [
                 'result' => [
