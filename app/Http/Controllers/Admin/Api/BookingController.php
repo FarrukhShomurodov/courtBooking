@@ -83,6 +83,10 @@ class BookingController extends Controller
                 $totalSum += $bookItem->price;
             }
 
+            $booking->update([
+                'total_price' => $totalSum,
+            ]);
+
             return $booking->id;
         });
 

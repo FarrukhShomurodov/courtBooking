@@ -40,6 +40,10 @@ class BookingService
                 'status' => 'paid',
             ]);
 
+            $booking->update([
+                'total_price' => $booking->price,
+            ]);
+
             return $booking;
         });
     }

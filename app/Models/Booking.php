@@ -15,6 +15,7 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'bot_user_id',
+        'total_price',
     ];
 
     public function bookingItems(): HasMany
