@@ -157,7 +157,7 @@
                 description.toggleClass('expanded');
             });
 
-            truncateText('#description', 300);
+            truncateText($('#description'), 300);
 
             $('#copy-icon').click(function () {
                 let addressText = $('#address-text').text();
