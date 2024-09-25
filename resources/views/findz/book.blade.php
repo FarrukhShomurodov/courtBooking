@@ -311,10 +311,14 @@
                     $('.prev').removeClass('disabled');
                 }
 
-                if (dateObject >= maxDate - 2) {
+                if (dateObject >= maxDate) {
                     $('.next').addClass('disabled');
                 } else {
                     $('.next').removeClass('disabled');
+                }
+
+                if (dateObject === maxDate) {
+                    $('.next').addClass('disabled');
                 }
 
                 updateDateDisplay();
