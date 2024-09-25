@@ -19,7 +19,6 @@
 
             if (userData.user) {
                 let chatID = userData.user.id;
-
                 async function checkUser() {
                     try {
                         let response = await fetch('/api/has-bot-user', {
@@ -32,10 +31,10 @@
 
                         let result = await response.json();
 
-                        console.log(result)
 
                         if (result.exists) {
                             if (result.isactive) {
+                                setLocale(result.lang)
                                 tg.expand();
                             } else {
                                 tg.sendData('Пройдите регистрацию.');
@@ -51,6 +50,11 @@
                         window.location.href = 'https://t.me/cuourts_bokking_bot';
                     }
                 }
+
+                function setLocale(locale) {
+                    window.location.href = `/set-lang/${locale}`;
+                }
+
 
                 if (Object.keys(userData).length === 0 || typeof userData.user === 'undefined') {
                     window.location.href = 'https://t.me/cuourts_bokking_bot';

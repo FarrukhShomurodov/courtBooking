@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Telegram;
 
 use App\Http\Controllers\Controller;
-use App\Models\AdminAssembly;
 use App\Models\Booking;
 use App\Models\BotUser;
 use App\Services\OtpService;
