@@ -304,6 +304,8 @@
 
             function updateButtonState() {
                 let today = new Date();
+                let maxDateForCom = new Date();
+                maxDateForCom.setDate(today.getDate() + 29)
 
                 if (dateObject <= today) {
                     $('.prev').addClass('disabled');
@@ -311,14 +313,10 @@
                     $('.prev').removeClass('disabled');
                 }
 
-                if (dateObject >= maxDate) {
+                if (dateObject >= maxDateForCom) {
                     $('.next').addClass('disabled');
                 } else {
                     $('.next').removeClass('disabled');
-                }
-
-                if (dateObject === maxDate) {
-                    $('.next').addClass('disabled');
                 }
 
                 updateDateDisplay();
