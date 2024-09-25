@@ -527,10 +527,13 @@ class TelegramController extends Controller
     protected function myBookings($chatId, $user)
     {
         $bookings = Booking::query()
-            ->where('source', 'bot')
-            ->where('status', 'paid')
             ->where('bot_user_id', $user->id)
+            ->whereHas('bookingItems', function ($query) {
+                $query->where('source', 'bot')
+                    ->where('status', 'paid');
+            })
             ->get();
+
 
         if ($bookings->count() < 1) {
             $this->telegram->sendMessage([
@@ -540,42 +543,44 @@ class TelegramController extends Controller
             return;
         }
 
-        foreach ($bookings as $booking) {
-            $photos = json_decode($booking->court->stadium->photos, true);
-            $bookingDateTime = Carbon::parse($booking->date . ' ' . $booking->start_time);
-            $now = Carbon::now();
-            $hoursRemaining = $now->diffInHours($bookingDateTime, false);
+        foreach ($bookings as $bookingItems) {
+            foreach ($bookingItems->bookingItems as $booking) {
+                $photos = json_decode($booking->court->stadium->photos, true);
+                $bookingDateTime = Carbon::parse($booking->date . ' ' . $booking->start_time);
+                $now = Carbon::now();
+                $hoursRemaining = $now->diffInHours($bookingDateTime, false);
 
-            $description = __('stadium.stadium') . ': ' . htmlspecialchars($booking->court->stadium->name) . "\n"
-                . __('court.court') . ": " . htmlspecialchars($booking->court->name) . "\n"
-                . __('findz/book.address') . " " . htmlspecialchars($booking->court->stadium->address) . "\n"
-                . __('findz/book.date') . " " . $booking->date . "\n"
-                . __('findz/book.time') . " " . substr($booking->start_time, 0, 5) . " - " . substr($booking->end_time, 0, 5) . "\n"
-                . __('findz/book.price') . " " . round($booking->price / 1000) . " " . __('findz/book.currency') . "\n\n";
+                $description = __('stadium.stadium') . ': ' . htmlspecialchars($booking->court->stadium->name) . "\n"
+                    . __('court.court') . ": " . htmlspecialchars($booking->court->name) . "\n"
+                    . __('findz/book.address') . " " . htmlspecialchars($booking->court->stadium->address) . "\n"
+                    . __('findz/book.date') . " " . $booking->date . "\n"
+                    . __('findz/book.time') . " " . substr($booking->start_time, 0, 5) . " - " . substr($booking->end_time, 0, 5) . "\n"
+                    . __('findz/book.price') . " " . round($booking->price / 1000) . " " . __('findz/book.currency') . "\n\n";
 
-            if ($hoursRemaining <= 24) {
-                $description .= __('findz/book.edit_book_info');
-            }
-
-            $mediaGroup = [];
-            if (!empty($photos) && is_array($photos)) {
-                foreach ($photos as $index => $photo) {
-                    $photoPath = Storage::url('public/' . $photo);
-                    $fullPhotoUrl = env('APP_URL') . $photoPath;
-
-                    $mediaGroup[] = InputMediaPhoto::make([
-                        'type' => 'photo',
-                        'media' => $fullPhotoUrl,
-                        'caption' => $index === 0 ? $description : '',
-                        'parse_mode' => 'HTML'
-                    ]);
+                if ($hoursRemaining <= 24) {
+                    $description .= __('findz/book.edit_book_info');
                 }
 
-                // Отправка группы медиа
-                $this->telegram->sendMediaGroup([
-                    'chat_id' => $chatId,
-                    'media' => json_encode($mediaGroup)
-                ]);
+                $mediaGroup = [];
+                if (!empty($photos) && is_array($photos)) {
+                    foreach ($photos as $index => $photo) {
+                        $photoPath = Storage::url('public/' . $photo);
+                        $fullPhotoUrl = env('APP_URL') . $photoPath;
+
+                        $mediaGroup[] = InputMediaPhoto::make([
+                            'type' => 'photo',
+                            'media' => $fullPhotoUrl,
+                            'caption' => $index === 0 ? $description : '',
+                            'parse_mode' => 'HTML'
+                        ]);
+                    }
+
+                    // Отправка группы медиа
+                    $this->telegram->sendMediaGroup([
+                        'chat_id' => $chatId,
+                        'media' => json_encode($mediaGroup)
+                    ]);
+                }
             }
         }
 
