@@ -157,7 +157,7 @@
                 let description = $('#description');
                 if (description.hasClass('expanded')) {
                     description.text(description.data('truncated-text'));
-                    $(this).text({{ __('findz/book.read_more')}});
+                    $(this).text(`{{ __('findz/book.read_more')}}`);
                 } else {
                     description.text(description.data('original-text'));
                     $(this).text('Свернуть');

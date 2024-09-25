@@ -155,7 +155,7 @@
                 let description = $('#courtDescription');
                 if (description.hasClass('expanded')) {
                     description.text(description.data('truncated-text'));
-                    $(this).text({{ __('findz/book.read_more')}});
+                    $(this).text(`{{ __('findz/book.read_more')}}`);
                 } else {
                     description.text(description.data('original-text'));
                     $(this).text('Свернуть');
@@ -176,7 +176,7 @@
                     success: function (response) {
                         $('#courtName').text(response.name);
                         $('#courtDescription').text(response.description);
-                        $('#read-more').text({{ __('findz/book.read_more')}});
+                        $('#read-more').text(`{{ __('findz/book.read_more')}}`);
                         $('#courtPhotos').empty();
 
                         if (response.photos) {
