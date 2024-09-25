@@ -144,14 +144,19 @@
 
                 let originalText = element.text().trim();
 
-                // Логирование оригинального текста
+                // Логирование оригинального текста и его длины
                 console.log("Оригинальный текст:", originalText);
+                console.log("Длина оригинального текста:", originalText.length);
 
+                // Если длина оригинального текста больше максимального значения
                 if (originalText.length > maxChars) {
                     let truncatedText = originalText.slice(0, maxChars) + '...';
                     element.data('original-text', originalText);
                     element.data('truncated-text', truncatedText);
                     element.text(truncatedText);
+                    console.log("Текст после усечения:", truncatedText);
+                } else {
+                    console.log("Текст не превышает максимальную длину. Урезка не требуется.");
                 }
             }
 
