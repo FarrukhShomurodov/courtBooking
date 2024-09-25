@@ -135,8 +135,18 @@
 
             function truncateText(maxChars) {
                 let element = $('#description');
+
+                // Проверяем, существует ли элемент
+                if (element.length === 0) {
+                    console.error("Элемент с ID 'description' не найден.");
+                    return;
+                }
+
                 let originalText = element.text().trim();
-                console.log(element)
+
+                // Логирование оригинального текста
+                console.log("Оригинальный текст:", originalText);
+
                 if (originalText.length > maxChars) {
                     let truncatedText = originalText.slice(0, maxChars) + '...';
                     element.data('original-text', originalText);
@@ -157,7 +167,7 @@
                 description.toggleClass('expanded');
             });
 
-            truncateText(300);
+            truncateText(100);
 
             $('#copy-icon').click(function () {
                 let addressText = $('#address-text').text();
