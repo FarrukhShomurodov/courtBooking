@@ -34,9 +34,6 @@
 
                         if (result.exists) {
                             if (result.isactive) {
-                                @if(!Session::has('storage'))
-                                    setLocale(result.lang)
-                                @endif
                                 tg.expand();
                             } else {
                                 tg.sendData('Пройдите регистрацию.');
@@ -52,11 +49,6 @@
                         window.location.href = 'https://t.me/cuourts_bokking_bot';
                     }
                 }
-
-                function setLocale(locale) {
-                    window.location.href = `/set-lang/${locale}`;
-                }
-
 
                 if (Object.keys(userData).length === 0 || typeof userData.user === 'undefined') {
                     window.location.href = 'https://t.me/cuourts_bokking_bot';
