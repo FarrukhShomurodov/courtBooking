@@ -34,7 +34,9 @@
 
                         if (result.exists) {
                             if (result.isactive) {
-                                sessionStorage.setItem('locale', result.lang)
+                                @if(!Session::has('storage'))
+                                    setLocale(result.lang)
+                                @endif
                                 tg.expand();
                             } else {
                                 tg.sendData('Пройдите регистрацию.');
@@ -49,6 +51,10 @@
                         console.error('Error:', error);
                         window.location.href = 'https://t.me/cuourts_bokking_bot';
                     }
+                }
+
+                function setLocale(locale) {
+                    window.location.href = `/set-lang/${locale}`;
                 }
 
 
