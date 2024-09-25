@@ -12,55 +12,58 @@
     {{--    <script src="https://telegram.org/js/telegram-web-app.js"></script>--}}
     <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
     <script>
-        window.addEventListener('DOMContentLoaded', async (event) => {
+        window.addEventListener('DOMContentLoaded', (event) => {
             let tg = window.Telegram.WebApp;
             tg.expand();
             let userData = tg.initDataUnsafe;
 
             if (userData.user) {
                 let chatID = userData.user.id;
-                async function checkUser() {
-                    try {
-                        let response = await fetch('/api/has-bot-user', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(userData)
-                        });
 
-                        let result = await response.json();
-
-
-                        if (result.exists) {
-                            if (result.isactive) {
-                                tg.expand();
+                function checkUser() {
+                    return fetch('/api/has-bot-user', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(userData)
+                    })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.exists) {
+                                if (result.isactive) {
+                                    setLocale(result.lang);
+                                    tg.expand();
+                                } else {
+                                    tg.sendData('Пройдите регистрацию.');
+                                    tg.close();
+                                }
                             } else {
-                                tg.sendData('Пройдите регистрацию.');
-                                tg.close()
+                                tg.sendData('Пользователь не найден.');
+                                window.location.href = 'https://t.me/cuourts_bokking_bot';
                             }
-                        } else {
-                            tg.sendData('Пользователь не найден.');
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
                             window.location.href = 'https://t.me/cuourts_bokking_bot';
-                        }
+                        });
+                }
 
-                    } catch (error) {
-                        console.error('Error:', error);
-                        window.location.href = 'https://t.me/cuourts_bokking_bot';
-                    }
+                function setLocale(locale) {
+                    window.location.href = `/set-lang/${locale}`;
                 }
 
                 if (Object.keys(userData).length === 0 || typeof userData.user === 'undefined') {
                     window.location.href = 'https://t.me/cuourts_bokking_bot';
                 } else {
-                    await checkUser();
+                    checkUser();
                 }
 
                 // Обновите ссылку на "Мои брони"
                 let myBookingsLink = document.getElementById('myBookingsLink');
                 if (myBookingsLink) {
                     @if($currentSportTypeId)
-                        myBookingsLink.href = `https://st40.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chatID}`;
+                        myBookingsLink.href = `/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chatID}`;
                     @endif
                 }
 
@@ -70,7 +73,7 @@
                 let myBookingsImg = document.getElementById('myBookingsImg');
                 if (myBookingsImg) {
                     myBookingsImg.onclick = function () {
-                        location.href = `https://st40.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chatID}`;
+                        location.href = `/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chatID}`;
                     };
                 }
                 @endif
@@ -79,6 +82,7 @@
             }
         });
     </script>
+
 
 
     @yield('extra-js')
