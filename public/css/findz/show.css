@@ -15,9 +15,13 @@
 }
 
 .stadium_desc span {
+    display: inline;
     font-size: 16px;
     font-weight: 400;
     line-height: 25.6px;
+    white-space: normal;
+    overflow-wrap: break-word;
+    width: 100%;
 }
 
 .address img {
