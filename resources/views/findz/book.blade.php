@@ -269,10 +269,12 @@
                     });
                     const selected_date = selectedDates[0];
                     const dayOfWeek = getRussianDayOfWeek(selected_date);
+
                     $('.date').html(`${dateStr}, ${dayOfWeek}`);
-                    $('.selected_date').html(`${dateStr}, ${dayOfWeek}`);
+
                     dateObject = new Date(dateStr);
                     selectedDate = new Date(dateStr);
+
                     const url = new URL(window.location.href);
                     url.searchParams.set('date', dateStr);
                     window.history.replaceState(null, null, url);
