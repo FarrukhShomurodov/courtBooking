@@ -274,7 +274,7 @@
 
                     dateObject = new Date(dateStr);
 
-                    dateObject.setDate(dateObject.getDate() - 1);
+                    dateObject.setDate(dateObject.getDate());
                     selectedDate = formatDate(dateObject);
 
                     updateButtonState()
