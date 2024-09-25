@@ -561,6 +561,10 @@ class TelegramController extends Controller
                     $description .= __('findz/book.edit_book_info');
                 }
 
+                if ($booking->is_edit) {
+                    $description .= __('findz/book.can_not_edit_book_more_one');
+                }
+
                 $mediaGroup = [];
                 if (!empty($photos) && is_array($photos)) {
                     foreach ($photos as $index => $photo) {
