@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Telegram;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\BookingItem;
 use App\Models\BotUser;
 use App\Models\Coach;
 use App\Models\Court;
@@ -183,28 +184,38 @@ class FindzController extends Controller
 
         $isUpdate = false;
 
-        return view('findz.book', compact('courts','stadium', 'currentSportTypeId', 'isUpdate'));
+        return view('findz.book', compact('courts', 'stadium', 'currentSportTypeId', 'isUpdate'));
     }
 
-    public function bookUpdate(Booking $booking, Request $request): View
+    public function bookUpdate(BookingItem $booking, Request $request): View
     {
         $courts = Court::with('schedules')->where('is_active', true)->get();
+        $stadium = $booking->court()->first()->stadium;
         $currentSportTypeId = $request->input('sportType');
+
         $isUpdate = true;
         $userBook = $booking;
-        return view('findz.book', compact('courts', 'userBook', 'currentSportTypeId', 'isUpdate'));
+        return view('findz.book', compact('courts', 'userBook', 'currentSportTypeId', 'isUpdate', 'stadium'));
     }
 
-    public function myBookings(Request $request): View
+    public function myBookings(Request $request)
     {
         $stadiums = Stadium::all();
         $currentSportTypeId = $request->input('sportType');
         $botUserId = $request->input('bot_user_id');
-        $botUser = BotUser::query()->where('chat_id', $botUserId)->first();
 
-        $bookings = Booking::where('bot_user_id', $botUser->id)->where('source', 'bot')->where('status', 'paid')->get();
+        if ($botUserId) {
+            $botUser = BotUser::query()->where('chat_id', $botUserId)->first();
+            $bookings = Booking::where('bot_user_id', $botUser->id)
+                ->whereHas('bookingItems', function ($query) {
+                    $query->where('source', 'bot')->where('status', 'paid');
+                })
+                ->get();
 
-        return view('findz.pages.mybookings', compact('currentSportTypeId', 'stadiums', 'bookings'));
+            return view('findz.pages.mybookings', compact('currentSportTypeId', 'stadiums', 'bookings'));
+        } else {
+            return redirect()->route('webapp');
+        }
     }
 
 }

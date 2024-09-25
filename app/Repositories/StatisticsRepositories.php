@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 
 use App\Models\Booking;
+use App\Models\BookingItem;
 use App\Models\BotUser;
 use App\Models\Court;
 use App\Models\SportType;
@@ -21,13 +22,13 @@ class StatisticsRepositories
         $botUserCount = BotUser::query()->count();
         $stadiumsCount = Stadium::query()->count();
         $courtCount = Court::query()->count();
-        $bookingCount = Booking::query()->count();
+        $bookingCount = BookingItem::query()->count();
         $sportTypeCount = SportType::query()->count();
-        $mostBookedDate = Booking::query()->select('date', DB::raw('count(*) as booking_count'))
+        $mostBookedDate = BookingItem::query()->select('date', DB::raw('count(*) as booking_count'))
             ->groupBy('date')
             ->orderBy('booking_count', 'desc')
             ->first();
-        $mostBookedTimeSlot = Booking::query()->select('start_time', 'end_time', DB::raw('count(*) as booking_count'))
+        $mostBookedTimeSlot = BookingItem::query()->select('start_time', 'end_time', DB::raw('count(*) as booking_count'))
             ->groupBy('start_time', 'end_time')
             ->orderBy('booking_count', 'desc')
             ->first();
@@ -54,14 +55,14 @@ class StatisticsRepositories
         }
 
         $courtCount = $stadium->courts()->count();
-        $bookingCount = Booking::query()->whereIn('court_id', $stadium->courts()->pluck('id'))->count();
-        $mostBookedDate = Booking::query()
+        $bookingCount = BookingItem::query()->whereIn('court_id', $stadium->courts()->pluck('id'))->count();
+        $mostBookedDate = BookingItem::query()
             ->whereIn('court_id', $stadium->courts()->pluck('id'))
             ->select('date', DB::raw('count(*) as booking_count'))
             ->groupBy('date')
             ->orderBy('booking_count', 'desc')
             ->first();
-        $mostBookedTimeSlot = Booking::query()
+        $mostBookedTimeSlot = BookingItem::query()
             ->whereIn('court_id', $stadium->courts()->pluck('id'))
             ->select('start_time', 'end_time', DB::raw('count(*) as booking_count'))
             ->groupBy('start_time', 'end_time')

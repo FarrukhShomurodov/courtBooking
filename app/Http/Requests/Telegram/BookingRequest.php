@@ -35,4 +35,20 @@ class BookingRequest extends FormRequest
             'source' => 'required|string|in:bot',
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'bot_user_id' => 'Пользователь бота',
+            'full_name' => 'Полное имя',
+            'phone_number' => 'Номер телефона',
+            'slots' => 'Слоты',
+            'source' => 'Источник',
+            'slots.*.court_id' => 'Площадка',
+            'slots.*.start' => 'Время начала',
+            'slots.*.end' => 'Время окончания',
+            'slots.*.date' => 'Дата',
+            'slots.*.price' => 'Цена',
+        ];
+    }
 }

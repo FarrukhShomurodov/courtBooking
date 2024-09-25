@@ -93,6 +93,7 @@
             <p>{{ __('findz/book.Правила брони') }}</p>
             <ul>
                 <li>{{ __('findz/book.Рекомендуется быть на месте за 15 минут до начала') }}</li>
+                <li>{{ __('findz/book.can_not_edit_book_more_one') }}</li>
             </ul>
         </div>
 
@@ -230,6 +231,7 @@
                     $('.date').html(`${dateStr}, ${dayOfWeek}`);
                     $('.selected_date').html(`${dateStr}, ${dayOfWeek}`);
                     dateObject = new Date(dateStr);
+                    selectedDate = new Date(dateStr);
                     const url = new URL(window.location.href);
                     url.searchParams.set('date', dateStr);
                     window.history.replaceState(null, null, url);
@@ -288,7 +290,7 @@
                     method: 'GET',
                     data: {
                         date: selectedDate,
-                        stadium: {{ request('stadium') }},
+                        stadium: {{ $stadium->id }},
                         sportTypeId: {{ $currentSportTypeId }}
                     },
                     success: function (res) {
@@ -327,6 +329,14 @@
                     return daysOfWeek[date.getDay()];
             }
 
+            function formatCost(cost) {
+                if (cost >= 1000000) {
+                    return (cost / 1000000).toLocaleString('ru-RU', {minimumFractionDigits: 1}) + ' M';
+                } else {
+                    return (cost / 1000).toLocaleString('ru-RU') + ' ' + `{{ __('findz/book.currency') }}`;
+                }
+            }
+
             // slots
             function updateSlots(data) {
                 const savedSlots = JSON.parse(localStorage.getItem('selectedSlots')) || [];
@@ -347,7 +357,7 @@
                         let hasBooking = false;
 
                         @if($isUpdate)
-                        let oldSelectedSlot = (court.id === {{ $userBook->court_id }} && schedule?.start_time >= "{{ $userBook->start_time }}" && schedule?.end_time <= "{{ $userBook->end_time }}");
+                        let oldSelectedSlot = (court.id === {{ $userBook->court_id }} && schedule?.start_time == "{{ $userBook->start_time }}" && schedule?.end_time == "{{ $userBook->end_time }}");
                         hasBooking = false;
                         let endTime = "{{ $userBook->end_time }}";
                         endTime = endTime.slice(0, 5);
@@ -376,13 +386,6 @@
                         let selectedClass = selected ? 'selected' : '';
                         let slotClass = hasBooking ? 'slot_booked' : '';
 
-                        function formatCost(cost) {
-                            if (cost >= 1000000) {
-                                return (cost / 1000000).toLocaleString('ru-RU', {minimumFractionDigits: 1}) + ' M'; // Форматируем миллионы
-                            } else {
-                                return (cost / 1000).toLocaleString('ru-RU') + ' ' + `{{ __('findz/book.currency') }}`;
-                            }
-                        }
 
                         if (schedule) {
                             row += `
@@ -467,7 +470,7 @@
                                     </div>
                                 </div>
                                 <div class="cost_cancel_section">
-                                    <h2>${slot.price} т.с</h2>
+                                    <h2>${formatCost(slot.price * 1000)}</h2>
                                     <button class="delete-btn" data-court-id="${slot.court_id}" data-start="${slot.start}" data-end="${slot.end}">
                                         <img src="../../../img/findz/icons/delete_selected_time.svg" alt="delete selected time icon">
                                     </button>
@@ -520,11 +523,25 @@
                 const isBooked = $this.hasClass('slot_booked');
 
                 if (!isBooked) {
+                    const price = $this.data('price');
+
+                    @if($isUpdate)
+                    if({{ round($userBook->price) / 1000 }} !== price){
+                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>Пожалуйста, выберите другое время, так как указанная цена не соответствует вашему выбору.</li></div>`;
+                        $('.res_error').empty();
+                        $('.res_error').empty();
+                        $('.res_error').append(errorHtml);
+                        $('#error_modal').fadeIn().delay(5000).fadeOut();
+                        return;
+                    }
+                    @endif
+
                     $this.toggleClass('selected');
 
                     const courtId = $this.data('court-id');
                     const startTime = $this.data('start-time');
                     const endTime = $this.data('end-time');
+
                     let savedSlots = JSON.parse(localStorage.getItem('selectedSlots')) || [];
 
                     if ($this.hasClass('selected')) {
@@ -563,9 +580,11 @@
 
 
             // Book
-            let tg = window.Telegram.WebApp;
-            let userData = tg.initDataUnsafe;
-            let chat_id = userData.user.id;
+            //Todo вернуть бот
+            // let tg = window.Telegram.WebApp;
+            // let userData = tg.initDataUnsafe;
+            // let chat_id = userData.user.id;
+            let chat_id = 1;
 
             $.ajaxSetup({
                 headers: {
@@ -610,62 +629,52 @@
                         if (response.success) {
                             const user = response.data;
 
-                            const bookingData = {
-                                bot_user_id: user.id,
-                                full_name: $('#user_name').val(),
-                                phone_number: $('#user_phone').val(),
-                                slots: selectedSlots,
-                                date: selectedDate,
-                                source: 'bot'
-                            };
-
                             @if($isUpdate)
-                                bookingData.date = @json($userBook->date);
-                            $.ajax({
-                                url: '/api/booking/{{$userBook->id}}',
-                                method: 'PUT',
-                                data: bookingData,
-                                success: function (response) {
-                                    window.location.href = '{{ route('
-                            findz.mybookings
-                            ', ['
-                            sportType
-                            ' => $currentSportTypeId]) }}';
-                                },
-                                error: function (err) {
-                                    let errors = err.responseJSON.message;
-                                    let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
+                                if(savedSlots.length > 1){
+                                    let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>Пожалуйста, выберите одно время для бронирования.</li></div>`;
+                                    $('.res_error').empty();
                                     $('.res_error').empty();
                                     $('.res_error').append(errorHtml);
                                     $('#error_modal').fadeIn().delay(5000).fadeOut();
+                                }else{
+                                    $.ajax({
+                                        url: '/api/booking/{{$userBook->id}}',
+                                        method: 'PUT',
+                                        data: bookingData,
+                                        success: function (response) {
+                                            localStorage.removeItem("selectedSlots")
+                                            window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
+                                        },
+                                        error: function (err) {
+                                            let errors = err.responseJSON.message;
+                                            let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
+                                            $('.res_error').empty();
+                                            $('.res_error').append(errorHtml);
+                                            $('#error_modal').fadeIn().delay(5000).fadeOut();
+                                        }
+                                    });
                                 }
-                            });
                             @else
-                            $.ajax({
-                                url: '/api/booking',
-                                method: 'POST',
-                                data: bookingData,
-                                success: function (response) {
-                                    clearSlotsFromLocalStorage();
-                                    @if
-                                        (!$isUpdate)
-                                    initiatePaycomPayment(response.booking_ids, response.total_sum);
-                                    @else
-                                        window.location.href = '{{ route('
-                            findz.mybookings
-                            ', ['
-                            sportType
-                            ' => $currentSportTypeId]) }}';
-                                    @endif
-                                },
-                                error: function (err) {
-                                    let errors = err.responseJSON.message;
-                                    let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
-                                    $('.res_error').empty();
-                                    $('.res_error').append(errorHtml);
-                                    $('#error_modal').fadeIn().delay(5000).fadeOut();
-                                }
-                            });
+                                $.ajax({
+                                    url: '/api/booking',
+                                    method: 'POST',
+                                    data: bookingData,
+                                    success: function (response) {
+                                        localStorage.removeItem("selectedSlots")
+                                        @if(!$isUpdate)
+                                            initiatePaycomPayment(response.booking_id, response.total_sum);
+                                        @else
+                                            window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
+                                        @endif
+                                    },
+                                    error: function (err) {
+                                        let errors = err.responseJSON.message;
+                                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
+                                        $('.res_error').empty();
+                                        $('.res_error').append(errorHtml);
+                                        $('#error_modal').fadeIn().delay(5000).fadeOut();
+                                    }
+                                });
                             @endif
                         } else {
                             console.log('Ошибка: пользователь не найден');

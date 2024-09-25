@@ -6,7 +6,8 @@
 
 @section('content')
     <h6 class="py-3 breadcrumb-wrapper mb-4">
-        <span class="text-muted fw-light"><a class="text-muted" href="{{route('users.index')}}">{{  __('menu.Пользователи') }}</a> /</span>{{  __('user.Создать пользователя') }}
+        <span class="text-muted fw-light"><a class="text-muted"
+                                             href="{{route('users.index')}}">{{  __('menu.Пользователи') }}</a> /</span>{{  __('user.Создать пользователя') }}
     </h6>
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -48,7 +49,26 @@
                         <ul class="dropdown-menu w-100" aria-labelledby="roleDropdown">
                             @foreach($roles as $role)
                                 <li><a class="dropdown-item" href="#"
-                                       data-value="{{ $role->id }}">{{ $role->name == 'stadium manager' ? 'Администратор стадиона' : $role->name }}</a></li>
+                                       data-value="{{ $role->id }}">
+                                        @php
+                                            $newRoleNam = '';
+                                            switch ($role->name){
+                                                  case 'stadium manager':
+                                                      $newRoleNam = "Администратор стадиона";
+                                                      break;
+                                                  case 'admin':
+                                                  $newRoleNam = "Findz";
+                                                      break;
+                                                  case 'owner stadium':
+                                                  $newRoleNam = "Владелец стадиона";
+                                                      break;
+                                                  case 'trainer':
+                                                  $newRoleNam = "Тренер";
+                                                      break;
+                                            }
+                                        @endphp
+                                        {{ $newRoleNam }}
+                                    </a></li>
                             @endforeach
                         </ul>
                         <input type="hidden" name="role_id" id="roleInput">

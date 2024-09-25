@@ -90,9 +90,9 @@
                         <td>{{ $statistic['statistic']['bot_book_count'] }}</td>
                         <td>{{ $statistic['statistic']['manual_book_count'] }}</td>
 
-                        <td>{{ is_float($statistic['statistic']['total_revenue']) ? round($statistic['statistic']['total_revenue']) : $statistic['statistic']['total_revenue'] }}</td>
-                        <td>{{ is_float($statistic['statistic']['bot_revenue']) ? round($statistic['statistic']['bot_revenue']) : $statistic['statistic']['bot_revenue'] }}</td>
-                        <td>{{ is_float($statistic['statistic']['manual_revenue']) ? round($statistic['statistic']['manual_revenue']) : $statistic['statistic']['manual_revenue'] }}</td>
+                        <td>{{ number_format(round($statistic['statistic']['total_revenue']), 0 , ' ', ' ') }}</td>
+                        <td>{{ number_format(round($statistic['statistic']['bot_revenue']), 0 , ' ', ' ') }}</td>
+                        <td>{{ number_format(round($statistic['statistic']['manual_revenue']), 0 , ' ', ' ')  }}</td>
                         <td>{{ $statistic['statistic']['unbooked_hours'] }}</td>
                     </tr>
                 @endforeach
@@ -103,9 +103,9 @@
                     <td>{{ $totalStatistics['total_book_count'] }}</td>
                     <td>{{ $totalStatistics['bot_book_count'] }}</td>
                     <td>{{ $totalStatistics['manual_book_count'] }}</td>
-                    <td>{{ round($totalStatistics['total_revenue']) }}</td>
-                    <td>{{ round($totalStatistics['bot_revenue']) }}</td>
-                    <td>{{ round($totalStatistics['manual_revenue']) }}</td>
+                    <td>{{ number_format(round($totalStatistics['total_revenue']), 0 , ' ', ' ') }}</td>
+                    <td>{{ number_format (round($totalStatistics['bot_revenue']), 0 , ' ', ' ') }}</td>
+                    <td>{{ number_format(round($totalStatistics['manual_revenue']), 0 , ' ', ' ') }}</td>
                     <td>{{ $totalStatistics['unbooked_hours'] }}</td>
                 </tr>
                 @endrole

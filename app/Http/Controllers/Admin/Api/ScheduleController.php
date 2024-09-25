@@ -19,10 +19,13 @@ class ScheduleController extends Controller
         $validated = $request->validate([
             'court_id' => 'required|integer|exists:courts,id',
             'date' => 'required|date'
+        ], [
+            'court_id.required' => 'Поле корт обязательно для заполнения.',
+            'date.required' => 'Поле дата обязательно для заполнения.',
         ]);
 
         $court = Court::find($validated['court_id']);
-        $bookings = $court->bookings()->where('date', $validated['date'])->where('status','paid')->get();
+        $bookings = $court->bookings()->where('date', $validated['date'])->where('status', 'paid')->get();
         $schedules = $court->schedules;
 
         if ($schedules->isEmpty()) {
@@ -40,7 +43,13 @@ class ScheduleController extends Controller
             'court_id' => 'required|exists:courts,id',
             'start_time' => 'required|date_format:H:i:s',
             'end_time' => 'required|date_format:H:i:s|after:start_time',
+        ], [
+            'court_id.required' => 'Поле корт обязательно для заполнения.',
+            'start_time.required' => 'Поле время начала обязательно для заполнения.',
+            'end_time.required' => 'Поле время окончания обязательно для заполнения.',
+            'end_time.after' => 'Время окончания должно быть позже времени начала.',
         ]);
+
 
         $courtId = $validated['court_id'];
         $startTime = Carbon::parse($validated['start_time']);

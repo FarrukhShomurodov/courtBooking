@@ -18,7 +18,7 @@
                     <th>Id</th>
                     <th>{{  __('user.Имя') }}</th>
                     <th>{{  __('user.Фамилия') }}</th>
-                    <th>{{  __('user.Аватар') }}</th>
+{{--                    <th>{{  __('user.Аватар') }}</th>--}}
                     <th>{{  __('user.Логин') }}</th>
                     <th>{{  __('user.Роль') }}</th>
                     <th></th>
@@ -34,15 +34,32 @@
                         <td>{{ $count++ }}</td>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->second_name }}</td>
-                        <td>
-                            @if($user->avatar)
-                                <img class="rounded-circle"
-                                     src="{{ \Illuminate\Support\Facades\Storage::url($user->avatar) }}" width="50px"
-                                     height="50px">
-                            @endif
-                        </td>
+{{--                        <td>--}}
+{{--                            @if($user->avatar)--}}
+{{--                                <img class="rounded-circle"--}}
+{{--                                     src="{{ \Illuminate\Support\Facades\Storage::url($user->avatar) }}" width="50px"--}}
+{{--                                     height="50px">--}}
+{{--                            @endif--}}
+{{--                        </td>--}}
                         <td>{{ $user->login }}</td>
-                        <td>{{ $user->roles->pluck('name')[0] ?? '' }}</td>
+                        <td>
+                            @php
+                                switch ($user->roles->pluck('name')[0]){
+                                      case 'stadium manager':
+                                         echo "Администратор стадиона";
+                                          break;
+                                      case 'admin':
+                                      echo"Findz";
+                                          break;
+                                      case 'owner stadium':
+                                      echo "Владелец стадиона";
+                                          break;
+                                      case 'trainer':
+                                        echo "Тренер";
+                                          break;
+                                }
+                            @endphp
+                        </td>
                         <td>
                             <div class="d-inline-block text-nowrap">
                                 <button class="btn btn-sm btn-icon"

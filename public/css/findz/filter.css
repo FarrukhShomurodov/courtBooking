@@ -148,6 +148,9 @@
     width: 50px !important;
 }
 
+.flatpickr-disabled{
+    color: #a8b1bb !important;
+}
 
 /*Time Picker*/
 .time-picker {

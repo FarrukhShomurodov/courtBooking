@@ -21,6 +21,7 @@ class BookingItem extends Model
         'end_time',
         'source',
         'status',
+        'is_edit',
     ];
 
     public function booking(): BelongsTo

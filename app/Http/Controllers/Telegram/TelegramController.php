@@ -550,7 +550,7 @@ class TelegramController extends Controller
                 . __('court.court') . ": " . htmlspecialchars($booking->court->name) . "\n"
                 . __('findz/book.address') . " " . htmlspecialchars($booking->court->stadium->address) . "\n"
                 . __('findz/book.date') . " " . $booking->date . "\n"
-                . __('findz/book.time') . " " . $booking->start_time . " - " . $booking->end_time . "\n"
+                . __('findz/book.time') . " " . substr($booking->start_time, 0, 5) . " - " . substr($booking->end_time, 0, 5) . "\n"
                 . __('findz/book.price') . " " . round($booking->price / 1000) . " " . __('findz/book.currency') . "\n\n";
 
             if ($hoursRemaining <= 24) {

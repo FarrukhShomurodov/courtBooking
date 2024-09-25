@@ -92,9 +92,9 @@
                         <td>{{ $statistic['spotType']->name }}</td>
                         <td>{{ $statistic['statistic']['total_bookings'] }}</td>
 
-                        <td>{{ is_float($statistic['statistic']['total_revenue']) ? round($statistic['statistic']['total_revenue']) : $statistic['statistic']['total_revenue'] }}</td>
-                        <td>{{ is_float($statistic['statistic']['manual_revenue']) ? round($statistic['statistic']['manual_revenue']) : $statistic['statistic']['manual_revenue'] }}</td>
-                        <td>{{ is_float($statistic['statistic']['bot_revenue']) ? round($statistic['statistic']['bot_revenue']) : $statistic['statistic']['bot_revenue'] }}</td>
+                        <td>{{ number_format(round($statistic['statistic']['total_revenue']), 0 , ' ', ' ') }}</td>
+                        <td>{{ number_format(round($statistic['statistic']['manual_revenue']), 0 , ' ', ' ')  }}</td>
+                        <td>{{ number_format(round($statistic['statistic']['bot_revenue']), 0 , ' ', ' ') }}</td>
 
                         <td>{{ $statistic['statistic']['most_booked_date'] ?? '-' }}</td>
                         <td>
@@ -112,9 +112,9 @@
                 <tr style="font-weight: bold;">
                     <td>@lang('court.total')</td>
                     <td>{{ $totalStatistics['total_bookings'] }}</td>
-                    <td>{{ round($totalStatistics['total_revenue']) }}</td>
-                    <td>{{ round($totalStatistics['manual_revenue']) }}</td>
-                    <td>{{ round($totalStatistics['bot_revenue']) }}</td>
+                    <td>{{ number_format(round($totalStatistics['total_revenue']), 0 , ' ', ' ') }}</td>
+                    <td>{{ number_format(round($totalStatistics['manual_revenue']), 0 , ' ', ' ') }}</td>
+                    <td>{{ number_format (round($totalStatistics['bot_revenue']), 0 , ' ', ' ') }}</td>
                     <td>-</td>
                     <td>-</td>
                     <td>{{ $totalStatistics['unbooked_hours'] }}</td>

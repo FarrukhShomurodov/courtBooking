@@ -5,93 +5,116 @@
 
 @section('title')
     <title>{{'Findz - '. __('book.all_book') }}</title>
+    <style>
+        @media (max-width: 700px) {
+            .app-calendar-wrapper .app-calendar-sidebar {
+                z-index: 99999 !important;
+            }
+
+            .offcanvas {
+                z-index: 1000000 !important;
+            }
+        }
+    </style>
 @endsection
 
 @section('content')
-    <div class="container-xxl flex-grow-1 container-p-y">
-        @if ($errors->any())
-            <div class="alert alert-solid-danger" role="alert">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </div>
-        @endif
-        <div class="card app-calendar-wrapper">
-            <div class="row g-0">
-                <div class="col app-calendar-sidebar" id="app-calendar-sidebar">
-                    <div class="border-bottom p-4 my-sm-0 mb-3">
-                        <div class="d-grid">
-                            <a href="{{ route('all-bookings') }}" class="btn btn-primary btn-toggle-sidebar"
-                               style="color: white">
-                                <span class="align-middle">{{ __('book.all_book') }}</span>
-                            </a>
-                            <button class="btn btn-primary btn-toggle-sidebar mt-1" data-bs-toggle="offcanvas"
-                                    data-bs-target="#addEventSidebar" aria-controls="addEventSidebar">
-                                <i class="bx bx-plus me-1"></i>
-                                <span class="align-middle">{{ __('book.add_book') }}</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <div class="ms-n2">
-                            <div class="inline-calendar"></div>
-                        </div>
+    {{--    <div class="container-xxl flex-grow-1 container-p-y">--}}
+    @if ($errors->any())
+        <div class="alert alert-solid-danger" role="alert">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </div>
+    @endif
+    <div class="card app-calendar-wrapper">
+        <div class="row g-0">
+            <div class="col app-calendar-sidebar" id="app-calendar-sidebar">
+                <div class="border-bottom p-4 my-sm-0 mb-3">
+                    <div class="d-grid">
+                        <a href="{{ route('all-bookings') }}" class="btn btn-primary btn-toggle-sidebar"
+                           style="color: white">
+                            <span class="align-middle">{{ __('book.all_book') }}</span>
+                        </a>
+                        <button class="btn btn-primary btn-toggle-sidebar mt-1" data-bs-toggle="offcanvas"
+                                data-bs-target="#addEventSidebar" aria-controls="addEventSidebar">
+                            <i class="bx bx-plus me-1"></i>
+                            <span class="align-middle">{{ __('book.add_book') }}</span>
+                        </button>
                     </div>
                 </div>
-                <div class="col app-calendar-content">
-                    <div class="card" style="box-shadow: 0 0 0 !important">
-                        <div class="card-body" style="padding: 0 !important;">
-                            <div class="table-responsive text-nowrap">
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th>{{ __('book.time') }}</th>
-                                        @foreach($courts as $court)
-                                            <th data-court-id="{{ $court->id }}">{{ $court->name }}</th>
-                                        @endforeach
-                                    </tr>
-                                    </thead>
-
-                                    <tbody class="table-border-bottom-0">
-                                    @for ($i = 0; $i < 24; $i++)
-                                        <tr>
-                                            <td>{{ sprintf('%02d:00', $i) }}</td>
-                                            @foreach($courts as $court)
-                                                @php
-                                                    $bookingId = 0;
-                                                    $hasBooking = false;
-                                                    $isPaid = false;
-                                                    $currentTime = Carbon::createFromTime($i, 0, 0);
-                                                    foreach($court->bookings as $booking){
-                                                        if (Carbon::parse($booking->date)->isToday()) {
-                                                            $bookingStartTime = Carbon::parse($booking->start_time);
-                                                            $bookingEndTime = Carbon::parse($booking->end_time);
-                                                            if ($currentTime->equalTo($bookingStartTime)) {
-                                                                $hasBooking = true;
-                                                                $bookingId = $booking->id;
-                                                                $isPaid = $booking->status === 'paid';
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-                                                @endphp
-                                                <td style="padding: 0px !important;" data-court-id="{{$court->id}}">
-                                                    <div class=" @if($hasBooking) booking-cell @endif"
-                                                         data-booking-id="{{$bookingId}}"
-                                                         data-bs-toggle="tooltip"
-                                                         title="{{ $hasBooking ? $booking->full_name : '' }}"
-                                                         style="width: 100%; height: 43.5px; @if($hasBooking && $isPaid) background-color: #006400; @elseif($hasBooking && !$isPaid) background-color: #ff294d; @endif"></div>
-                                                </td>
-                                            @endforeach
-                                        </tr>
-                                    @endfor
-                                    </tbody>
-                                </table>
+                <div class="p-4">
+                    <div class="ms-n2">
+                        <div class="inline-calendar"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col app-calendar-content">
+                <div class="card shadow-none border-0">
+                    <div class="card-body pb-0" style="padding: 0 !important;">
+                        <div class="fc-header-toolbar fc-toolbar ">
+                            <div class="fc-toolbar-chunk">
+                                <div class="fc-button-group">
+                                    <button class="btn btn-toggle-sidebar mt-1 d-lg-none d-inline-block" data-bs-toggle="offcanvas"
+                                            data-overlay=""
+                                            data-bs-target="#app-calendar-sidebar" aria-controls="app-calendar-sidebar">
+                                        <i class="bx bx-menu me-1"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                        <div class="table-responsive text-nowrap">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>{{ __('book.time') }}</th>
+                                    @foreach($courts as $court)
+                                        <th data-court-id="{{ $court->id }}">{{ $court->name }}</th>
+                                    @endforeach
+                                </tr>
+                                </thead>
+
+                                <tbody class="table-border-bottom-0">
+                                @for ($i = 0; $i < 24; $i++)
+                                    <tr>
+                                        <td>{{ sprintf('%02d:00', $i) }}</td>
+                                        @foreach($courts as $court)
+                                            @php
+                                                $bookingId = 0;
+                                                $hasBooking = false;
+                                                $isPaid = false;
+                                                $currentTime = Carbon::createFromTime($i, 0, 0);
+                                                foreach($court->bookings as $booking){
+                                                    if (Carbon::parse($booking->date)->isToday()) {
+                                                        $bookingStartTime = Carbon::parse($booking->start_time);
+                                                        $bookingEndTime = Carbon::parse($booking->end_time);
+                                                        if ($currentTime->equalTo($bookingStartTime)) {
+                                                            $hasBooking = true;
+                                                            $bookingId = $booking->id;
+                                                            $isPaid = $booking->status === 'paid';
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            @endphp
+                                            <td style="padding: 0px !important;" data-court-id="{{$court->id}}">
+                                                <div class=" @if($hasBooking) booking-cell @endif"
+                                                     data-booking-id="{{$bookingId}}"
+                                                     data-bs-toggle="tooltip"
+                                                     title="{{ $hasBooking ? $booking->full_name : '' }}"
+                                                     style="width: 100%; height: 43.5px; @if($hasBooking && $isPaid) background-color: #006400; @elseif($hasBooking && !$isPaid) background-color: #ff294d; @endif"></div>
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                @endfor
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
                     <div class="app-overlay"></div>
-                    <div class="offcanvas offcanvas-end event-sidebar" tabindex="-1" id="addEventSidebar"
+                    <div class="offcanvas offcanvas-end event-sidebar" data-bs-backdrop="false" tabindex="-1"
+                         id="addEventSidebar"
                          aria-labelledby="addEventSidebarLabel">
                         <div class="offcanvas-header border-bottom d-flex align-items-center align-content-center">
                             <h5 id="modalDateTitle">{{ __('book.add_book') }}</h5>
@@ -181,36 +204,37 @@
                             </form>
                         </div>
                     </div>
+
                 </div>
             </div>
+        </div>
 
-            <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="bookingModalLabel">{{  __('book.book_details') }}</h5>
-                        </div>
-                        <div class="modal-body">
-                            <p><strong>ID:</strong> <span id="bookingId"></span></p>
-                            <p><strong>{{ __('book.fio') }}:</strong> <span id="bookingFullName"></span></p>
-                            <p><strong>{{ __('book.phone_number') }}:</strong> <span id="bookingPhoneNumber"></span></p>
-                            <p><strong>{{ __('book.date') }}:</strong> <span id="bookingDateInfo"></span></p>
-                            <p><strong>{{ __('book.start_time') }}:</strong> <span id="bookingStartTime"></span></p>
-                            <p><strong>{{ __('book.end_time') }}:</strong> <span id="bookingEndTime"></span></p>
-                            <p><strong>{{ __('book.source') }}:</strong> <span id="bookingSource"></span></p>
-                            <p><strong>{{__('book.status')}}:</strong> <span id="bookingStatus"></span></p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">{{ __('book.close') }}</button>
-                        </div>
+        <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bookingModalLabel">{{  __('book.book_details') }}</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>ID:</strong> <span id="bookingId"></span></p>
+                        <p><strong>{{ __('book.fio') }}:</strong> <span id="bookingFullName"></span></p>
+                        <p><strong>{{ __('book.phone_number') }}:</strong> <span id="bookingPhoneNumber"></span></p>
+                        <p><strong>{{ __('book.date') }}:</strong> <span id="bookingDateInfo"></span></p>
+                        <p><strong>{{ __('book.start_time') }}:</strong> <span id="bookingStartTime"></span></p>
+                        <p><strong>{{ __('book.end_time') }}:</strong> <span id="bookingEndTime"></span></p>
+                        <p><strong>{{ __('book.source') }}:</strong> <span id="bookingSource"></span></p>
+                        <p><strong>{{__('book.status')}}:</strong> <span id="bookingStatus"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">{{ __('book.close') }}</button>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
+    {{--    </div>--}}
 @endsection
 
 @section('scripts')

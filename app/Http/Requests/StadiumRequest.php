@@ -56,4 +56,22 @@ class StadiumRequest extends FormRequest
             ],
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'name' => 'Название стадиона',
+            'description' => 'Описание',
+            'address' => 'Адрес',
+            'map_link' => 'Ссылка на карту',
+            'sport_types' => 'Типы спорта',
+            'sport_types.*' => 'Тип спорта',
+            'photos' => 'Фотографии',
+            'photos.*' => 'Фотография',
+            'is_active' => 'Активен',
+            'owner_id' => 'Владелец',
+            'manager_id' => 'Менеджер',
+            'coach_id' => 'Тренер',
+        ];
+    }
 }

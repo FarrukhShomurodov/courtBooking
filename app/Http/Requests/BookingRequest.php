@@ -44,4 +44,19 @@ class BookingRequest extends FormRequest
             'source' => 'required|string|in:manual',
         ];
     }
+    public function attributes(): array
+    {
+        return [
+            'court_id' => 'Корт',
+            'user_id' => 'Пользователь',
+            'full_name' => 'Полное имя',
+            'phone_number' => 'Номер телефона',
+            'price' => 'Цена',
+            'date' => 'Дата',
+            'start_time' => 'Время начала',
+            'end_time' => 'Время окончания',
+            'source' => 'Источник',
+        ];
+    }
+
 }

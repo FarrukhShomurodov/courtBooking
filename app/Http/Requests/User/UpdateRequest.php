@@ -38,4 +38,19 @@ class UpdateRequest extends FormRequest
             return $input->role_id == 3;
         });
     }
+
+    public function attributes(): array
+    {
+        return [
+            'name' => 'Имя',
+            'second_name' => 'Фамилия',
+            'login' => 'Логин',
+            'role_id' => 'Роль',
+            'avatar' => 'Аватар',
+            'password' => 'Пароль',
+            'price_for_coach' => 'Цена для тренера',
+            'sport_types' => 'Типы спорта',
+            'description' => 'Описание',
+        ];
+    }
 }

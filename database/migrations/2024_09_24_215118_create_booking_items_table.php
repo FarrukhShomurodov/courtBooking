@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->time('end_time');
             $table->enum('source', ['bot', 'manual']);
             $table->enum('status', ['pending', 'paid', 'canceled'])->default('pending');
+            $table->boolean('is_edit')->default(false);
             $table->timestamps();
         });
     }

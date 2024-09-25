@@ -39,4 +39,5 @@ return [
     'do_not_edit_book' => 'O\'zgartirish mumkin emas',
     'edit_book_info' => 'Zirhni 24 soatdan kamroq vaqt ichida ko\'chirish mumkin emas.',
     'no_slot' => 'Uyasi yo\'q',
+    'can_not_edit_book_more_one' => 'Bronni bir martadan ortiq o‘zgartira olmaysiz.',
 ];

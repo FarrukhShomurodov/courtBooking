@@ -24,47 +24,59 @@
 
     <div class="container_mobile">
         <div class="content">
-            @foreach($bookings as $booking)
-                <div class="stadiums mt-30">
-                    @if($booking->court->stadium->photos)
-                        <div class="court_images">
-                            <div class="scroll-container">
-                                @foreach(json_decode($booking->court->stadium->photos) as $photo)
-                                    <div><img class="stadium_image"
-                                              src="{{\Illuminate\Support\Facades\Storage::url($photo)}}"
-                                              alt="court photo"/></div>
-                                @endforeach
+            @foreach($bookings as $bookingItems)
+                @foreach($bookingItems->bookingItems()->where('status', 'paid')->get() as $booking)
+                    <div class="stadiums mt-30">
+                        @if($booking->court->stadium->photos)
+                            <div class="court_images">
+                                <div class="scroll-container">
+                                    @foreach(json_decode($booking->court->stadium->photos) as $photo)
+                                        <div><img class="stadium_image"
+                                                  src="{{\Illuminate\Support\Facades\Storage::url($photo)}}"
+                                                  alt="court photo"/></div>
+                                    @endforeach
+                                </div>
                             </div>
+                        @endif
+
+                        @php
+                            $bookingDateTime = Carbon\Carbon::parse($booking->date . ' ' . $booking->start_time);
+                            $now = Carbon\Carbon::now();
+
+                            $hoursRemaining = $now->diffInHours($bookingDateTime, false);
+                        @endphp
+                        <div class="stadium_desc mt-15">
+                            <p>{{ substr($booking->start_time, 0, 5) }} - {{ substr($booking->end_time, 0, 5) }} | {{ $booking->date}}</p>
+                            <p>{{ $booking->court->stadium->name }}, {{  $booking->court->name }}</p>
+                            <span>{{ round($booking->price) / 1000 }} {{ __('findz/book.currency') }}</span>
+                            <span>{{ $booking->court->stadium->address }}</span>
+                            @if($hoursRemaining <= 24)
+                                <i>{{ __('findz/book.edit_book_info') }}</i>
+                            @endif
+                            @if($booking->is_edit)
+                                <i>{{ __('findz/book.can_not_edit_book_more_one') }}</i>
+                            @endif
                         </div>
-                    @endif
+                        <button class="cancel-btn">
+                            @if($hoursRemaining >= 24)
+                                @if($booking->is_edit)
+                                    <a style="color: #585864;  cursor: not-allowed;">
+                                        {{ __('findz/book.do_not_edit_book') }}
+                                    </a>
+                                @else
+                                    <a href="{{ route('book.edit', ['booking' => $booking->id, 'sportType' => $currentSportTypeId]) }}">
+                                        {{ __('findz/book.edit_book') }}
+                                    </a>
+                                @endif
 
-                    @php
-                        $bookingDateTime = Carbon\Carbon::parse($booking->date . ' ' . $booking->start_time);
-                        $now = Carbon\Carbon::now();
-
-                        $hoursRemaining = $now->diffInHours($bookingDateTime, false);
-                    @endphp
-                    <div class="stadium_desc mt-15">
-                        <p>{{ $booking->start_time }} - {{  $booking->end_time}} | {{ $booking->date}}</p>
-                        <p>{{ $booking->court->stadium->name }}, {{  $booking->court->name }}</p>
-                        <span>{{ round($booking->price) / 1000 }} {{ __('findz/book.currency') }}</span>
-                        <span>{{ $booking->court->stadium->address }}</span>
-                        @if($hoursRemaining <= 24)
-                            <i>{{ __('findz/book.edit_book_info') }}</i>
-                        @endif
+                            @else
+                                <a style="color: #585864;  cursor: not-allowed;">
+                                    {{ __('findz/book.do_not_edit_book') }}
+                                </a>
+                            @endif
+                        </button>
                     </div>
-                    <button class="cancel-btn">
-                        @if($hoursRemaining >= 24)
-                            <a href="{{ route('book.edit',$booking->id,[ 'sportType' => $currentSportTypeId]) }}">
-                                {{ __('findz/book.edit_book') }}
-                            </a>
-                        @else
-                            <a style="color: #585864;  cursor: not-allowed;">
-                                {{ __('findz/book.do_not_edit_book') }}
-                            </a>
-                        @endif
-                    </button>
-                </div>
+                @endforeach
             @endforeach
         </div>
     </div>

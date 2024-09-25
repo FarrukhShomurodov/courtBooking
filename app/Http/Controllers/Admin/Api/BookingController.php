@@ -94,7 +94,7 @@ class BookingController extends Controller
     }
 
 
-    public function update(Booking $booking, UpdateBookingRequest $request): JsonResponse
+    public function update(BookingItem $booking, UpdateBookingRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
@@ -102,14 +102,18 @@ class BookingController extends Controller
             return response()->json(['message' => 'Пожалуйста, выберите только один слот.'], 422);
         }
 
-        // Проверяем, что время не изменилось
         foreach ($validated['slots'] as $slot) {
+
+            if (round($booking->price) === $slot['price'] * 1000) return response()->json(['message' => 'Пожалуйста, выберите другое время, так как указанная цена не соответствует вашему выбору.'], 422);
+            if ($booking->is_edit) return response()->json(['message' => 'Вы не можете изменить бронь более одного раза.'], 422);
+
             $booking->update([
-                'date' => $validated['date'],
+                'date' => $slot['date'],
                 'full_name' => $validated['full_name'],
                 'phone_number' => $validated['phone_number'],
-                'price' => $slot['price'] * 1000,
-                'source' => $validated['source'],
+                'start_time' => $slot['start'],
+                'end_time' => $slot['end'],
+                'is_edit' => true,
             ]);
         }
 

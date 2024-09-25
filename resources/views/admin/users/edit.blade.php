@@ -6,7 +6,8 @@
 
 @section('content')
     <h6 class="py-3 breadcrumb-wrapper mb-4">
-        <span class="text-muted fw-light"><a class="text-muted" href="{{route('users.index')}}">{{  __('menu.Пользователи') }}</a> /</span>{{ __('user.Редактировать пользователя') }}
+        <span class="text-muted fw-light"><a class="text-muted"
+                                             href="{{route('users.index')}}">{{  __('menu.Пользователи') }}</a> /</span>{{ __('user.Редактировать пользователя') }}
     </h6>
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -26,12 +27,14 @@
                 <div class="mb-3">
                     <label class="form-label" for="basic-default-fullname">{{  __('user.Имя') }} *</label>
                     <input type="text" name="name" class="form-control"
-                           id="basic-default-fullname" placeholder="{{  __('user.Имя') }}" value="{{ $user->name }}" required>
+                           id="basic-default-fullname" placeholder="{{  __('user.Имя') }}" value="{{ $user->name }}"
+                           required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="basic-default-fullname">{{  __('user.Фамилия') }} *</label>
                     <input type="text" name="second_name" class="form-control"
-                           id="basic-default-fullname" placeholder="{{  __('user.Фамилия') }}" value="{{ $user->second_name }}" required>
+                           id="basic-default-fullname" placeholder="{{  __('user.Фамилия') }}"
+                           value="{{ $user->second_name }}" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="basic-default-message">{{  __('user.Логин') }} *</label>
@@ -45,7 +48,22 @@
                                 type="button" id="roleDropdown" data-bs-toggle="dropdown" aria-expanded="false"
                                 style="border: 1px solid #d4d8dd; padding: .535rem 1.375rem .535rem .75rem;">
                             @if(isset($user->roles[0]))
-                                {{ $user->roles[0]->name }}
+                                @php
+                                    switch ($user->roles[0]->name ){
+                                          case 'stadium manager':
+                                             echo "Администратор стадиона";
+                                              break;
+                                          case 'admin':
+                                          echo"Findz";
+                                              break;
+                                          case 'owner stadium':
+                                          echo "Владелец стадиона";
+                                              break;
+                                          case 'trainer':
+                                            echo "Тренер";
+                                              break;
+                                    }
+                                @endphp
                             @else
                                 {{  __('user.Выбрать роль') }}
                             @endif
@@ -53,7 +71,26 @@
                         <ul class="dropdown-menu w-100" aria-labelledby="roleDropdown">
                             @foreach($roles as $role)
                                 <li><a class="dropdown-item" href="#"
-                                       data-value="{{ $role->id }}">{{ $role->name }}</a></li>
+                                       data-value="{{ $role->id }}">
+                                        @php
+                                            $newRoleNam = '';
+                                            switch ($role->name){
+                                                  case 'stadium manager':
+                                                      $newRoleNam = "Администратор стадиона";
+                                                      break;
+                                                  case 'admin':
+                                                  $newRoleNam = "Findz";
+                                                      break;
+                                                  case 'owner stadium':
+                                                  $newRoleNam = "Владелец стадиона";
+                                                      break;
+                                                  case 'trainer':
+                                                  $newRoleNam = "Тренер";
+                                                      break;
+                                            }
+                                        @endphp
+                                        {{ $newRoleNam }}
+                                    </a></li>
                             @endforeach
                         </ul>
                         <input type="hidden" name="role_id" id="roleInput" value="{{ $user->roles[0]->id }}">
@@ -124,7 +161,7 @@
 @section('scripts')
     <script>
 
-        @if( $user->roles[0]->id === 4)
+        @if( $user->roles[0]->id === 3)
         $('.price_for_coach').show();
         $('.sport_types_for_coach').show();
         $('.coach_desc').show();
@@ -175,7 +212,7 @@
 
         $('#roleDropdown').next('.dropdown-menu').on('click', '.dropdown-item', function (e) {
             e.preventDefault();
-            if ($(this).data('value') === 4) {
+            if ($(this).data('value') === 3) {
                 $('.price_for_coach').show();
                 $('.sport_types_for_coach').show();
                 $('.coach_desc').show();

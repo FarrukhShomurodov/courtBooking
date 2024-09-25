@@ -224,8 +224,18 @@ footer ul li a {
 }
 
 .slick-dots {
-    bottom: 10px;
+    position: absolute;
+    bottom: -25px;
+    display: block;
+    width: 100%;
+    height: 20px !important;
+    overflow: hidden !important;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: center;
 }
+
 
 .slick-dots li button:before {
     color: white !important;

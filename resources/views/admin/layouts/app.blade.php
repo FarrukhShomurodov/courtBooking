@@ -14,11 +14,6 @@
     <meta name="description" content="Start your development with a Dashboard for Bootstrap 5"/>
     <meta name="keywords"
           content="dashboard, bootstrap 5 dashboard, bootstrap 5 admin, bootstrap 5 design, bootstrap 5">
-    <!-- Canonical SEO -->
-    <link rel="canonical" href="https://1.envato.market/frest_admin">
-
-
-    <!-- End Google Tag Manager -->
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}"/>
@@ -63,15 +58,6 @@
 </head>
 
 <body>
-
-
-<!-- ?PROD Only: Google Tag Manager (noscript) (Default ThemeSelection: GTM-5DDHKGP, PixInvent: GTM-5J3LMKC) -->
-<noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5DDHKGP" height="0" width="0"
-            style="display: none; visibility: hidden"></iframe>
-</noscript>
-<!-- End Google Tag Manager (noscript) -->
-
 <!-- Layout wrapper -->
 <div class="layout-wrapper layout-content-navbar  ">
     <div class="layout-container">
@@ -137,9 +123,6 @@
 
 @yield('scripts')
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-{{--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>--}}
 </body>
 
 </html>
-
-<!-- beautify ignore:end -->
