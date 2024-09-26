@@ -42,7 +42,7 @@ class AuthController extends Controller
         if ($user->hasRole('admin')) {
             return redirect()->route('dashboard');
         } elseif ($user->hasRole('owner stadium')) {
-            if (Auth::user()->stadiumOwner->count() > 0) {
+            if (Auth::user()->stadiumOwner) {
                 if (Auth::user()->stadiumOwner->is_active == 1) {
                     return redirect()->route('dashboard');
                 } else {
