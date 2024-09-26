@@ -66,7 +66,7 @@ Route::group(['middleware' => 'auth'], function () {
 // Telegram
 Route::prefix('telegram')->group(function () {
     Route::get('/webhook', function () {
-        $telegram = new \Telegram\Bot\Api(config('telegram.bot_token'));
+        $telegram = new \Telegram\Bot\Api(config('telegram.bot_token.token'));
         $hook = $telegram->setWebhook(['url' => env('TELEGRAM_WEBHOOK_URL')]);
         dd($hook);
     });
