@@ -52,8 +52,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-12 mb-3">
+        @endrole
 
+        <div class="col-lg-4 col-12 mb-3">
             <div class="card border-0 text-center">
                 <div class="card-body p-3">
                     <h3 class="mb-1">{{ $statistics['stadium_count'] }}</h3>
@@ -74,23 +75,8 @@
                 </div>
             </div>
         </div>
-        @endrole
-
 
         <div class="col-lg-4 col-12 mb-3">
-            @role('owner stadium')
-                <div class="card border-0 text-center mb-3">
-                    <div class="card-body p-3">
-                        <h3 class="mb-1">{{ $statistics['court_count'] }}</h3>
-                        <p class="mb-2 text-muted">{{ __('dashboard.Корты') }}</p>
-                        <a class="btn btn-outline-primary btn-sm" href="{{ route('statistics.courts') }}">
-                            {{ __('dashboard.view_court_statistics') }}
-                        </a>
-                    </div>
-                </div>
-            @endrole
-
-
             <div class="card border-0 text-center">
                 <div class="card-body p-3">
                     <p class="mb-1 text-muted">{{ __('dashboard.Брони') }}</p>
