@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin\Api;
 use App\Http\Controllers\Controller;
 use App\Models\BookingItem;
 use App\Models\Court;
-use App\Models\Booking;
 use App\Models\Stadium;
 use App\Traits\BookingTrait;
 use App\Traits\PhotoTrait;
@@ -94,6 +93,10 @@ class CourtController extends Controller
         $validated = $request->validate([
             'is_active' => 'required|boolean',
         ]);
+
+        if (!$court->stadium->is_active) {
+            return response()->json(['error' => 'Невозможно активировать корт, так как стадион не активный.'], 422);
+        }
 
         if ($validated['is_active'] == 0 && $this->courtHasBookings($court)) {
             return response()->json(['error' => 'Невозможно деактивировать корт, так как имеются активные бронирования.'], 422);
