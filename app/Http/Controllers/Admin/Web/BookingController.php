@@ -35,7 +35,13 @@ class BookingController extends Controller
             }
         }  elseif (Auth::user()->roles()->first()->name == 'trainer') {
             if (Auth::user()->coach()->count() > 0) {
-                $courts = Auth::user()->coach->stadium->courts()->where('is_active', true)->get()->load('schedules');
+                if(Auth::user()->coach->stadium()->where('is_active', 1)->count() > 1){
+                    $courts = Auth::user()->coach->stadium->courts()->where('is_active', true)->get()->load('schedules');
+
+                }else{
+                    Auth::logout();
+                    return redirect()->route('login')->withErrors(['error' => 'Стадион к которому вы преклеплены не активен.']);
+                }
             } else {
                 Auth::logout();
                 return redirect()->route('login')->withErrors(['error' => 'Вы не прикреплены ни к одному стадиону.']);
