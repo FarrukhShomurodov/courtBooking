@@ -44,6 +44,13 @@ class StadiumController extends Controller
 
         $stadium->update(['is_active' => $validated['is_active']]);
 
+        if ($validated['is_active'] === false) {
+            foreach ($stadium->courts() as $court) {
+                $court->update(['is_active' => $validated['is_active']]);
+            }
+        }
+
+
         return response()->json([], 200);
     }
 }
