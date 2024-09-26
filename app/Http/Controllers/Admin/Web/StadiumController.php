@@ -80,7 +80,7 @@ class StadiumController extends Controller
         $validated = $request->validated();
 
         if ($validated['is_active'] == 0 && $this->stadiumHasBookings($stadium)) {
-            return redirect()->route('stadiums.create')->withErrors('Невозможно деактивировать стадион, так как у кортов есть активные бронирования.');
+            return redirect()->route('stadiums.create')->withErrors(__('validation.cannot_inactive_stadium_due_to_has_book'));
         }
 
         $this->stadiumService->update($stadium, $validated);
@@ -90,7 +90,7 @@ class StadiumController extends Controller
     public function destroy(Stadium $stadium): RedirectResponse
     {
         if ($this->stadiumHasBookings($stadium)) {
-            return redirect()->route('stadiums.index')->withErrors('Невозможно удалить стадион, так как у кортов есть активные бронирования.');
+            return redirect()->route('stadiums.index')->withErrors(__('validation.cannot_delete_stadium_due_to_has_book'));
         }
         $this->stadiumService->destroy($stadium);
         return redirect()->route('stadiums.index');

@@ -20,8 +20,8 @@ class ScheduleController extends Controller
             'court_id' => 'required|integer|exists:courts,id',
             'date' => 'required|date'
         ], [
-            'court_id.required' => 'Поле корт обязательно для заполнения.',
-            'date.required' => 'Поле дата обязательно для заполнения.',
+            'court_id.required' => __('validation.required', ['attribute' => 'court']),
+            'date.required' => __('validation.required', ['attribute' => 'date']),
         ]);
 
         $court = Court::find($validated['court_id']);
@@ -29,7 +29,7 @@ class ScheduleController extends Controller
         $schedules = $court->schedules;
 
         if ($schedules->isEmpty()) {
-            return response()->json(['message' => 'Невозможно выбрать корт, так как не имеются расписание.'], 422);
+            return response()->json(['message' => __('validation.cannot_select_cort_due_to_has_schedule')], 422);
         }
 
         $availableSchedules = $this->filterAvailableSchedules($schedules, $bookings);
@@ -44,10 +44,10 @@ class ScheduleController extends Controller
             'start_time' => 'required|date_format:H:i:s',
             'end_time' => 'required|date_format:H:i:s|after:start_time',
         ], [
-            'court_id.required' => 'Поле корт обязательно для заполнения.',
-            'start_time.required' => 'Поле время начала обязательно для заполнения.',
-            'end_time.required' => 'Поле время окончания обязательно для заполнения.',
-            'end_time.after' => 'Время окончания должно быть позже времени начала.',
+            'court_id.required' => __('validation.required', ['attribute' => __('validation.attributes.court_id')]),
+            'start_time.required' => __('validation.required', ['attribute' => __('validation.attributes.start_time')]),
+            'end_time.required' => __('validation.required', ['attribute' => __('validation.attributes.end_time')]),
+            'end_time.after' => __('validation.end_time.after'),
         ]);
 
 
@@ -61,7 +61,7 @@ class ScheduleController extends Controller
             ->exists();
 
         if (!$scheduleExists) {
-            return response()->json(['message' => 'No schedule found with the given start time'], 422);
+            return response()->json(['message' => __('validation.no_schedule_found_with_the_given_start_time')], 422);
         }
 
         $schedules = Schedule::query()

@@ -66,7 +66,7 @@ class BookingController extends Controller
 //                    ->exists();
 
                 if ($isAvailable) {
-                    throw new \Exception('В указанное время корт недоступен.');
+                    throw new \Exception(__('validation.court_unvalible'));
                 }
 
                 $bookItem = $booking->bookingItems()->create([
@@ -91,7 +91,7 @@ class BookingController extends Controller
         });
 
         return response()->json([
-            'message' => 'Booking successful',
+            'message' => __('validation.book_succ_saved'),
             'total_sum' => $totalSum,
             'booking_id' => $bookingId
         ], 200);
@@ -103,13 +103,12 @@ class BookingController extends Controller
         $validated = $request->validated();
 
         if (count($validated['slots']) > 1) {
-            return response()->json(['message' => 'Пожалуйста, выберите только один слот.'], 422);
+            return response()->json(['message' => __('validation.select_one_slot')], 422);
         }
 
         foreach ($validated['slots'] as $slot) {
-
-            if (round($booking->price) === $slot['price'] * 1000) return response()->json(['message' => 'Пожалуйста, выберите другое время, так как указанная цена не соответствует вашему выбору.'], 422);
-            if ($booking->is_edit) return response()->json(['message' => 'Вы не можете изменить бронь более одного раза.'], 422);
+            if (round($booking->price) === $slot['price'] * 1000) return response()->json(['message' => __('validation.select_another_slot')], 422);
+            if ($booking->is_edit) return response()->json(['message' => __('validation.no_more_one')], 422);
 
             $booking->update([
                 'date' => $slot['date'],
@@ -121,7 +120,7 @@ class BookingController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Бронирование успешно обновлено.'], 200);
+        return response()->json(['message' => __('validation.book_succ_updated')], 200);
     }
 
 }
