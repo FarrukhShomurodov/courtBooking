@@ -576,7 +576,7 @@
 
                     @if($isUpdate)
                     if({{ round($userBook->price) / 1000 }} !== price){
-                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>{{ __('validation.select_another_slot') }}</li></div>`;
+                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>{{ __('errors.select_another_slot') }}</li></div>`;
                         $('.res_error').empty();
                         $('.res_error').empty();
                         $('.res_error').append(errorHtml);
@@ -678,7 +678,7 @@
 
                             @if($isUpdate)
                                 if(savedSlots.length > 1){
-                                    let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>{{ __('validation.select_one_slot') }}</li></div>`;
+                                    let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>{{ __('errors.select_one_slot') }}</li></div>`;
                                     $('.res_error').empty();
                                     $('.res_error').empty();
                                     $('.res_error').append(errorHtml);
@@ -725,7 +725,7 @@
                             @endif
                         } else {
                             console.log('Ошибка: пользователь не найден');
-                            let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>{{ __('validation.user_not_found') }}</li></div>`;
+                            let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>{{ __('errors.user_not_found') }}</li></div>`;
                             $('.res_error').empty();
                             $('.res_error').append(errorHtml);
                             $('#error_modal').fadeIn().delay(5000).fadeOut();
@@ -734,7 +734,7 @@
                     error: function (err) {
                         console.log('Ошибка при получении данных пользователя', err);
                         let errors = err.responseJSON.message;
-                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>{{ __('validation.error_user_data')}}</li></div>`;
+                        let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>{{ __('errors.error_user_data')}}</li></div>`;
                         $('.res_error').empty();
                         $('.res_error').append(errorHtml);
                         $('#error_modal').fadeIn().delay(5000).fadeOut();

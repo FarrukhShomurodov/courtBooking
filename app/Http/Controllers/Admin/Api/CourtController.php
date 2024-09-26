@@ -95,11 +95,11 @@ class CourtController extends Controller
         ]);
 
         if (!$court->stadium->is_active) {
-            return response()->json(['error' => __('validation.cannot_active_cort_due_to_stadium')], 422);
+            return response()->json(['error' => __('errors.cannot_active_cort_due_to_stadium')], 422);
         }
 
         if ($validated['is_active'] == 0 && $this->courtHasBookings($court)) {
-            return response()->json(['error' => __('validation.cannot_inactive_cort_due_to_has_book')], 422);
+            return response()->json(['error' => __('errors.cannot_inactive_cort_due_to_has_book')], 422);
         }
 
         $court->update(['is_active' => $validated['is_active']]);

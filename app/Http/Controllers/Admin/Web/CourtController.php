@@ -58,7 +58,7 @@ class CourtController extends Controller
         $validated = $request->validated();
 
         if ($validated['is_active'] == 0 && $this->courtHasBookings($court)) {
-            return redirect()->route('courts.create')->withErrors(__('validation.cannot_inactive_cort_due_to_has_book'));
+            return redirect()->route('courts.create')->withErrors(__('errors.cannot_inactive_cort_due_to_has_book'));
         }
 
         $this->courtService->update($court, $validated);
@@ -68,7 +68,7 @@ class CourtController extends Controller
     public function destroy(Court $court): RedirectResponse
     {
         if ($this->courtHasBookings($court)) {
-            return redirect()->route('courts.index')->withErrors(__('validation.cannot_delete_cort_due_to_has_book'));
+            return redirect()->route('courts.index')->withErrors(__('errors.cannot_delete_cort_due_to_has_book'));
         }
         $this->courtService->destroy($court);
         return redirect()->route('courts.index');

@@ -66,7 +66,7 @@ class BookingController extends Controller
 //                    ->exists();
 
                 if ($isAvailable) {
-                    throw new \Exception(__('validation.court_unvalible'));
+                    throw new \Exception(__('errors.court_unvalible'));
                 }
 
                 $bookItem = $booking->bookingItems()->create([
@@ -91,7 +91,7 @@ class BookingController extends Controller
         });
 
         return response()->json([
-            'message' => __('validation.book_succ_saved'),
+            'message' => __('errors.book_succ_saved'),
             'total_sum' => $totalSum,
             'booking_id' => $bookingId
         ], 200);
@@ -103,12 +103,12 @@ class BookingController extends Controller
         $validated = $request->validated();
 
         if (count($validated['slots']) > 1) {
-            return response()->json(['message' => __('validation.select_one_slot')], 422);
+            return response()->json(['message' => __('errors.select_one_slot')], 422);
         }
 
         foreach ($validated['slots'] as $slot) {
-            if (round($booking->price) === $slot['price'] * 1000) return response()->json(['message' => __('validation.select_another_slot')], 422);
-            if ($booking->is_edit) return response()->json(['message' => __('validation.no_more_one')], 422);
+            if (round($booking->price) === $slot['price'] * 1000) return response()->json(['message' => __('errors.select_another_slot')], 422);
+            if ($booking->is_edit) return response()->json(['message' => __('errors.no_more_one')], 422);
 
             $booking->update([
                 'date' => $slot['date'],
@@ -120,7 +120,7 @@ class BookingController extends Controller
             ]);
         }
 
-        return response()->json(['message' => __('validation.book_succ_updated')], 200);
+        return response()->json(['message' => __('errors.book_succ_updated')], 200);
     }
 
 }

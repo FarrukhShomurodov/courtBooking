@@ -39,7 +39,7 @@ class StadiumController extends Controller
         ]);
 
         if ($validated['is_active'] == 0 && $this->stadiumHasBookings($stadium)) {
-            return response()->json(['error' => __('validation.cannot_inactive_stadium_due_to_has_book')], 422);
+            return response()->json(['error' => __('errors.cannot_inactive_stadium_due_to_has_book')], 422);
         }
 
         $stadium->update(['is_active' => $validated['is_active']]);

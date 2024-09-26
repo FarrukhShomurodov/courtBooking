@@ -31,11 +31,11 @@ class BookingController extends Controller
                     $courts = Auth::user()->stadiumManager->courts()->where('is_active', true)->get()->load('schedules');
                 } else {
                     Auth::logout();
-                    return redirect()->route('login')->withErrors(['error' => __('validation.stadium_inactive')]);
+                    return redirect()->route('login')->withErrors(['error' => __('errors.stadium_inactive')]);
                 }
             } else {
                 Auth::logout();
-                return redirect()->route('login')->withErrors(['error' => __('validation.no_stadium_attached')]);
+                return redirect()->route('login')->withErrors(['error' => __('errors.no_stadium_attached')]);
             }
         } elseif (Auth::user()->roles()->first()->name == 'trainer') {
             if (Auth::user()->coach()->count() > 0) {
@@ -43,11 +43,11 @@ class BookingController extends Controller
                     $courts = Auth::user()->coach->stadium->courts()->where('is_active', true)->get()->load('schedules');
                 } else {
                     Auth::logout();
-                    return redirect()->route('login')->withErrors(['error' => __('validation.stadium_inactive')]);
+                    return redirect()->route('login')->withErrors(['error' => __('errors.stadium_inactive')]);
                 }
             } else {
                 Auth::logout();
-                return redirect()->route('login')->withErrors(['error' => __('validation.no_stadium_attached')]);
+                return redirect()->route('login')->withErrors(['error' => __('errors.no_stadium_attached')]);
             }
         } else {
             $courts = Court::query()->where('is_active', true)->get()->load('schedules');
@@ -122,10 +122,10 @@ class BookingController extends Controller
                         if ($hasBooking) {
                             $this->bookingService->delete($booking);
                         } else {
-                            return redirect()->route('all-bookings')->withErrors(__('validation.stadium_booking_not_found'));
+                            return redirect()->route('all-bookings')->withErrors(__('errors.stadium_booking_not_found'));
                         }
                     } else {
-                        return redirect()->route('all-bookings')->withErrors(__('validation.unauthorized_booking_delete'));
+                        return redirect()->route('all-bookings')->withErrors(__('errors.unauthorized_booking_delete'));
                     }
                     break;
 
@@ -140,10 +140,10 @@ class BookingController extends Controller
                         if ($hasBooking) {
                             $this->bookingService->delete($booking);
                         } else {
-                            return redirect()->route('all-bookings')->withErrors(__('validation.manager_booking_not_found'));
+                            return redirect()->route('all-bookings')->withErrors(__('errors.manager_booking_not_found'));
                         }
                     } else {
-                        return redirect()->route('all-bookings')->withErrors(__('validation.unauthorized_booking_delete'));
+                        return redirect()->route('all-bookings')->withErrors(__('errors.unauthorized_booking_delete'));
                     }
                     break;
 
@@ -158,20 +158,20 @@ class BookingController extends Controller
                         if ($hasBooking) {
                             $this->bookingService->delete($booking);
                         } else {
-                            return redirect()->route('all-bookings')->withErrors(__('validation.trainer_booking_not_found'));
+                            return redirect()->route('all-bookings')->withErrors(__('errors.trainer_booking_not_found'));
                         }
                     } else {
-                        return redirect()->route('all-bookings')->withErrors(__('validation.unauthorized_booking_delete'));
+                        return redirect()->route('all-bookings')->withErrors(__('errors.unauthorized_booking_delete'));
                     }
                     break;
 
                 default:
-                    return redirect()->route('all-bookings')->withErrors(__('validation.invalid_role'));
+                    return redirect()->route('all-bookings')->withErrors(__('errors.invalid_role'));
             }
 
-            return redirect()->route('all-bookings')->with('success', __('validation.booking_deleted'));
+            return redirect()->route('all-bookings')->with('success', __('errors.booking_deleted'));
         } else {
-            return redirect()->route('all-bookings')->withErrors(__('validation.bot_booking_error'));
+            return redirect()->route('all-bookings')->withErrors(__('errors.bot_booking_error'));
         }
     }
 
