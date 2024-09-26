@@ -510,6 +510,7 @@
                 }
 
                 const courtIds = JSON.parse(localStorage.getItem('courtIds')) || [];
+                console.log(courtIds);
                 const filteredSlots = savedSlots.filter(slot => courtIds.includes(slot.court_id));
 
                 filteredSlots.forEach(slot => {
