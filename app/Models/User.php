@@ -31,14 +31,14 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function stadiumOwner(): HasMany
+    public function stadiumOwner(): HasOne
     {
-        return $this->hasMany(Stadium::class, 'owner_id');
+        return $this->hasOne(Stadium::class, 'owner_id');
     }
 
     public function stadiumManager(): HasMany
     {
-        return $this->hasMany(Stadium::class, 'manager_id');
+        return $this->hasOne(Stadium::class, 'manager_id');
     }
 
     public function stadiumTrainer(): HasOne
