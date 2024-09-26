@@ -40,8 +40,8 @@
                 <img src="{{ asset('img/findz/icons/next.svg') }}" alt="next icon" class="header-icon">
             </button>
         </div>
+        <div class="court_stadium"> {{ $stadium->name }}</div>
         <div class="time-slots">
-            <div class="court_stadium"> {{ $stadium->name }}</div>
             <table class="slots-table">
                 <thead>
                 <tr>

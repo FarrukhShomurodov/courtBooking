@@ -118,7 +118,7 @@
 }
 
 .slots-table {
-    width: 100%;
+    width: max-content;
     height: 300px;
     overflow: auto;
     border-collapse: separate;
@@ -255,6 +255,7 @@
     height: 44px;
     line-height: 44px;
     margin: 4px;
+    width: 100%;
 }
 
 
