@@ -36,7 +36,7 @@ class User extends Authenticatable
         return $this->hasOne(Stadium::class, 'owner_id');
     }
 
-    public function stadiumManager(): HasMany
+    public function stadiumManager(): HasOne
     {
         return $this->hasOne(Stadium::class, 'manager_id');
     }
