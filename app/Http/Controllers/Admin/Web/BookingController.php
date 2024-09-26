@@ -65,6 +65,14 @@ class BookingController extends Controller
                     $bookings = collect();
                 }
                 break;
+            case 'trainer':
+                $trainer = Auth::user()->coach()->first();
+                if ($trainer) {
+                    $bookings = BookingItem::whereIn('court_id', $trainer->courts->pluck('id'))->get()->load('court');
+                } else {
+                    $bookings = collect();
+                }
+                break;
         }
 
         return view('admin.booking.all', compact('bookings'));
