@@ -469,6 +469,7 @@
                     $('.slots-table tbody tr').append(row);
                 });
                 localStorage.setItem('courtIds', JSON.stringify(courtIds))
+                updateSelectedSlots()
             }
 
             function updateSelectedSlots() {
@@ -510,7 +511,6 @@
                 }
 
                 const courtIds = JSON.parse(localStorage.getItem('courtIds')) || [];
-                console.log(courtIds);
                 const filteredSlots = savedSlots.filter(slot => courtIds.includes(slot.court_id));
 
                 filteredSlots.forEach(slot => {
@@ -665,7 +665,6 @@
             $(document).on('click', '.book', function () {
                 const courtIds = JSON.parse(localStorage.getItem('courtIds')) || [];
                 const savedSlots = JSON.parse(localStorage.getItem('selectedSlots')) || [];
-
                 const filteredSlots = savedSlots.filter(slot => courtIds.includes(slot.court_id));
 
                 const bookingData = {
