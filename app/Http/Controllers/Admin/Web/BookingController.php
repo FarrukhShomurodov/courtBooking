@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookingRequest;
-use App\Models\Booking;
 use App\Models\BookingItem;
 use App\Models\Court;
 use App\Models\User;
@@ -25,15 +24,25 @@ class BookingController extends Controller
     public function index()
     {
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
-            if (Auth::user()->stadiumOwner()->courts() > 0) {
-                $courts = Auth::user()->stadiumOwner->courts()->where('is_active', true)->get()->load('schedules');
+            if (Auth::user()->stadiumOwner->count() > 0) {
+                if (Auth::user()->stadiumOwner->stadium->is_active == 1) {
+                    $courts = Auth::user()->stadiumOwner->courts()->where('is_active', true)->get()->load('schedules');
+                } else {
+                    Auth::logout();
+                    return redirect()->route('login')->withErrors(['error' => 'Стадион к которому вы преклеплены не активен.']);
+                }
             } else {
                 Auth::logout();
                 return redirect()->route('login')->withErrors(['error' => 'Вы не прикреплены ни к одному стадиону.']);
             }
         } elseif (Auth::user()->roles()->first()->name == 'stadium manager') {
-            if (Auth::user()->stadiumManager()->count() > 0) {
-                $courts = Auth::user()->stadiumManager->courts()->where('is_active', true)->get()->load('schedules');
+            if (Auth::user()->stadiumManager->count() > 0) {
+                if (Auth::user()->stadiumManager->stadium->is_active == 1) {
+                    $courts = Auth::user()->stadiumManager->courts()->where('is_active', true)->get()->load('schedules');
+                } else {
+                    Auth::logout();
+                    return redirect()->route('login')->withErrors(['error' => 'Стадион к которому вы преклеплены не активен.']);
+                }
             } else {
                 Auth::logout();
                 return redirect()->route('login')->withErrors(['error' => 'Вы не прикреплены ни к одному стадиону.']);
@@ -67,7 +76,7 @@ class BookingController extends Controller
                 $bookings = BookingItem::query()->get()->load('court');
                 break;
             case 'owner stadium':
-                $owner = Auth::user()->stadiumOwner()->first();
+                $owner = Auth::user()->stadiumOwner;
                 if ($owner) {
                     $bookings = BookingItem::whereIn('court_id', $owner->courts->pluck('id'))->get()->load('court');
                 } else {
@@ -75,7 +84,7 @@ class BookingController extends Controller
                 }
                 break;
             case 'stadium manager':
-                $stadiumManager = Auth::user()->stadiumManager()->first();
+                $stadiumManager = Auth::user()->stadiumManager;
                 if ($stadiumManager) {
                     $bookings = BookingItem::whereIn('court_id', $stadiumManager->courts->pluck('id'))->get()->load('court');
                 } else {
@@ -112,7 +121,7 @@ class BookingController extends Controller
                     break;
 
                 case 'owner stadium':
-                    $owner = Auth::user()->stadiumOwner()->first();
+                    $owner = Auth::user()->stadiumOwner;
                     if ($owner) {
                         $hasBooking = BookingItem::query()
                             ->whereIn('court_id', $owner->courts->pluck('id'))
@@ -130,7 +139,7 @@ class BookingController extends Controller
                     break;
 
                 case 'stadium manager':
-                    $stadiumManager = Auth::user()->stadiumManager()->first();
+                    $stadiumManager = Auth::user()->stadiumManager;
                     if ($stadiumManager) {
                         $hasBooking = BookingItem::query()
                             ->whereIn('court_id', $stadiumManager->courts->pluck('id'))
