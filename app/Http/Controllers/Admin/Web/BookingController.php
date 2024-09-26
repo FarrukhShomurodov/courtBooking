@@ -33,6 +33,13 @@ class BookingController extends Controller
                 Auth::logout();
                 return redirect()->route('login')->withErrors(['error' => 'Вы не прикреплены ни к одному стадиону.']);
             }
+        }  elseif (Auth::user()->roles()->first()->name == 'trainer') {
+            if (Auth::user()->coach()->count() > 0) {
+                $courts = Auth::user()->coach->stadium->courts()->where('is_active', true)->get()->load('schedules');
+            } else {
+                Auth::logout();
+                return redirect()->route('login')->withErrors(['error' => 'Вы не прикреплены ни к одному стадиону.']);
+            }
         } else {
             $courts = Court::query()->where('is_active', true)->get()->load('schedules');
         }
