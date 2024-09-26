@@ -468,7 +468,7 @@
                     row += '</td>';
                     $('.slots-table tbody tr').append(row);
                 });
-                localStorage.setItem('courtIds', courtIds)
+                localStorage.setItem('courtIds', JSON.stringify(courtIds))
             }
 
             function updateSelectedSlots() {
