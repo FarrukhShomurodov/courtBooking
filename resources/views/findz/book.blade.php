@@ -758,7 +758,7 @@
 
                 function initiatePaycomPayment(bookingId, amount) {
                     let formattedAmount = Math.round(amount);
-                    let callback = `https://st40.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chat_id}`;
+                    let callback = `https://event-in.online/telegram/mybookings?sportType={{$currentSportTypeId}}&bot_user_id=${chat_id}`;
 
                     let paycomForm = `
                         <form id="form-payme" method="POST" action="https://checkout.paycom.uz">
