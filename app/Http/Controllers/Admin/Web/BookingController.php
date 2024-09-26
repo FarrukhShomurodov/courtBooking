@@ -24,19 +24,9 @@ class BookingController extends Controller
     public function index()
     {
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
-            if (Auth::user()->stadiumOwner->count() > 0) {
-                if (Auth::user()->stadiumOwner->is_active == 1) {
-                    $courts = Auth::user()->stadiumOwner->courts()->where('is_active', true)->get()->load('schedules');
-                } else {
-                    Auth::logout();
-                    return redirect()->route('login')->withErrors(['error' => 'Стадион к которому вы преклеплены не активен.']);
-                }
-            } else {
-                Auth::logout();
-                return redirect()->route('login')->withErrors(['error' => 'Вы не прикреплены ни к одному стадиону.']);
-            }
+            $courts = Auth::user()->stadiumOwner->courts()->where('is_active', true)->get()->load('schedules');
         } elseif (Auth::user()->roles()->first()->name == 'stadium manager') {
-            if (Auth::user()->stadiumManager->count() > 0) {
+            if (Auth::user()->stadiumManager) {
                 if (Auth::user()->stadiumManager->is_active == 1) {
                     $courts = Auth::user()->stadiumManager->courts()->where('is_active', true)->get()->load('schedules');
                 } else {
@@ -131,7 +121,7 @@ class BookingController extends Controller
                         if ($hasBooking) {
                             $this->bookingService->delete($booking);
                         } else {
-                            return redirect()->route('all-bookings')->withErrors('Booking not found for this stadium.');
+                            return redirect()->route('all-bookings')->withErrors('Бронирование на этот стадион не найдено.');
                         }
                     } else {
                         return redirect()->route('all-bookings')->withErrors('Unauthorized to delete booking.');
@@ -149,7 +139,25 @@ class BookingController extends Controller
                         if ($hasBooking) {
                             $this->bookingService->delete($booking);
                         } else {
-                            return redirect()->route('all-bookings')->withErrors('Booking not found for this manager.');
+                            return redirect()->route('all-bookings')->withErrors('Бронирование у этого менеджера не найдено.');
+                        }
+                    } else {
+                        return redirect()->route('all-bookings')->withErrors('Unauthorized to delete booking.');
+                    }
+                    break;
+
+                case 'trainer':
+                    $trainer = Auth::user()->coach;
+
+                    if ($trainer) {
+                        $hasBooking = BookingItem::query()
+                            ->whereIn('court_id', $trainer->stadium->courts->pluck('id'))
+                            ->where('id', $booking->id)
+                            ->exists();
+                        if ($hasBooking) {
+                            $this->bookingService->delete($booking);
+                        } else {
+                            return redirect()->route('all-bookings')->withErrors('Бронирование на этого тренера не найдено.');
                         }
                     } else {
                         return redirect()->route('all-bookings')->withErrors('Unauthorized to delete booking.');
@@ -160,9 +168,9 @@ class BookingController extends Controller
                     return redirect()->route('all-bookings')->withErrors('Invalid role.');
             }
 
-            return redirect()->route('all-bookings')->with('success', 'Booking deleted successfully.');
+            return redirect()->route('all-bookings')->with('success', 'Бронирование успешно удалено.');
         } else {
-            return redirect()->route('all-bookings')->withErrors('You cannot delete a bot user\'s booking.');
+            return redirect()->route('all-bookings')->withErrors('Вы не можете удалить бронирование пользователя бота.');
         }
 
     }
