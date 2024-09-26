@@ -79,7 +79,7 @@
 
         <div class="col-lg-4 col-12 mb-3">
             @role('owner stadium')
-            <div class="card border-0 text-center mt-3">
+            <div class="card border-0 text-center">
                 <div class="card-body p-3">
                     <h3 class="mb-1">{{ $statistics['court_count'] }}</h3>
                     <p class="mb-2 text-muted">{{ __('dashboard.Корты') }}</p>
