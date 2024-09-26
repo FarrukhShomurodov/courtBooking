@@ -20,8 +20,8 @@ class ScheduleController extends Controller
             'court_id' => 'required|integer|exists:courts,id',
             'date' => 'required|date'
         ], [
-            'court_id.required' => __('errors.required', ['attribute' => 'court']),
-            'date.required' => __('errors.required', ['attribute' => 'date']),
+            'court_id.required' => __('validation.required', ['attribute' => 'court']),
+            'date.required' => __('validation.required', ['attribute' => 'date']),
         ]);
 
         $court = Court::find($validated['court_id']);
@@ -44,10 +44,10 @@ class ScheduleController extends Controller
             'start_time' => 'required|date_format:H:i:s',
             'end_time' => 'required|date_format:H:i:s|after:start_time',
         ], [
-            'court_id.required' => __('errors.required', ['attribute' => __('errors.attributes.court_id')]),
-            'start_time.required' => __('errors.required', ['attribute' => __('errors.attributes.start_time')]),
-            'end_time.required' => __('errors.required', ['attribute' => __('errors.attributes.end_time')]),
-            'end_time.after' => __('errors.end_time.after'),
+            'court_id.required' => __('validation.required', ['attribute' => __('validation.attributes.court_id')]),
+            'start_time.required' => __('validation.required', ['attribute' => __('validation.attributes.start_time')]),
+            'end_time.required' => __('validation.required', ['attribute' => __('validation.attributes.end_time')]),
+            'end_time.after' => __('validation.end_time.after'),
         ]);
 
 
