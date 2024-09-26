@@ -25,7 +25,7 @@ class BookingController extends Controller
     {
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
             if (Auth::user()->stadiumOwner->count() > 0) {
-                if (Auth::user()->stadiumOwner->stadium->is_active == 1) {
+                if (Auth::user()->stadiumOwner->is_active == 1) {
                     $courts = Auth::user()->stadiumOwner->courts()->where('is_active', true)->get()->load('schedules');
                 } else {
                     Auth::logout();
@@ -37,7 +37,7 @@ class BookingController extends Controller
             }
         } elseif (Auth::user()->roles()->first()->name == 'stadium manager') {
             if (Auth::user()->stadiumManager->count() > 0) {
-                if (Auth::user()->stadiumManager->stadium->is_active == 1) {
+                if (Auth::user()->stadiumManager->is_active == 1) {
                     $courts = Auth::user()->stadiumManager->courts()->where('is_active', true)->get()->load('schedules');
                 } else {
                     Auth::logout();
