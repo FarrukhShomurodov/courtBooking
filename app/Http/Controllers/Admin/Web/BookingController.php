@@ -66,7 +66,7 @@ class BookingController extends Controller
                 }
                 break;
             case 'trainer':
-                $trainer = Auth::user()->coach();
+                $trainer = Auth::user()->coach;
                 if ($trainer) {
                     $bookings = BookingItem::whereIn('court_id', $trainer->stadium->courts->pluck('id'))->get()->load('court');
                 } else {
