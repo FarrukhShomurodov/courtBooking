@@ -68,6 +68,10 @@ Route::prefix('telegram')->group(function () {
     Route::get('/webhook', function () {
         $telegram = new \Telegram\Bot\Api(env('TELEGRAM_BOT_TOKEN'));
         $hook = $telegram->setWebhook(['url' => env('TELEGRAM_WEBHOOK_URL')]);
+        $telegram->sendMessage([
+            'chat_id'=> 1893716322,
+            'text'=> 'test'
+        ])
         dd($hook);
     });
 
