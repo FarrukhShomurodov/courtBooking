@@ -48,7 +48,7 @@ class StatisticsRepositories
 
     public function stadiumOwnerStatistics(): array
     {
-        $stadium = Auth::user()->stadiumOwner()->first();
+        $stadium = Auth::user()->stadiumOwner;
 
         if (!$stadium) {
             return [];
