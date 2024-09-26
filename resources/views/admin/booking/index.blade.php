@@ -248,7 +248,8 @@
                     $('#app-calendar-sidebar').toggleClass('show');
                     $('.app-overlay').toggleClass('show');
                 });
-
+            }
+            if (window.innerWidth > 1000) {
                 let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
                 let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                     return new bootstrap.Tooltip(tooltipTriggerEl);
@@ -402,7 +403,7 @@
                 });
 
                 // Reinitialize tooltips
-                if (window.innerWidth < 1000) {
+                if (window.innerWidth > 1000) {
                     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
                     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                         return new bootstrap.Tooltip(tooltipTriggerEl);
