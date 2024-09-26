@@ -109,14 +109,16 @@
 <script src="{{asset('vendor/libs/moment/moment.js')}}"></script>
 
 <!-- Main JS -->
+<script src="{{asset('js/forms-selects.js')}}"></script>
+
 <script src="{{ asset('js/main.js') }}"></script>
+
 <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 
-
-<script src="{{asset('js/forms-selects.js')}}"></script>
 <script src="{{asset('js/app-calendar-events.js')}}"></script>
 <script src="{{asset('js/app-calendar.js')}}"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+
 <script>
     flatpickr.localize(flatpickr.l10ns.ru);
 </script>

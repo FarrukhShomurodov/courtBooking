@@ -2,14 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    {{--    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">--}}
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
     <title>Findz</title>
     <link rel="stylesheet" href="{{ asset('css/findz/style.css') }}"/>
     <link rel="stylesheet" href="{{ asset('css/findz/findz.css') }}"/>
     @yield('extra-css')
-    {{--    <script src="https://telegram.org/js/telegram-web-app.js"></script>--}}
     <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {
@@ -44,12 +42,12 @@
                                 }
                             } else {
                                 tg.sendData('Пользователь не найден.');
-                                window.location.href = 'https://t.me/cuourts_bokking_bot';
+                                window.location.href = 'https://t.me/court_book_bot';
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            window.location.href = 'https://t.me/cuourts_bokking_bot';
+                            window.location.href = 'https://t.me/court_book_bot';
                         });
                 }
 
@@ -59,12 +57,12 @@
                 }
 
                 if (Object.keys(userData).length === 0 || typeof userData.user === 'undefined') {
-                    window.location.href = 'https://t.me/cuourts_bokking_bot';
+                    window.location.href = 'https://t.me/court_book_bot';
                 } else {
                     checkUser();
                 }
 
-                // Обновите ссылку на "Мои брони"
+
                 let myBookingsLink = document.getElementById('myBookingsLink');
                 if (myBookingsLink) {
                     @if($currentSportTypeId)
@@ -83,7 +81,7 @@
                 }
                 @endif
             } else {
-                window.location.href = 'https://t.me/cuourts_bokking_bot';
+                window.location.href = 'https://t.me/court_book_bot';
             }
         });
     </script>

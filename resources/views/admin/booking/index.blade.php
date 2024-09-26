@@ -7,19 +7,20 @@
     <title>{{'Findz - '. __('book.all_book') }}</title>
     <style>
         @media (max-width: 700px) {
-            .app-calendar-wrapper .app-calendar-sidebar {
-                z-index: 99999 !important;
-            }
-
-            .offcanvas {
-                z-index: 1000000 !important;
-            }
+            /*.app-calendar-wrapper .app-calendar-sidebar {*/
+            /*    z-index: 99999 !important;*/
+            /*}*/
+            /*.offcanvas {*/
+            /*    z-index: 1000000 !important;*/
+            /*}*/
+            /*.light-style .flatpickr-calendar.open {*/
+            /*    z-index: 10000000 !important;*/
+            /*}*/
         }
     </style>
 @endsection
 
 @section('content')
-    {{--    <div class="container-xxl flex-grow-1 container-p-y">--}}
     @if ($errors->any())
         <div class="alert alert-solid-danger" role="alert">
             @foreach ($errors->all() as $error)
@@ -55,8 +56,8 @@
                         <div class="fc-header-toolbar fc-toolbar ">
                             <div class="fc-toolbar-chunk">
                                 <div class="fc-button-group">
-                                    <button class="btn btn-toggle-sidebar mt-1 d-lg-none d-inline-block" data-bs-toggle="offcanvas"
-                                            data-overlay=""
+                                    <button class="btn btn-toggle-sidebar mt-1 d-lg-none d-inline-block"
+                                            data-bs-toggle="sidebar"
                                             data-bs-target="#app-calendar-sidebar" aria-controls="app-calendar-sidebar">
                                         <i class="bx bx-menu me-1"></i>
                                     </button>
@@ -113,7 +114,7 @@
                     </div>
 
                     <div class="app-overlay"></div>
-                    <div class="offcanvas offcanvas-end event-sidebar" data-bs-backdrop="false" tabindex="-1"
+                    <div class="offcanvas offcanvas-end event-sidebar" tabindex="-1"
                          id="addEventSidebar"
                          aria-labelledby="addEventSidebarLabel">
                         <div class="offcanvas-header border-bottom d-flex align-items-center align-content-center">
@@ -167,35 +168,34 @@
                                            placeholder="{{ __('book.phone_number') }}" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">{{ __('book.time') }}</label>
+                                    <label class="form-label"><b>{{ __('book.time') }}</b></label>
                                     <div id="hours-container">
                                         <div class="hour-row">
                                             <div class="row">
-                                                <div class="col-md-4">
-                                                    <label for="from">{{ __('book.from') }}: </label>
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="from">{{ __('book.from') }}: </label>
                                                     <select id="from"
-                                                            class="form-select small-select"
+                                                            class="form-select w-100"
                                                             data-live-search="true">
                                                     </select>
                                                 </div>
-                                                <div class="col-md-4">
-                                                    <label for="to">{{ __('book.to') }}: </label>
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="to">{{ __('book.to') }}: </label>
                                                     <select id="to"
-                                                            class="form-select small-select"
+                                                            class="form-select "
                                                             data-live-search="true">
                                                     </select>
                                                 </div>
-                                                <div class="col-md-4">
-                                                    <label for="cost">{{ __('book.cost') }}</label>
-                                                    <input id="cost" name="price" class="cost form-control" value="0"
-                                                           style="height: 29.59px" readonly>
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="cost">{{ __('book.cost') }}</label>
+                                                    <input id="cost" name="price" class="form-control cost" value="0"
+                                                           readonly>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                {{--hours --}}
                                 <input type="hidden" name="start_time">
                                 <input type="hidden" name="end_time">
                                 <input type="hidden" name="source" value="manual">
@@ -204,7 +204,6 @@
                             </form>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -234,16 +233,27 @@
             </div>
         </div>
     </div>
-    {{--    </div>--}}
 @endsection
 
 @section('scripts')
     <script>
         $(document).ready(function () {
-            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
+            if (window.innerWidth < 1000) {
+                $('.app-overlay').click(function () {
+                    $('#app-calendar-sidebar').removeClass('show');
+                    $('.app-overlay').removeClass('show');
+                });
+
+                $('.btn-toggle-sidebar').click(function () {
+                    $('#app-calendar-sidebar').toggleClass('show');
+                    $('.app-overlay').toggleClass('show');
+                });
+
+                let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            }
 
             const courtDropdown = $('#courtDropdown');
             const courtInput = $('#courtInput');
@@ -354,7 +364,6 @@
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (response) {
-                        console.log(response)
                         displayBookings(response);
                     },
                     error: function (err) {
@@ -393,10 +402,12 @@
                 });
 
                 // Reinitialize tooltips
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl);
-                });
+                if (window.innerWidth < 1000) {
+                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                        return new bootstrap.Tooltip(tooltipTriggerEl);
+                    });
+                }
             }
 
             function formatTimeToHIS(time) {
@@ -486,7 +497,6 @@
                         console.log(err);
                     }
                 });
-
             });
         });
     </script>

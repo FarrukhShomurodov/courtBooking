@@ -67,3 +67,5 @@
         </li>
     </ul>
 </aside>
+
+<div class="layout-overlay layout-menu-toggle"></div>
