@@ -6,10 +6,6 @@
 
 
 @section('content')
-    @php
-        $isOwner = session('isOwner', false);
-    @endphp
-
     <div class="row mb-3">
         <div class="col-12 text-end">
             <a href="{{ route('statistics.export') }}" class="btn btn-success btn-sm">
@@ -56,10 +52,8 @@
                 </div>
             </div>
         </div>
-        @endrole
-
         <div class="col-lg-4 col-12 mb-3">
-            @role('admin')
+
             <div class="card border-0 text-center">
                 <div class="card-body p-3">
                     <h3 class="mb-1">{{ $statistics['stadium_count'] }}</h3>
@@ -69,7 +63,6 @@
                     </a>
                 </div>
             </div>
-            @endrole
 
             <div class="card border-0 text-center mt-3">
                 <div class="card-body p-3">
@@ -81,6 +74,20 @@
                 </div>
             </div>
         </div>
+        @endrole
+
+
+        @role('stadium owner')
+        <div class="card border-0 text-center mt-3">
+            <div class="card-body p-3">
+                <h3 class="mb-1">{{ $statistics['court_count'] }}</h3>
+                <p class="mb-2 text-muted">{{ __('dashboard.Корты') }}</p>
+                <a class="btn btn-outline-primary btn-sm" href="{{ route('statistics.courts') }}">
+                    {{ __('dashboard.view_court_statistics') }}
+                </a>
+            </div>
+        </div>
+        @endrole
 
         <div class="col-lg-4 col-12 mb-3">
             <div class="card border-0 text-center">
