@@ -35,6 +35,7 @@
                                         setLocale(result.lang);
                                     }
 
+                                    localStorage.removeItem("selectedSlots")
                                     tg.expand();
                                 } else {
                                     tg.sendData('Пройдите регистрацию.');
