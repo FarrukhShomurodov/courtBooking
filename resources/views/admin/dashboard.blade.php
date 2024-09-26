@@ -58,6 +58,7 @@
         </div>
         @endrole
 
+        @role('admin')
         <div class="col-lg-4 col-12 mb-3">
             <div class="card border-0 text-center">
                 <div class="card-body p-3">
@@ -68,6 +69,7 @@
                     </a>
                 </div>
             </div>
+            @endrole
 
             <div class="card border-0 text-center mt-3">
                 <div class="card-body p-3">
