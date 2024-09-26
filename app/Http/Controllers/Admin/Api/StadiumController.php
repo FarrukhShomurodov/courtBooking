@@ -8,8 +8,6 @@ use App\Traits\BookingTrait;
 use App\Traits\PhotoTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
 
 class StadiumController extends Controller
 {
@@ -36,8 +34,6 @@ class StadiumController extends Controller
 
     public function isActive(Request $request, Stadium $stadium): JsonResponse
     {
-        App::setLocale('uz');
-
         $validated = $request->validate([
             'is_active' => 'required|boolean',
         ]);
