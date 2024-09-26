@@ -57,7 +57,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     // Bookings
-    Route::group(['middleware' => 'role:owner stadium|admin|stadium manager'], function () {
+    Route::group(['middleware' => 'role:owner stadium|admin|stadium manager|trainer'], function () {
         Route::get('/all-bookings', [BookingController::class, 'fetchAllBooking'])->name('all-bookings');
         Route::resource('/bookings', BookingController::class);
     });
