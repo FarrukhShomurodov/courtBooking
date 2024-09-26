@@ -162,7 +162,7 @@
                     $(this).text(`{{ __('findz/book.read_more')}}`);
                 } else {
                     description.text(description.data('original-text'));
-                    $(this).text('Свернуть');
+                    $(this).text(`{{ __('findz/book.minimize') }}`);
                 }
                 description.toggleClass('expanded');
             });

@@ -41,5 +41,5 @@ return [
     'no_slot' => 'Uyasi yo\'q',
     'can_not_edit_book_more_one' => 'Bronni bir martadan ortiq o‘zgartira olmaysiz.',
     'read_more' => 'To\'liq o\'qish',
-
+    'minimize' => 'Kamaytirish',
 ];
