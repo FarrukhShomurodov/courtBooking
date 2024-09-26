@@ -102,7 +102,7 @@ class StatisticsController extends Controller
     {
 
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
-            $courts = Auth::user()->stadiumOwner()->first()->courts()->get();
+            $courts = Auth::user()->stadiumOwner->courts()->get();
         } else {
             $courts = Court::all();
 
@@ -117,7 +117,7 @@ class StatisticsController extends Controller
 //            $owner = User::query()->find($request->get('owner-id'));
 //
 //            if ($owner && $owner->hasRole('owner stadium')) {
-//                $courts = $owner->stadiumOwner()->first()->courts()->get();
+//                $courts = $owner->stadiumOwner->courts()->get();
 //            }
 //        }
 
@@ -183,9 +183,9 @@ class StatisticsController extends Controller
         $stadiumId = $request->input('stadium-id') ?? 'all';
 
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
-            $sportTypes = Auth::user()->stadiumOwner()->first()->sportTypes()->get();
-            $stadiumId = Auth::user()->stadiumOwner()->first()->id;
-            $allSportTypes = Auth::user()->stadiumOwner()->first()->sportTypes()->get();
+            $sportTypes = Auth::user()->stadiumOwner->sportTypes()->get();
+            $stadiumId = Auth::user()->stadiumOwner->id;
+            $allSportTypes = Auth::user()->stadiumOwner->sportTypes()->get();
         } else {
             $sportTypes = SportType::all();
             $allSportTypes = SportType::all();
@@ -388,7 +388,7 @@ class StatisticsController extends Controller
         $role = Auth::user()->roles()->first()->name;
 
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
-            $courts = Auth::user()->stadiumOwner()->first()->courts()->get();
+            $courts = Auth::user()->stadiumOwner->courts()->get();
         } else {
             $courts = Court::all();
         }
@@ -469,9 +469,9 @@ class StatisticsController extends Controller
         $stadiumId = $request->input('stadium-id') ?? 'all';
 
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
-            $sportTypes = Auth::user()->stadiumOwner()->first()->sportTypes()->get();
-            $stadiumId = Auth::user()->stadiumOwner()->first()->id;
-            $allSportTypes = Auth::user()->stadiumOwner()->first()->sportTypes()->get();
+            $sportTypes = Auth::user()->stadiumOwner->sportTypes()->get();
+            $stadiumId = Auth::user()->stadiumOwner->id;
+            $allSportTypes = Auth::user()->stadiumOwner->sportTypes()->get();
         } else {
             $sportTypes = SportType::all();
             $allSportTypes = SportType::all();

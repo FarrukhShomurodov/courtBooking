@@ -26,7 +26,7 @@ class CourtController extends Controller
     public function index(): View
     {
         if (Auth::user()->roles()->first()->name == 'owner stadium') {
-            $courts = Auth::user()->stadiumOwner()->first()->courts()->with('stadium')->get();
+            $courts = Auth::user()->stadiumOwner->courts()->with('stadium')->get();
         } else {
             $courts = Court::query()->with('stadium')->get();
         }
