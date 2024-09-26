@@ -8,8 +8,10 @@
     <div class="card">
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="card-header">{{ __('court.courts') }}</h5>
+            @role('admin')
             <a href="{{ route('courts.create') }}" class="btn btn-primary"
                style="margin-right: 22px;">{{ __('court.create') }}</a>
+            @endrole
         </div>
 
         <div class="res_error"></div>
