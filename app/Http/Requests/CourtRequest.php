@@ -36,7 +36,7 @@ class CourtRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:100',
-            'description' => 'nullable|string|max:400',
+            'description' => 'nullable|string|max:100',
             'photos' => 'sometimes|array|max:25',
             'photos.*' => 'image|mimes:jpg,png',
             'is_active' => 'nullable|boolean',
