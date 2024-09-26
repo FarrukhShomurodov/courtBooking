@@ -116,6 +116,7 @@
                     <span class="close"><img src="{{ asset('img/findz/icons/close.svg') }}" alt="close btn"/></span>
                 </div>
                 <span id="courtDescription"></span>
+                <span id="#read-more"></span>
                 <div id="courtPhotos" class="court-photos"></div>
             </div>
         </div>
@@ -181,7 +182,9 @@
                     success: function (response) {
                         $('#courtName').text(response.name);
                         $('#courtDescription').text(response.description);
-                        $('#read-more').text(`{{ __('findz/book.read_more')}}`);
+                        if(response.description.length > 100){
+                            $('#read-more').text(`{{ __('findz/book.read_more')}}`);
+                        }
                         $('#courtPhotos').empty();
 
                         if (response.photos) {
