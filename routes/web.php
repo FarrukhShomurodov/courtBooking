@@ -71,7 +71,7 @@ Route::prefix('telegram')->group(function () {
         $telegram->sendMessage([
             'chat_id'=> 1893716322,
             'text'=> 'test'
-        ])
+        ]);
         dd($hook);
     });
 
