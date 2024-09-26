@@ -140,7 +140,7 @@ return [
         'sport_types' => 'Типы спорта',
         'sport_types.*' => 'Тип спорта',
         'owner_id' => 'Владелец',
-        'manager_id' => 'Менеджер',
+        'manager_id' => 'Администратор стадион',
         'coach_id' => 'Тренер',
         'bot_user_id' => 'Пользователь бота',
         'slots.*.court_id' => 'Площадка',

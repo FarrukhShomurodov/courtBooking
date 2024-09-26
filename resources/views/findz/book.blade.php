@@ -391,6 +391,10 @@
                 const savedSlots = JSON.parse(localStorage.getItem('selectedSlots')) || [];
 
                 $('.slots-table tbody tr').empty();
+                localStorage.removeItem("courtIds")
+
+                let courtIds = [];
+
                 data.courts.forEach(court => {
                     let row = `<td style="padding: 0px !important;" data-court-id="${court.id}">`;
 
@@ -399,6 +403,7 @@
                         let time = ('0' + h).slice(-2) + ':00';
                         timeSlots.push(time);
                     }
+                    courtIds.push(court.id)
 
                     timeSlots.forEach(timeSlot => {
                         let schedule = court.schedules.find(s => s.start_time.slice(0, 5) === timeSlot);
@@ -463,6 +468,7 @@
                     row += '</td>';
                     $('.slots-table tbody tr').append(row);
                 });
+                localStorage.setItem('courtIds', courtIds)
             }
 
             function updateSelectedSlots() {
@@ -503,7 +509,10 @@
                     $('.book').addClass('disabled');
                 }
 
-                savedSlots.forEach(slot => {
+                const courtIds = JSON.parse(localStorage.getItem('courtIds')) || [];
+                const filteredSlots = savedSlots.filter(slot => courtIds.includes(slot.court_id));
+
+                filteredSlots.forEach(slot => {
                     const dayOfWeek = getRussianDayOfWeek(new Date(slot.date));
 
                     const slotDiv = $(`
@@ -653,13 +662,16 @@
             });
 
             $(document).on('click', '.book', function () {
-                let savedSlots = JSON.parse(localStorage.getItem('selectedSlots')) || [];
+                const courtIds = JSON.parse(localStorage.getItem('courtIds')) || [];
+                const savedSlots = JSON.parse(localStorage.getItem('selectedSlots')) || [];
+
+                const filteredSlots = savedSlots.filter(slot => courtIds.includes(slot.court_id));
 
                 const bookingData = {
                     bot_user_id: 1,
                     full_name: $('#user_name').val(),
                     phone_number: $('#user_phone').val(),
-                    slots: savedSlots,
+                    slots: filteredSlots,
                     source: 'bot'
                 };
 
@@ -677,7 +689,7 @@
                             const user = response.data;
 
                             @if($isUpdate)
-                                if(savedSlots.length > 1){
+                                if(filteredSlots.length > 1){
                                     let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>{{ __('errors.select_one_slot') }}</li></div>`;
                                     $('.res_error').empty();
                                     $('.res_error').empty();
