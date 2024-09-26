@@ -58,8 +58,8 @@
         </div>
         @endrole
 
-        @role('admin')
         <div class="col-lg-4 col-12 mb-3">
+            @role('admin')
             <div class="card border-0 text-center">
                 <div class="card-body p-3">
                     <h3 class="mb-1">{{ $statistics['stadium_count'] }}</h3>
