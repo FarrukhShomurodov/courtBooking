@@ -54,20 +54,4 @@ class CourtRequest extends FormRequest
         ];
     }
 
-    public function attributes(): array
-    {
-        return [
-            'name' => 'Название корта',
-            'description' => 'Описание',
-            'photos' => 'Фотографии',
-            'photos.*' => 'Фотография',
-            'is_active' => 'Активен',
-            'stadium_id' => 'Стадион',
-            'sport_type_id' => 'Тип спорта',
-            'schedule' => 'Расписание',
-            'schedule.*.cost' => 'Стоимость',
-            'schedule.*.start_time' => 'Время начала',
-            'schedule.*.end_time' => 'Время окончания',
-        ];
-    }
 }

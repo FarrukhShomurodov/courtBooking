@@ -29,14 +29,4 @@ class SportTypeRequest extends FormRequest
             'photos.*' => 'image|mimes:jpg,png',
         ];
     }
-
-    public function attributes(): array
-    {
-        return [
-            'name' => 'Название вида спорта',
-            'description' => 'Описание',
-            'photos' => 'Фотографии',
-            'photos.*' => 'Фотография',
-        ];
-    }
 }

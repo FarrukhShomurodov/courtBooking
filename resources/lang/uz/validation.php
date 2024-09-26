@@ -116,6 +116,5 @@ return [
         'email' => 'Elektron pochta',
         'password' => 'Parol',
         'age' => 'Yosh',
-        // Bu yerga qo‘shimcha attributlar nomlarini qo‘shishingiz mumkin
     ],
 ];
