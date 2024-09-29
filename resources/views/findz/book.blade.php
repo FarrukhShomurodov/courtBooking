@@ -670,26 +670,20 @@
                 const savedSlots = JSON.parse(localStorage.getItem('selectedSlots')) || [];
                 const filteredSlots = savedSlots.filter(slot => courtIds.includes(slot.court_id));
 
-                const bookingData = {
-                    bot_user_id: 1,
-                    full_name: $('#user_name').val(),
-                    phone_number: $('#user_phone').val(),
-                    slots: filteredSlots,
-                    source: 'bot'
-                };
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-
                 $.ajax({
                     url: `/api/bot-user/${chat_id}`,
                     method: 'GET',
                     success: function (response) {
                         if (response.success) {
                             const user = response.data;
+
+                            const bookingData = {
+                                bot_user_id: user.idZ,
+                                full_name: $('#user_name').val(),
+                                phone_number: $('#user_phone').val(),
+                                slots: filteredSlots,
+                                source: 'bot'
+                            }
 
                             @if($isUpdate)
                                 if(filteredSlots.length > 1){

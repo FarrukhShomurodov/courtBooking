@@ -224,6 +224,7 @@
                         <p><strong>{{ __('book.end_time') }}:</strong> <span id="bookingEndTime"></span></p>
                         <p><strong>{{ __('book.source') }}:</strong> <span id="bookingSource"></span></p>
                         <p><strong>{{__('book.status')}}:</strong> <span id="bookingStatus"></span></p>
+                        <p><strong>{{__('book.sum')}}:</strong> <span id="bookingSum"></span></p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
@@ -487,10 +488,11 @@
                         $('#bookingFullName').text(response.full_name);
                         $('#bookingPhoneNumber').text(response.phone_number);
                         $('#bookingDateInfo').text(response.date);
-                        $('#bookingStartTime').text(response.start_time);
-                        $('#bookingEndTime').text(response.end_time);
+                        $('#bookingStartTime').text(response.start_time.slice(0, 5));
+                        $('#bookingEndTime').text(response.end_time.slice(0, 5));
                         $('#bookingSource').text(response.source == 'manual' ? 'Manual' : 'Findz');
                         $('#bookingStatus').text(response.status);
+                        $('#bookingSum').text(Math.round(response.price).toLocaleString('ru-RU'));
 
                         $('#bookingModal').modal('show');
                     },

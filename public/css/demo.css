@@ -235,5 +235,7 @@
 }
 
 .app-calendar-content{
-    max-width: 500px !important;
+    width: max-content;
+    overflow: auto;
+    display: inline-block;
 }
