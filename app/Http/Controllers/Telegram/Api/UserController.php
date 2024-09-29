@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function getUserByChatId($chat_id): JsonResponse
     {
-        $botUser = BotUser::query()->where('chat_id', $chat_id)->first();
+        $botUser = BotUser::query()->where('chat_id', (string)$chat_id)->first();
 
         if ($botUser) {
             return response()->json([
@@ -29,10 +29,9 @@ class UserController extends Controller
 
     public function hasUser(Request $request): JsonResponse
     {
-        $userData = $request->all();
-        $userId = $userData['user']['id'] ?? null;
+        $userId = $request->input('chat_id') ?? null;
 
-        $user = BotUser::query()->where('chat_id', $userId)->first();
+        $user = BotUser::query()->where('chat_id', (string)$userId)->first();
 
         if ($user) {
             return response()->json([

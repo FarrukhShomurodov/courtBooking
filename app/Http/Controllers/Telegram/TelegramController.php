@@ -542,7 +542,6 @@ class TelegramController extends Controller
 
         foreach ($bookings as $bookingItems) {
             foreach ($bookingItems->bookingItems as $booking) {
-                $photos = json_decode($booking->court->stadium->photos, true);
                 $bookingDateTime = Carbon::parse($booking->date . ' ' . $booking->start_time);
                 $now = Carbon::now();
                 $hoursRemaining = $now->diffInHours($bookingDateTime, false);
@@ -562,26 +561,11 @@ class TelegramController extends Controller
                     $description .= __('findz/book.can_not_edit_book_more_one');
                 }
 
-                $mediaGroup = [];
-                if (!empty($photos) && is_array($photos)) {
-                    foreach ($photos as $index => $photo) {
-                        $photoPath = Storage::url('public/' . $photo);
-                        $fullPhotoUrl = env('APP_URL') . $photoPath;
+                $this->telegram->sendMessage([
+                    'chat_id' => $chatId,
+                    'text' => $description
+                ]);
 
-                        $mediaGroup[] = InputMediaPhoto::make([
-                            'type' => 'photo',
-                            'media' => $fullPhotoUrl,
-                            'caption' => $index === 0 ? $description : '',
-                            'parse_mode' => 'HTML'
-                        ]);
-                    }
-
-                    // Отправка группы медиа
-                    $this->telegram->sendMediaGroup([
-                        'chat_id' => $chatId,
-                        'media' => json_encode($mediaGroup)
-                    ]);
-                }
             }
         }
 

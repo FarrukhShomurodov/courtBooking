@@ -24,7 +24,9 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(userData)
+                        body: JSON.stringify({
+                            chat_id: chatID
+                        })
                     })
                         .then(response => response.json())
                         .then(result => {

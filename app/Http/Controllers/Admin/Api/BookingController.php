@@ -49,21 +49,32 @@ class BookingController extends Controller
 
         $totalSum = 0;
 
+        foreach ($slots as $slot) {
+            $isAvailable = BookingItem::query()
+                ->where('court_id', $slot['court_id'])
+                ->where('status', 'paid')
+                ->where('start_time', $slot['start'].':00')
+                ->where('end_time', $slot['end'].':00')
+                ->where('date', $slot['date'])
+                ->exists();
+            if ($isAvailable) {
+                return response()->json(['message' => __('errors.court_unvalible')], 500);
+            }
+        }
+
         $bookingId = DB::transaction(function () use ($slots, $validated, &$totalSum) {
             $booking = Booking::create([
                 'bot_user_id' => $validated['bot_user_id'],
             ]);
 
             foreach ($slots as $slot) {
-                $isAvailable = $this->checkCourtAvailability($slot['court_id'], $slot['start'], $slot['end'], $slot['date']);
-
-//                $isAvailable = BookingItem::query()
-//                    ->where('court_id', $slot['court_id'])
-//                    ->where('status', 'paid')
-//                    ->where('start_time', $slot['start'].':00')
-//                    ->where('end_time', $slot['end'].':00')
-//                    ->where('date', $slot['date'])
-//                    ->exists();
+                $isAvailable = BookingItem::query()
+                    ->where('court_id', $slot['court_id'])
+                    ->where('status', 'paid')
+                    ->where('start_time', $slot['start'].':00')
+                    ->where('end_time', $slot['end'].':00')
+                    ->where('date', $slot['date'])
+                    ->exists();
 
                 if ($isAvailable) {
                     throw new \Exception(__('errors.court_unvalible'));
