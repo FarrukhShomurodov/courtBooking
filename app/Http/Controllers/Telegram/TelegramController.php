@@ -31,9 +31,7 @@ class TelegramController extends Controller
         $chatId = $update->getMessage()->getChat()->getId();
         $text = $update->getMessage()->getText();
 
-        // Retrieve or create a BotUser instance
-        $user = BotUser::query()->firstOrCreate(['chat_id' => $chatId]);
-
+        $user = BotUser::query()->firstOrCreate(['chat_id' => (string)$chatId]);
 
         $botUserInfo = $update->getMessage();
         if (isset($user->lang)) {
