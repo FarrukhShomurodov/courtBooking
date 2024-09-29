@@ -233,3 +233,7 @@
     max-width: 100%;
     height: auto;
 }
+
+.app-calendar-content{
+    max-width: 500px !important;
+}
