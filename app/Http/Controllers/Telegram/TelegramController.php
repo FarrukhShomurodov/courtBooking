@@ -531,11 +531,10 @@ class TelegramController extends Controller
             })
             ->get();
 
-
-        if ($bookings->count() < 1) {
+        if ($bookings->isEmpty()) {
             $this->telegram->sendMessage([
                 'chat_id' => $chatId,
-                'text' => __('findz/book.no_book')
+                'text' => __('findz/book.no_book'),
             ]);
             return;
         }
@@ -546,29 +545,30 @@ class TelegramController extends Controller
                 $now = Carbon::now();
                 $hoursRemaining = $now->diffInHours($bookingDateTime, false);
 
-                $description = __('stadium.stadium') . ': ' . htmlspecialchars($booking->court->stadium->name) . "\n"
-                    . __('court.court') . ": " . htmlspecialchars($booking->court->name) . "\n"
-                    . __('findz/book.address') . " " . htmlspecialchars($booking->court->stadium->address) . "\n"
-                    . __('findz/book.date') . " " . $booking->date . "\n"
-                    . __('findz/book.time') . " " . substr($booking->start_time, 0, 5) . " - " . substr($booking->end_time, 0, 5) . "\n"
-                    . __('findz/book.price') . " " . round($booking->price / 1000) . " " . __('findz/book.currency') . "\n\n";
+                $description = "*" . __('stadium.stadium') . "*: " . htmlspecialchars($booking->court->stadium->name) . "\n";
+                $description .= "*" . __('court.court') . "*: " . htmlspecialchars($booking->court->name) . "\n";
+                $description .= "*" . __('findz/book.address') . "* " . htmlspecialchars($booking->court->stadium->address) . "\n";
+                $description .= "*" . __('findz/book.date') . "* " . $booking->date . "\n";
+                $description .= "*" . __('findz/book.time') . "* " . substr($booking->start_time, 0, 5) . " - " . substr($booking->end_time, 0, 5) . "\n";
+                $description .= "*" . __('findz/book.price') . "* " . round($booking->price / 1000) . " " . __('findz/book.currency') . "\n\n";
 
                 if ($hoursRemaining <= 24) {
-                    $description .= __('findz/book.edit_book_info');
+                    $description .= "_" . __('findz/book.edit_book_info') . "_\n";
                 }
 
                 if ($booking->is_edit) {
-                    $description .= __('findz/book.can_not_edit_book_more_one');
+                    $description .= "_" . __('findz/book.can_not_edit_book_more_one') . "_\n";
                 }
 
                 $this->telegram->sendMessage([
                     'chat_id' => $chatId,
-                    'text' => $description
+                    'text' => $description,
+                    'parse_mode' => 'Markdown',
                 ]);
-
             }
         }
 
         $this->sendMainMenu($chatId);
     }
+
 }
