@@ -79,7 +79,9 @@
                     <th>@lang('stadium.total_revenue')</th>
                     <th>@lang('stadium.bot_revenue')</th>
                     <th>@lang('stadium.manual_revenue')</th>
-                    <th>@lang('stadium.unbooked_hours')</th>
+                    @role('admin')
+                        <th>@lang('stadium.unbooked_hours')</th>
+                    @endrole
                 </tr>
                 </thead>
                 <tbody>
@@ -93,7 +95,9 @@
                         <td>{{ number_format(round($statistic['statistic']['total_revenue']), 0 , ' ', ' ') }}</td>
                         <td>{{ number_format(round($statistic['statistic']['bot_revenue']), 0 , ' ', ' ') }}</td>
                         <td>{{ number_format(round($statistic['statistic']['manual_revenue']), 0 , ' ', ' ')  }}</td>
-                        <td>{{ $statistic['statistic']['unbooked_hours'] }}</td>
+                        @role('admin')
+                            <td>{{ $statistic['statistic']['unbooked_hours'] }}</td>
+                        @endrole
                     </tr>
                 @endforeach
 
