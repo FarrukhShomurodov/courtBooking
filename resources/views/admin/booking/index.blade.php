@@ -83,16 +83,14 @@
                                             @php
                                                 $bookingId = 0;
                                                 $hasBooking = false;
-                                                $isPaid = false;
                                                 $currentTime = Carbon::createFromTime($i, 0, 0);
-                                                foreach($court->bookings as $booking){
+                                                foreach($court->bookings()->where('status','paid')->get() as $booking){
                                                     if (Carbon::parse($booking->date)->isToday()) {
                                                         $bookingStartTime = Carbon::parse($booking->start_time);
-                                                        $bookingEndTime = Carbon::parse($booking->end_time);
-                                                        if ($currentTime->equalTo($bookingStartTime)) {
+                                                        $bookingEndTime = Carbon::parse($booking->end_time)->subHour();
+                                                        if ($currentTime->between($bookingStartTime, $bookingEndTime)) {
                                                             $hasBooking = true;
                                                             $bookingId = $booking->id;
-                                                            $isPaid = $booking->status === 'paid';
                                                             break;
                                                         }
                                                     }
@@ -103,7 +101,7 @@
                                                      data-booking-id="{{$bookingId}}"
                                                      data-bs-toggle="tooltip"
                                                      title="{{ $hasBooking ? $booking->full_name : '' }}"
-                                                     style="width: 100%; height: 43.5px; @if($hasBooking && $isPaid) background-color: #006400; @elseif($hasBooking && !$isPaid) background-color: #ff294d; @endif"></div>
+                                                     style="width: 100%; height: 43.5px; @if($hasBooking) background-color: #006400; @endif"></div>
                                             </td>
                                         @endforeach
                                     </tr>

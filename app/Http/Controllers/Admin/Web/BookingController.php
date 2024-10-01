@@ -64,12 +64,12 @@ class BookingController extends Controller
 
         switch ($role) {
             case 'admin':
-                $bookings = BookingItem::query()->get()->load('court');
+                $bookings = BookingItem::query()->where('status', 'paid')->get()->load('court');
                 break;
             case 'owner stadium':
                 $owner = Auth::user()->stadiumOwner;
                 if ($owner) {
-                    $bookings = BookingItem::whereIn('court_id', $owner->courts->pluck('id'))->get()->load('court');
+                    $bookings = BookingItem::whereIn('court_id', $owner->courts->pluck('id'))->where('status', 'paid')->get()->load('court');
                 } else {
                     $bookings = collect();
                 }
@@ -77,7 +77,7 @@ class BookingController extends Controller
             case 'stadium manager':
                 $stadiumManager = Auth::user()->stadiumManager;
                 if ($stadiumManager) {
-                    $bookings = BookingItem::whereIn('court_id', $stadiumManager->courts->pluck('id'))->get()->load('court');
+                    $bookings = BookingItem::whereIn('court_id', $stadiumManager->courts->pluck('id'))->where('status', 'paid')->get()->load('court');
                 } else {
                     $bookings = collect();
                 }
@@ -85,7 +85,7 @@ class BookingController extends Controller
             case 'trainer':
                 $trainer = Auth::user()->coach;
                 if ($trainer) {
-                    $bookings = BookingItem::whereIn('court_id', $trainer->stadium->courts->pluck('id'))->get()->load('court');
+                    $bookings = BookingItem::whereIn('court_id', $trainer->stadium->courts->pluck('id'))->where('status', 'paid')->get()->load('court');
                 } else {
                     $bookings = collect();
                 }
