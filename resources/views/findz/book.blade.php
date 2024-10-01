@@ -414,8 +414,8 @@
                         let hasBooking = false;
 
                         @if($isUpdate)
-                        let oldSelectedSlot = (court.id === {{ $userBook->court_id }} && schedule?.start_time == "{{ $userBook->start_time }}" && schedule?.end_time == "{{ $userBook->end_time }}");
-                        hasBooking = false;
+                        {{--let oldSelectedSlot = (court.id === {{ $userBook->court_id }} && schedule?.start_time == "{{ $userBook->start_time }}" && schedule?.end_time == "{{ $userBook->end_time }}");--}}
+                        {{--hasBooking = false;--}}
                         let endTime = "{{ $userBook->end_time }}";
                         endTime = endTime.slice(0, 5);
                         @else
@@ -428,7 +428,7 @@
                         let selected = false;
 
                         @if($isUpdate)
-                            selected = oldSelectedSlot;
+                            // selected = oldSelectedSlot;
                         @else
                             selected = (court.id == {{ request('stadium') }} && (schedule?.start_time.slice(0, 5) >= "{{ $selectedStartTime }}" && schedule?.end_time.slice(0, 5) <= "{{ $selectedEndTime }}"));
                         let endTime = "{{ $selectedEndTime }}";
