@@ -206,9 +206,9 @@ class FindzController extends Controller
 
     public function bookUpdate(BookingItem $booking, Request $request): View
     {
-        $courts = Court::with('schedules')->where('is_active', true)->get();
         $stadium = $booking->court()->first()->stadium;
         $currentSportTypeId = $request->input('sportType');
+        $courts = $stadium->courts()->with('schedules')->where('is_active', true)->where('sport_type_id', $currentSportTypeId)->get();
 
         $isUpdate = true;
         $userBook = $booking;
