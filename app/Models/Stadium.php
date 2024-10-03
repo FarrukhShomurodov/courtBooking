@@ -69,8 +69,8 @@ class Stadium extends Model
 
         $totalHoursBooked = $bookings->where('status', 'paid')->count();
 
-        $totalAvailableHours = $this->courts()->get()->reduce(function ($carry, $court) use ($dateFrom, $dateTo) {
-            $totalHours = 0;
+        $unbookedHours = $this->courts()->get()->reduce(function ($carry, $court) use ($dateFrom, $dateTo) {
+            $unbookedHours = 0;
 
             $from = Carbon::parse($dateFrom);
             $to = Carbon::parse($dateTo);
@@ -85,19 +85,21 @@ class Stadium extends Model
                 $interval = 1;
             }
             $interval = $interval === 0 ? 1 : $interval;
-
-
-            // Получаем количество расписаний
             $schedulesCount = $court->schedules()->count();
-            $totalHours += $schedulesCount * $interval;
 
-            return $carry + $totalHours;
+            $timeFormat = 24 * $interval;
+            $unActiveHour = $timeFormat - ($schedulesCount * $interval);
+
+            $totalBookedHours = $court->bookings->filter(function ($booking) use ($from, $to) {
+                return $booking->date >= $from && $booking->date <= $to;
+            })->sum(function ($booking) {
+                return $booking->getHours();
+            });
+
+            $unbookedHours = ($timeFormat - $unActiveHour) - ($totalBookedHours * $interval);
+
+            return $unbookedHours;
         }, 0);
-
-
-
-        // Рассчитываем незабронированные часы
-        $unbookedHours = $totalAvailableHours - $totalHoursBooked;
 
         // Рассчитываем общую выручку и разделение на ручные и бот-бронирования
         $totalRevenue = $bookings->sum('price');

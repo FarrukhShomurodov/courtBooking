@@ -129,11 +129,9 @@ class StatisticsRepositories
 
         $interval = $interval === 0 ? 1 : $interval;
 
-        $totalAvailableHours = $schedulesCount * $interval;
-
-
-        // Рассчитываем незабронированные часы
-        $unbookedHours = $totalAvailableHours - $totalHoursBooked;
+        $timeFormat = 24 * $interval;
+        $unActiveHour = $timeFormat - ($schedulesCount * $interval);
+        $unbookedHours = ($timeFormat - $unActiveHour) - ($totalHoursBooked * $interval);
 
         // Рассчитываем статистику по бронированиям
         $bookCountFromBot = $bookings->where('source', 'bot')->count();
@@ -190,11 +188,9 @@ class StatisticsRepositories
             })->get();
         });
 
-        // Подсчет забронированных часов
         $totalHoursBooked = $allBookings->sum(function ($booking) {
             return $booking->getHours();
         });
-
 
         $from = Carbon::parse($dateFrom);
         $to = Carbon::parse($dateTo);
@@ -215,10 +211,11 @@ class StatisticsRepositories
             return $court->schedules()->get();
         });
 
-        $totalAvailableHours = $schedules->count() * $interval;
+        $timeFormat = 24 * $interval;
+        $unActiveHour = $timeFormat - ($schedules->count() * $interval);
 
-        // Рассчитываем незабронированные часы
-        $unbookedHours = $totalAvailableHours - $totalHoursBooked;
+        $unbookedHours = ($timeFormat - $unActiveHour) - ($totalHoursBooked * $interval);
+
         $statistics['unbooked_hours'] = $unbookedHours;
 
         // Подсчет бронирований и доходов

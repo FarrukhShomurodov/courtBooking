@@ -15,7 +15,7 @@ trait ScheduleHelper
             ->where('status', 'paid')
             ->get(['start_time', 'end_time']);
 
-        $availableSchedules = $this->filterAvailableSchedules($schedules, $bookedSchedules);
+        $availableSchedules = $this->filterAvailableSchedules($schedules, $bookedSchedules, Carbon::parse($date));
 
         $sortedSchedules = $availableSchedules->sortBy('start_time')->values();
 
