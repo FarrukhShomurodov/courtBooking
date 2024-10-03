@@ -29,7 +29,7 @@ class ScheduleController extends Controller
             return response()->json(['message' => __('errors.cannot_select_cort_due_to_has_schedule')], 422);
         }
 
-        $availableSchedules = $this->filterAvailableSchedules($schedules, $bookings);
+        $availableSchedules = $this->filterAvailableSchedules($schedules, $bookings, Carbon::parse($validated['date']));
 
         return response()->json($availableSchedules);
     }

@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ asset('/css/findz/book.css') }}"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
-        #courtDescription{
+        #courtDescription {
             overflow-wrap: break-word;
         }
     </style>
@@ -170,7 +170,6 @@
             });
 
 
-
             $('.court_name').on('click', function () {
                 if ($(this).css('cursor') === 'not-allowed') return;
 
@@ -182,7 +181,7 @@
                     success: function (response) {
                         $('#courtName').text(response.name);
                         $('#courtDescription').text(response.description);
-                        if(response.description.length > 100){
+                        if (response.description.length > 100) {
                             $('#read-more').text(`{{ __('findz/book.read_more')}}`);
                         }
                         $('#courtPhotos').empty();
@@ -428,7 +427,7 @@
                         let selected = false;
 
                         @if($isUpdate)
-                            // selected = oldSelectedSlot;
+                        // selected = oldSelectedSlot;
                         @else
                             selected = (court.id == {{ request('stadium') }} && (schedule?.start_time.slice(0, 5) >= "{{ $selectedStartTime }}" && schedule?.end_time.slice(0, 5) <= "{{ $selectedEndTime }}"));
                         let endTime = "{{ $selectedEndTime }}";
@@ -440,9 +439,24 @@
                             }
                         });
 
+                        let dateNow = new Date();
+                        let dataCompare = new Date(selectedDate);
+
+                        if (dataCompare.getFullYear() === dateNow.getFullYear() &&
+                            dataCompare.getMonth() === dateNow.getMonth() &&
+                            dataCompare.getDate() === dateNow.getDate()){
+                            let currentTime = dateNow.getHours() * 3600 + dateNow.getMinutes() * 60 + dateNow.getSeconds();
+                            let givenTime = timeSlot+':00';
+
+                            let [givenHours, givenMinutes, givenSeconds] = givenTime.split(':').map(Number);
+                            let givenTimeInSeconds = givenHours * 3600 + givenMinutes * 60 + givenSeconds;
+                            let isActiveHour = currentTime >= givenTimeInSeconds
+
+                            hasBooking = isActiveHour ? true : hasBooking
+                        }
+
                         let selectedClass = selected ? 'selected' : '';
                         let slotClass = hasBooking ? 'slot_booked' : '';
-
 
                         if (schedule) {
                             row += `
@@ -588,7 +602,7 @@
                     const price = $this.data('price');
 
                     @if($isUpdate)
-                    if({{ round($userBook->price) / 1000 }} !== price){
+                    if ({{ round($userBook->price) / 1000 }} !== price) {
                         let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>{{ __('errors.select_another_slot') }}</li></div>`;
                         $('.res_error').empty();
                         $('.res_error').empty();
@@ -686,42 +700,20 @@
                             }
 
                             @if($isUpdate)
-                                if(filteredSlots.length > 1){
-                                    let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>{{ __('errors.select_one_slot') }}</li></div>`;
-                                    $('.res_error').empty();
-                                    $('.res_error').empty();
-                                    $('.res_error').append(errorHtml);
-                                    $('#error_modal').fadeIn().delay(5000).fadeOut();
-                                }else{
-                                    $.ajax({
-                                        url: '/api/booking/{{$userBook->id}}',
-                                        method: 'PUT',
-                                        data: bookingData,
-                                        success: function (response) {
-                                            localStorage.removeItem("selectedSlots")
-                                            window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
-                                        },
-                                        error: function (err) {
-                                            let errors = err.responseJSON.message;
-                                            let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
-                                            $('.res_error').empty();
-                                            $('.res_error').append(errorHtml);
-                                            $('#error_modal').fadeIn().delay(5000).fadeOut();
-                                        }
-                                    });
-                                }
-                            @else
+                            if (filteredSlots.length > 1) {
+                                let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>{{ __('errors.select_one_slot') }}</li></div>`;
+                                $('.res_error').empty();
+                                $('.res_error').empty();
+                                $('.res_error').append(errorHtml);
+                                $('#error_modal').fadeIn().delay(5000).fadeOut();
+                            } else {
                                 $.ajax({
-                                    url: '/api/booking',
-                                    method: 'POST',
+                                    url: '/api/booking/{{$userBook->id}}',
+                                    method: 'PUT',
                                     data: bookingData,
                                     success: function (response) {
                                         localStorage.removeItem("selectedSlots")
-                                        @if(!$isUpdate)
-                                            initiatePaycomPayment(response.booking_id, response.total_sum);
-                                        @else
-                                            window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
-                                        @endif
+                                        window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
                                     },
                                     error: function (err) {
                                         let errors = err.responseJSON.message;
@@ -731,6 +723,28 @@
                                         $('#error_modal').fadeIn().delay(5000).fadeOut();
                                     }
                                 });
+                            }
+                            @else
+                            $.ajax({
+                                url: '/api/booking',
+                                method: 'POST',
+                                data: bookingData,
+                                success: function (response) {
+                                    localStorage.removeItem("selectedSlots")
+                                    @if(!$isUpdate)
+                                    initiatePaycomPayment(response.booking_id, response.total_sum);
+                                    @else
+                                        window.location.href = '{{ route('findz.mybookings', ['sportType' => $currentSportTypeId]) }}';
+                                    @endif
+                                },
+                                error: function (err) {
+                                    let errors = err.responseJSON.message;
+                                    let errorHtml = `<div class="alert alert-solid-danger" role="alert"><li>${errors}</li></div>`;
+                                    $('.res_error').empty();
+                                    $('.res_error').append(errorHtml);
+                                    $('#error_modal').fadeIn().delay(5000).fadeOut();
+                                }
+                            });
                             @endif
                         } else {
                             console.log('Ошибка: пользователь не найден');

@@ -39,9 +39,16 @@ trait ScheduleHelper
     }
 
 
-    public function filterAvailableSchedules($schedules, $bookings)
+    public function filterAvailableSchedules($schedules, $bookings, $date)
     {
-        return $schedules->filter(function ($schedule) use ($bookings) {
+        $now = Carbon::now();
+        return $schedules->filter(function ($schedule) use ($bookings, $now, $date) {
+            $scheduleStartTime = Carbon::parse($schedule->start_time);
+
+            if ($date->isToday() && $scheduleStartTime->lessThanOrEqualTo($now->format('H:i:s'))) {
+                return false;
+            }
+
             foreach ($bookings as $booking) {
                 $bookingStartTime = Carbon::parse($booking->start_time);
                 $bookingEndTime = Carbon::parse($booking->end_time);
