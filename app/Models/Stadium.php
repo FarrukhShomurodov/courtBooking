@@ -70,8 +70,6 @@ class Stadium extends Model
         $totalHoursBooked = $bookings->where('status', 'paid')->count();
 
         $unbookedHours = $this->courts()->get()->reduce(function ($carry, $court) use ($dateFrom, $dateTo) {
-            $unbookedHours = 0;
-
             $from = Carbon::parse($dateFrom);
             $to = Carbon::parse($dateTo);
 
@@ -90,15 +88,29 @@ class Stadium extends Model
             $timeFormat = 24 * $interval;
             $unActiveHour = $timeFormat - ($schedulesCount * $interval);
 
-            $totalBookedHours = $court->bookings->filter(function ($booking) use ($from, $to) {
-                return $booking->date >= $from && $booking->date <= $to;
-            })->sum(function ($booking) {
-                return $booking->getHours();
-            });
+            $unbookedHours = ($timeFormat - $unActiveHour);
 
-            $unbookedHours = ($timeFormat - $unActiveHour) - ($totalBookedHours * $interval);
+            return $carry + $unbookedHours;
+        }, 0) - $totalHoursBooked;
 
-            return $unbookedHours;
+        $unActiveHour = $this->courts()->get()->reduce(function ($carry, $court) use ($dateFrom, $dateTo) {
+            $from = Carbon::parse($dateFrom);
+            $to = Carbon::parse($dateTo);
+
+            if ($dateFrom && $dateTo) {
+                $interval = $from->diffInDays($to);
+            } elseif ($dateFrom) {
+                $interval = $from->diffInDays(Carbon::now());
+            } elseif ($dateTo) {
+                $interval = Carbon::now()->diffInDays($to);
+            } else {
+                $interval = 1;
+            }
+            $interval = $interval === 0 ? 1 : $interval;
+            $schedulesCount = $court->schedules()->count();
+
+            $timeFormat = 24 * $interval;
+            return $timeFormat - ($schedulesCount * $interval);
         }, 0);
 
         // Рассчитываем общую выручку и разделение на ручные и бот-бронирования
@@ -115,6 +127,7 @@ class Stadium extends Model
             'manual_revenue' => $manualRevenue,
             'bot_revenue' => $botRevenue,
             'unbooked_hours' => $unbookedHours,
+            'un_active_hours' => $unActiveHour,
         ];
     }
 

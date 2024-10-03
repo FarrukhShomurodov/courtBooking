@@ -30,4 +30,5 @@ return [
     'bot_revenue' => 'Выручка через бота',
     'manual_revenue' => 'Выручка вручную',
     'total' => 'ИТОГО',
+    'un_active_hours' => 'Неактивные часы',
 ];

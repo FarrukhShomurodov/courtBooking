@@ -50,20 +50,20 @@
                             </select>
                         </div>
                         {{--    Owners  --}}
-{{--                        <div>--}}
-{{--                            <select id="select22"--}}
-{{--                                    class="select2 form-select"--}}
-{{--                                    name="owner-id"--}}
-{{--                                    onchange="this.form.submit()"--}}
-{{--                                    tabindex="-1" aria-hidden="true" style="margin-right: 10px">--}}
-{{--                                @foreach($ownerStadium as $owner)--}}
-{{--                                    <option value="{{ $owner->id }}"--}}
-{{--                                        {{ request('owner-id') == $owner->id ? 'selected' : '' }}>--}}
-{{--                                        {{ $owner->name }}--}}
-{{--                                    </option>--}}
-{{--                                @endforeach--}}
-{{--                            </select>--}}
-{{--                        </div>--}}
+                        {{--                        <div>--}}
+                        {{--                            <select id="select22"--}}
+                        {{--                                    class="select2 form-select"--}}
+                        {{--                                    name="owner-id"--}}
+                        {{--                                    onchange="this.form.submit()"--}}
+                        {{--                                    tabindex="-1" aria-hidden="true" style="margin-right: 10px">--}}
+                        {{--                                @foreach($ownerStadium as $owner)--}}
+                        {{--                                    <option value="{{ $owner->id }}"--}}
+                        {{--                                        {{ request('owner-id') == $owner->id ? 'selected' : '' }}>--}}
+                        {{--                                        {{ $owner->name }}--}}
+                        {{--                                    </option>--}}
+                        {{--                                @endforeach--}}
+                        {{--                            </select>--}}
+                        {{--                        </div>--}}
                     </div>
                 </form>
             @endcan
@@ -80,8 +80,9 @@
                     <th>@lang('stadium.bot_revenue')</th>
                     <th>@lang('stadium.manual_revenue')</th>
                     @role('admin')
-                        <th>@lang('stadium.unbooked_hours')</th>
+                    <th>@lang('stadium.unbooked_hours')</th>
                     @endrole
+                    <th>@lang('court.un_active_hours')</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -96,8 +97,9 @@
                         <td>{{ number_format(round($statistic['statistic']['bot_revenue']), 0 , ' ', ' ') }}</td>
                         <td>{{ number_format(round($statistic['statistic']['manual_revenue']), 0 , ' ', ' ')  }}</td>
                         @role('admin')
-                            <td>{{ $statistic['statistic']['unbooked_hours'] }}</td>
+                        <td>{{ $statistic['statistic']['unbooked_hours'] }}</td>
                         @endrole
+                        <td>{{ number_format(round($statistic['statistic']['un_active_hours']), 0 , ' ', ' ')  }}</td>
                     </tr>
                 @endforeach
 
@@ -111,6 +113,7 @@
                     <td>{{ number_format (round($totalStatistics['bot_revenue']), 0 , ' ', ' ') }}</td>
                     <td>{{ number_format(round($totalStatistics['manual_revenue']), 0 , ' ', ' ') }}</td>
                     <td>{{ $totalStatistics['unbooked_hours'] }}</td>
+                    <td>{{ $totalStatistics['un_active_hours'] }}</td>
                 </tr>
                 @endrole
                 </tbody>

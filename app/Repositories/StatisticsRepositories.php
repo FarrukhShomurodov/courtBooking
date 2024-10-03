@@ -94,6 +94,7 @@ class StatisticsRepositories
             'manual_revenue' => $statistics['manual_revenue'],
             'total_revenue' => $statistics['total_revenue'],
             'unbooked_hours' => $statistics['unbooked_hours'],
+            'un_active_hours' => $statistics['un_active_hours'],
         ];
     }
 
@@ -131,7 +132,7 @@ class StatisticsRepositories
 
         $timeFormat = 24 * $interval;
         $unActiveHour = $timeFormat - ($schedulesCount * $interval);
-        $unbookedHours = ($timeFormat - $unActiveHour) - ($totalHoursBooked * $interval);
+        $unbookedHours = ($timeFormat - $unActiveHour) - ($totalHoursBooked);
 
         // Рассчитываем статистику по бронированиям
         $bookCountFromBot = $bookings->where('source', 'bot')->count();
@@ -150,6 +151,7 @@ class StatisticsRepositories
             'manual_revenue' => $manualRevenue,
             'total_revenue' => $totalRevenue,
             'unbooked_hours' => $unbookedHours,
+            'un_active_hours' => $unActiveHour,
         ];
     }
 
@@ -165,6 +167,7 @@ class StatisticsRepositories
             'most_booked_date' => null,
             'most_booked_time_slot' => null,
             'unbooked_hours' => 0,
+            'un_active_hours' => 0,
         ];
 
         if ($stadiumId === 'all') {
@@ -188,6 +191,7 @@ class StatisticsRepositories
             })->get();
         });
 
+        // Подсчет забронированных часов
         $totalHoursBooked = $allBookings->sum(function ($booking) {
             return $booking->getHours();
         });
@@ -214,9 +218,10 @@ class StatisticsRepositories
         $timeFormat = 24 * $interval;
         $unActiveHour = $timeFormat - ($schedules->count() * $interval);
 
-        $unbookedHours = ($timeFormat - $unActiveHour) - ($totalHoursBooked * $interval);
+        $unbookedHours = ($timeFormat - $unActiveHour) - ($totalHoursBooked);
 
         $statistics['unbooked_hours'] = $unbookedHours;
+        $statistics['un_active_hours'] = $unActiveHour;
 
         // Подсчет бронирований и доходов
         $statistics['total_bookings'] = $allBookings->count();

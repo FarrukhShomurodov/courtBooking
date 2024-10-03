@@ -84,6 +84,7 @@ class StatisticsController extends Controller
             'bot_revenue' => 0,
             'manual_revenue' => 0,
             'unbooked_hours' => 0,
+            'un_active_hours' => 0,
         ];
 
         foreach ($statistics as $statistic) {
@@ -94,6 +95,7 @@ class StatisticsController extends Controller
             $totalStatistics['bot_revenue'] += $statistic['statistic']['bot_revenue'];
             $totalStatistics['manual_revenue'] += $statistic['statistic']['manual_revenue'];
             $totalStatistics['unbooked_hours'] += $statistic['statistic']['unbooked_hours'];
+            $totalStatistics['un_active_hours'] += $statistic['statistic']['un_active_hours'];
         }
         return view('admin.statistics.stadiums', compact('statistics', 'sportTypes', 'ownerStadium', 'totalStatistics'));
     }
@@ -155,6 +157,7 @@ class StatisticsController extends Controller
             'bot_revenue' => 0,
             'manual_revenue' => 0,
             'unbooked_hours' => 0,
+            'un_active_hours' => 0,
         ];
 
         foreach ($statistics as $statistic) {
@@ -165,6 +168,7 @@ class StatisticsController extends Controller
             $totalStatistics['bot_revenue'] += $statistic['statistic']['bot_revenue'];
             $totalStatistics['manual_revenue'] += $statistic['statistic']['manual_revenue'];
             $totalStatistics['unbooked_hours'] += $statistic['statistic']['unbooked_hours'];
+            $totalStatistics['un_active_hours'] += $statistic['statistic']['un_active_hours'];
         }
 
         $sportTypes = SportType::all();
@@ -225,6 +229,7 @@ class StatisticsController extends Controller
             'manual_revenue' => 0,
             'bot_revenue' => 0,
             'unbooked_hours' => 0,
+            'un_active_hours' => 0,
         ];
 
         foreach ($statistics as $statistic) {
@@ -233,6 +238,7 @@ class StatisticsController extends Controller
             $totalStatistics['manual_revenue'] += $statistic['statistic']['manual_revenue'];
             $totalStatistics['bot_revenue'] += $statistic['statistic']['bot_revenue'];
             $totalStatistics['unbooked_hours'] += $statistic['statistic']['unbooked_hours'];
+            $totalStatistics['un_active_hours'] += $statistic['statistic']['un_active_hours'];
         }
 
         $stadiums = Stadium::all();
@@ -326,6 +332,7 @@ class StatisticsController extends Controller
                 'manual_revenue' => $this->statisticsRepository->stadiumStatistics($stadium)['manual_revenue'],
                 'total_revenue' => $this->statisticsRepository->stadiumStatistics($stadium)['total_revenue'],
                 'unbooked_hours' => $this->statisticsRepository->stadiumStatistics($stadium)['unbooked_hours'],
+                'un_active_hours' => $this->statisticsRepository->stadiumStatistics($stadium)['un_active_hours'],
             ];
         }
 
@@ -342,9 +349,10 @@ class StatisticsController extends Controller
             __('stadium.manual_revenue'),
             __('stadium.total_revenue'),
             __('stadium.unbooked_hours'),
+            __('court.un_active_hours'),
         ];
 
-        $columnLetters = range('A', 'H');
+        $columnLetters = range('A', 'I');
         foreach ($columnLetters as $index => $letter) {
             $sheet->setCellValue($letter . '1', $headers[$index]);
             $sheet->getStyle($letter . '1')->getFont()->setBold(true); // Make header bold
@@ -361,6 +369,7 @@ class StatisticsController extends Controller
             $sheet->setCellValue('F' . $row, $data['manual_revenue']);
             $sheet->setCellValue('G' . $row, $data['total_revenue']);
             $sheet->setCellValue('H' . $row, $data['unbooked_hours']);
+            $sheet->setCellValue('I' . $row, $data['un_active_hours']);
             $row++;
         }
 
@@ -405,6 +414,7 @@ class StatisticsController extends Controller
                 'manual_revenue' => $this->statisticsRepository->courtStatistics($court)['manual_revenue'],
                 'total_revenue' => $this->statisticsRepository->courtStatistics($court)['total_revenue'],
                 'unbooked_hours' => $this->statisticsRepository->courtStatistics($court)['unbooked_hours'],
+                'un_active_hours' => $this->statisticsRepository->courtStatistics($court)['un_active_hours'],
             ];
         }
 
@@ -422,9 +432,10 @@ class StatisticsController extends Controller
             __('court.manual_revenue'),
             __('court.total_revenue'),
             __('stadium.unbooked_hours'),
+            __('court.un_active_hours'),
         ];
 
-        $columnLetters = range('A', 'H');
+        $columnLetters = range('A', 'I');
         foreach ($columnLetters as $index => $letter) {
             $sheet->setCellValue($letter . '1', $headers[$index]);
             $sheet->getStyle($letter . '1')->getFont()->setBold(true); // Make header bold
@@ -441,6 +452,7 @@ class StatisticsController extends Controller
             $sheet->setCellValue('F' . $row, $data['manual_revenue']);
             $sheet->setCellValue('G' . $row, $data['total_revenue']);
             $sheet->setCellValue('H' . $row, $data['unbooked_hours']);
+            $sheet->setCellValue('I' . $row, $data['un_active_hours']);
             $row++;
         }
 
@@ -508,6 +520,7 @@ class StatisticsController extends Controller
                 'most_booked_date' => $this->statisticsRepository->sportTypeStatistics($sportType,  $stadiumId, $dateFrom, $dateTo)['most_booked_date'] ?? '-',
                 'most_booked_time_slot' => $mostBookedTimeSlot ? $mostBookedTimeSlot['start_time'] . ' - ' . $mostBookedTimeSlot['end_time'] : '-',
                 'unbooked_hours' => $this->statisticsRepository->sportTypeStatistics($sportType,  $stadiumId, $dateFrom, $dateTo)['unbooked_hours'],
+                'un_active_hours' => $this->statisticsRepository->sportTypeStatistics($sportType,  $stadiumId, $dateFrom, $dateTo)['un_active_hours'],
             ];
         }
 
@@ -524,9 +537,10 @@ class StatisticsController extends Controller
             __('dashboard.Дата наибольшего бронирования'),
             __('dashboard.Cамый загруженный временной интервал'),
             __('stadium.unbooked_hours'),
+            __('court.un_active_hours'),
         ];
 
-        $columnLetters = range('A', 'H');
+        $columnLetters = range('A', 'I');
         foreach ($columnLetters as $index => $letter) {
             $sheet->setCellValue($letter . '1', $headers[$index]);
             $sheet->getStyle($letter . '1')->getFont()->setBold(true); // Make header bold
@@ -543,6 +557,7 @@ class StatisticsController extends Controller
             $sheet->setCellValue('F' . $row, $data['most_booked_date']);
             $sheet->setCellValue('G' . $row, $data['most_booked_time_slot']);
             $sheet->setCellValue('H' . $row, $data['unbooked_hours']);
+            $sheet->setCellValue('I' . $row, $data['un_active_hours']);
             $row++;
         }
 

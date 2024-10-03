@@ -30,4 +30,5 @@ return [
     'bot_revenue' => 'Bot orqali daromad',
     'manual_revenue' => 'Qo\'lda daromad',
     'total' => 'JAMI',
+    'un_active_hours' => 'Faol bo\'lmagan soatlar',
 ];

@@ -97,6 +97,7 @@
                     <th>@lang('court.bot_revenue')</th>
                     <th>@lang('court.manual_revenue')</th>
                     <th>@lang('stadium.unbooked_hours')</th>
+                    <th>@lang('court.un_active_hours')</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -111,6 +112,7 @@
                         <td>{{ number_format(round($statistic['statistic']['bot_revenue']), 0 , ' ', ' ') }}</td>
                         <td>{{ number_format(round($statistic['statistic']['manual_revenue']), 0 , ' ', ' ')  }}</td>
                         <td>{{ $statistic['statistic']['unbooked_hours'] }}</td>
+                        <td>{{ $statistic['statistic']['un_active_hours'] }}</td>
                     </tr>
                 @endforeach
 
@@ -123,6 +125,7 @@
                     <td>{{ number_format (round($totalStatistics['bot_revenue']), 0 , ' ', ' ') }}</td>
                     <td>{{ number_format(round($totalStatistics['manual_revenue']), 0 , ' ', ' ') }}</td>
                     <td>{{ $totalStatistics['unbooked_hours'] }}</td>
+                    <td>{{ $totalStatistics['un_active_hours'] }}</td>
                 </tr>
                 </tbody>
             </table>
