@@ -104,7 +104,7 @@ class StatisticsRepositories
         $bookings = $court->bookings()->when($dateFrom, function ($query, $dateFrom) {
             $query->whereDate('date', '>=', $dateFrom);
         })->when($dateTo, function ($query, $dateTo) {
-            $query->whereDate('date', '<=', $dateTo);
+            $query->whereDate('date', '<', $dateTo);
         })->where('status', 'paid')->get();
 
         // Считаем забронированные часы
@@ -186,7 +186,7 @@ class StatisticsRepositories
                     $query->whereDate('date', '>=', $dateFrom);
                 }
                 if ($dateTo) {
-                    $query->whereDate('date', '<=', $dateTo);
+                    $query->whereDate('date', '<', $dateTo);
                 }
             })->get();
         });

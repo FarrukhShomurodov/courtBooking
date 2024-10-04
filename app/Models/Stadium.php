@@ -60,7 +60,7 @@ class Stadium extends Model
                 $query->whereDate('date', '>=', $dateFrom);
             }
             if ($dateTo) {
-                $query->whereDate('date', '<=', $dateTo);
+                $query->whereDate('date', '<', $dateTo);
             }
 
             $query->where('status', 'paid');
