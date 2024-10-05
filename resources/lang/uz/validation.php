@@ -150,5 +150,5 @@ return [
         'slots.*.price' => 'Narx',
         'slots' => 'Slotlar',
     ],
-
+    'time_after' => 'Tugash vaqti boshlanish vaqtidan keyin bo‘lishi kerak,',
 ];

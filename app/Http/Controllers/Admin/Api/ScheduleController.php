@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Telegram\PaycomController;
 use App\Models\Court;
 use App\Models\Schedule;
 use App\Traits\ScheduleHelper;
@@ -39,7 +40,21 @@ class ScheduleController extends Controller
         $validated = $request->validate([
             'court_id' => 'required|exists:courts,id',
             'start_time' => 'required|date_format:H:i:s',
-            'end_time' => 'required|date_format:H:i:s|after:start_time',
+            'end_time' => [
+                'required',
+                'date_format:H:i:s',
+                function ($attribute, $value, $fail) use ($request) {
+                    $startTime = $request->input('start_time');
+                    $endTime = $value;
+                    if ($endTime === '00:00:00') {
+                        $endTime = '24:00:00';
+                    }
+
+                    if (strtotime($startTime) >= strtotime($endTime)) {
+                        $fail(trans('validation.time_after'));
+                    }
+                }
+            ],
         ]);
 
 
@@ -66,9 +81,18 @@ class ScheduleController extends Controller
             $scheduleStartTime = Carbon::parse($schedule->start_time);
             $scheduleEndTime = Carbon::parse($schedule->end_time);
 
-            if ($scheduleStartTime < $endTime && $scheduleEndTime > $startTime) {
-                $totalCost += $schedule->cost;
+            if ($validated['end_time'] == "00:00:00") {
+                $endTime = Carbon::parse($validated['end_time'])->addDay();
+
+                if ($scheduleStartTime < $endTime && $scheduleEndTime >= $startTime) {
+                    $totalCost += $schedule->cost;
+                }
+            }else{
+                if ($scheduleStartTime < $endTime && $scheduleEndTime > $startTime) {
+                    $totalCost += $schedule->cost;
+                }
             }
+
         }
 
         return response()->json(['total_cost' => $totalCost]);

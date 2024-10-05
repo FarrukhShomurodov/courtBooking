@@ -48,7 +48,7 @@
 
                     @php
                         $start_time = Carbon::parse($booking->start_time);
-                        $end_time = Carbon::parse($booking->end_time);
+                        $end_time = $booking->end_time === '00:00:00'? Carbon::parse($booking->end_time)->addDay() : Carbon::parse($booking->end_time);
                         $diff = $start_time->diff($end_time);
                     @endphp
                     <tr>
