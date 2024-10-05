@@ -108,9 +108,7 @@ class StatisticsRepositories
         })->where('status', 'paid')->get();
 
         // Считаем забронированные часы
-        $totalHoursBooked = $bookings->sum(function ($booking) {
-            return $booking->getHours();
-        });
+        $totalHoursBooked = $bookings->count();
 
 
         $schedulesCount = $court->schedules()->count();
@@ -192,9 +190,7 @@ class StatisticsRepositories
         });
 
         // Подсчет забронированных часов
-        $totalHoursBooked = $allBookings->sum(function ($booking) {
-            return $booking->getHours();
-        });
+        $totalHoursBooked = $allBookings->count();
 
         $from = Carbon::parse($dateFrom);
         $to = Carbon::parse($dateTo);

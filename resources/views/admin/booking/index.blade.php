@@ -87,7 +87,12 @@
                                                 foreach($court->bookings()->where('status','paid')->get() as $booking){
                                                     if (Carbon::parse($booking->date)->isToday()) {
                                                         $bookingStartTime = Carbon::parse($booking->start_time);
-                                                        $bookingEndTime = Carbon::parse($booking->end_time)->subHour();
+                                                        if ($booking->end_time == "00:00:00")
+                                                        {
+                                                            $bookingEndTime = Carbon::parse($booking->end_time)->addDay();
+                                                        }else{
+                                                            $bookingEndTime = Carbon::parse($booking->end_time)->subHour();
+                                                        }
                                                         if ($currentTime->between($bookingStartTime, $bookingEndTime)) {
                                                             $hasBooking = true;
                                                             $bookingId = $booking->id;
@@ -384,19 +389,48 @@
                     const fullName = booking.full_name;
                     const isPaid = booking.status === 'paid';
 
-                    const startHour = parseInt(startTime.split(':')[0], 10);
-                    const endHour = parseInt(endTime.split(':')[0], 10) - 1;
+                    let startHour = parseInt(startTime.split(':')[0], 10);
+                    let endHour = parseInt(endTime.split(':')[0], 10) - 1;
 
-                    const courtColumn = $(`th[data-court-id="${courtId}"]`).index();
+                    // Проверяем на случай перехода через полночь
+                    if (endHour < startHour) {
+                        // Если время пересекает полночь, обрабатываем два диапазона: до конца дня и от полуночи до endTime
+                        // Диапазон с startHour до 23:00
+                        const courtColumn = $(`th[data-court-id="${courtId}"]`).index();
 
-                    if (courtColumn !== -1) {
-                        for (let i = startHour; i <= endHour; i++) {
-                            const cell = $(`.table tbody tr:eq(${i}) td:eq(${courtColumn})`);
-                            cell.css('background-color', `${isPaid ? '#006400' : '#ff294d'}`);
-                            const cellDiv = cell.find('div');
-                            cellDiv.addClass('booking-cell').data('booking-id', bookingId)
-                                .attr('data-bs-toggle', 'tooltip')
-                                .attr('title', fullName);
+                        if (courtColumn !== -1) {
+                            for (let i = startHour; i <= 23; i++) {
+                                const cell = $(`.table tbody tr:eq(${i}) td:eq(${courtColumn})`);
+                                cell.css('background-color', `${isPaid ? '#006400' : '#ff294d'}`);
+                                const cellDiv = cell.find('div');
+                                cellDiv.addClass('booking-cell').data('booking-id', bookingId)
+                                    .attr('data-bs-toggle', 'tooltip')
+                                    .attr('title', fullName);
+                            }
+
+                            // Диапазон от 00:00 до endHour
+                            for (let i = 0; i <= endHour; i++) {
+                                const cell = $(`.table tbody tr:eq(${i}) td:eq(${courtColumn})`);
+                                cell.css('background-color', `${isPaid ? '#006400' : '#ff294d'}`);
+                                const cellDiv = cell.find('div');
+                                cellDiv.addClass('booking-cell').data('booking-id', bookingId)
+                                    .attr('data-bs-toggle', 'tooltip')
+                                    .attr('title', fullName);
+                            }
+                        }
+                    } else {
+                        // Обычная логика, если время в пределах одного дня
+                        const courtColumn = $(`th[data-court-id="${courtId}"]`).index();
+
+                        if (courtColumn !== -1) {
+                            for (let i = startHour; i <= endHour; i++) {
+                                const cell = $(`.table tbody tr:eq(${i}) td:eq(${courtColumn})`);
+                                cell.css('background-color', `${isPaid ? '#006400' : '#ff294d'}`);
+                                const cellDiv = cell.find('div');
+                                cellDiv.addClass('booking-cell').data('booking-id', bookingId)
+                                    .attr('data-bs-toggle', 'tooltip')
+                                    .attr('title', fullName);
+                            }
                         }
                     }
                 });
@@ -409,6 +443,7 @@
                     });
                 }
             }
+
 
             function formatTimeToHIS(time) {
                 const [hours, minutes] = time.split(':');

@@ -61,8 +61,8 @@
                         <td>{{ number_format(round($booking->price), 0 , ' ', ' ') }}</td>
                         <td>{{ $booking->source == 'manual' ? 'Manual' : 'Findz' }}</td>
                         <td>{{ $booking->status }}</td>
-                            <td>
-                                @if($booking->source === 'manual')
+                        <td>
+                            @if($booking->source === 'manual')
 
                                 <div class="d-inline-block text-nowrap">
                                     <form action="{{ route('bookings.destroy', $booking->id) }}" method="POST"
@@ -73,9 +73,8 @@
                                         </button>
                                     </form>
                                 </div>
-                                @endif
-
-                            </td>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>
