@@ -35,7 +35,16 @@ class FindzController extends Controller
         $endTime = $request->input('end_time');
 
         // Получаем стадионы по выбранному типу спорта
-        $stadiums = SportType::findOrFail($sportTypeId)->stadiums()->where('is_active', true)->get();
+        $stadiums = SportType::findOrFail($sportTypeId)
+            ->stadiums()
+            ->where('is_active', true)
+            ->whereHas('courts', function ($query) use ($sportTypeId) {
+                $query->where('is_active', true)
+                    ->where('sport_type_id', $sportTypeId);
+            })
+            ->get();
+
+
 
         // Проверяем наличие свободных кортов и фильтруем стадионы
         $stadiums->each(function ($stadium) use ($date, $startTime, $endTime) {
@@ -74,7 +83,14 @@ class FindzController extends Controller
         $endTime = $request->input('end_time');
 
         // Получаем стадионы по выбранному типу спорта
-        $stadiums = SportType::findOrFail($sportTypeId)->stadiums()->where('is_active', true)->get();
+        $stadiums = SportType::findOrFail($sportTypeId)
+            ->stadiums()
+            ->where('is_active', true)
+            ->whereHas('courts', function ($query) use ($sportTypeId) {
+                $query->where('is_active', true)
+                    ->where('sport_type_id', $sportTypeId);
+            })
+            ->get();
 
         // Проверяем наличие свободных кортов и фильтруем стадионы
         $stadiums->each(function ($stadium) use ($date, $startTime, $endTime) {
@@ -207,7 +223,7 @@ class FindzController extends Controller
     public function bookUpdate(BookingItem $booking, Request $request): View
     {
         $stadium = $booking->court()->first()->stadium;
-        $currentSportTypeId = $request->input('sportType');
+        $currentSportTypeId = $booking->court->sportTypes->id;
         $courts = $stadium->courts()->with('schedules')->where('is_active', true)->where('sport_type_id', $currentSportTypeId)->get();
 
         $isUpdate = true;
