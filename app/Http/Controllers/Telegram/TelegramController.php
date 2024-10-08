@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Telegram\Bot\Api;
+use Telegram\Bot\FileUpload\InputFile;
 use Telegram\Bot\Keyboard\Keyboard;
 
 class TelegramController extends Controller
@@ -217,7 +218,6 @@ class TelegramController extends Controller
             'text' => __('telegram.support')
         ]);
 
-        $this->sendMenu($chatId, $user);
     }
 
     protected function sendFaq($chatId){
@@ -407,9 +407,13 @@ class TelegramController extends Controller
 
     protected function sendOffer($chatId): void
     {
+        $this->telegram->sendDocument([
+            'chat_id' => $chatId,
+            'document' => InputFile::create( public_path('offer.pdf'), 'Offer.pdf'),
+        ]);
+
         $keyboard = [
             [
-                ['text' => __('telegram.offerta_btn'), 'url' => 'https://example.com/offer'],
                 ['text' => __('telegram.access_btn'), 'callback_data' => 'accept_offer']
             ]
         ];
@@ -470,7 +474,7 @@ class TelegramController extends Controller
             'chat_id' => $chatId,
             'text' => __('telegram.settings') . PHP_EOL .
                 __('telegram.language') . ': ' . $lang . PHP_EOL .
-                __('telegram.name') . ': ' . $user->first_name . ' ' . $user->second_name . PHP_EOL .
+                __('telegram.name') . ': ' . $user->first_name . PHP_EOL .
                 __('telegram.phone') . ': ' . $user->phone,
             'reply_markup' => $reply_markup
         ]);

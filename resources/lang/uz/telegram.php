@@ -3,7 +3,8 @@
 return [
     'lang_change_success' => 'Til muvaffaqiyatli o‘zgartirildi ',
     'auth_success' => 'Avtorizatsiya muvaffaqiyatli!',
-    'support' => '@username ga murojaat qiling yoki +998 90 000 00 00 raqamiga qo‘ng‘iroq qiling.',
+    'support' => '@findz_help ga murojaat qiling.',
+    //yoki +998 90 000 00 00 raqamiga qo‘ng‘iroq qiling.
     'send_phone_btn' => 'Telefon raqamini yuborish',
     'send_phone_mes' => 'Iltimos, telefon raqamingizni quyidagi formatda yuboring: +998XX12345678.',
     'auth_code_mes' => 'Biz telefon raqamingizga autentifikatsiya kodini yubordik, iltimos, kodni kiriting.',
