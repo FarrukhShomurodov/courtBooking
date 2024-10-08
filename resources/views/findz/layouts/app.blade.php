@@ -112,7 +112,7 @@
                     onclick="location.href='{{ route('webapp', ['sportType' => $currentSportTypeId, 'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}' "
                     src="@if($currentRouteName == 'webapp'  || $currentRouteName == 'findz.stadiums.filter.sport.type') {{ asset('img/findz/icons/courts_active.svg') }} @else {{ asset('img/findz/icons/courts.svg') }} @endif"
                     alt="footer icon">
-                <a href="{{ route('webapp', ['sportType' => $currentSportTypeId, 'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}">Площадки</a>
+                <a href="{{ route('webapp', ['sportType' => $currentSportTypeId, 'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}">{{ __('findz/findz.stadiums') }}</a>
             </li>
             {{--            <li class="d-flex col align-items-center @if($currentRouteName == 'findz.coaches.filter.sport.type') footer_active @endif">--}}
             {{--                <img--}}
@@ -127,7 +127,7 @@
                 <img id="myBookingsImg" class="pointer"
                      src="@if($currentRouteName == 'findz.mybookings') {{ asset('img/findz/icons/bookings_active.svg') }} @else {{ asset('img/findz/icons/booking.svg') }} @endif"
                      alt="footer icon">
-                <a id="myBookingsLink" href="#" class="mybookings">Мои брони</a>
+                <a id="myBookingsLink" href="#" class="mybookings">{{ __('findz/findz.my_bookings') }}</a>
             </li>
 
         </ul>

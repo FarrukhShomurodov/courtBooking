@@ -382,7 +382,7 @@
 
             function formatCost(cost) {
                 if (cost >= 1000000) {
-                    return (cost / 1000000).toLocaleString('ru-RU', {minimumFractionDigits: 1}) + ' M';
+                    return (cost / 1000000).toLocaleString('ru-RU', {minimumFractionDigits: 1}) + ` {{ __('findz/book.currency_m') }}`;
                 } else {
                     return (cost / 1000).toLocaleString('ru-RU') + ' ' + `{{ __('findz/book.currency') }}`;
                 }

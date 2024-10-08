@@ -20,7 +20,7 @@ return [
     'settings' => 'Hozirgi sozlamalar:',
     'settings_in_menu' => 'Sozlamalar',
     'language' => 'Til',
-    'resend_phone_number' => 'kodni qayta yuborish',
+    'resend_phone_number' => 'Kodni qayta yuborish',
     'name' => 'Ism',
     'phone' => 'Telefon',
     'back' => 'Orqaga',

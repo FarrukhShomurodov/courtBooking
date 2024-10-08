@@ -6,6 +6,7 @@ return [
     'courts' => 'Площадки',
     'trainers' => 'Тренеры',
     'currency' => 'т.с',
+    'currency_m' => 'M',
     'edit_book' => 'Изменить бронь',
     'from_price_per_hour' => 'От :price.000 uzs/час',
     'from_minimum_cost' => 'от :cost',

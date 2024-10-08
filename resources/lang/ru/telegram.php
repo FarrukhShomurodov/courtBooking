@@ -20,7 +20,7 @@ return array(
     'settings' => 'Текущие настройки:',
     'settings_in_menu' => 'Настройки',
     'language' => 'Язык',
-    'resend_phone_number' => 'отправить код повторно',
+    'resend_phone_number' => 'Отправить код повторно',
     'name' => 'Имя',
     'phone' => 'Телефон',
     'back' => 'Назад',
