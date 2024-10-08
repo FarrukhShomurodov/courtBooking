@@ -9,10 +9,8 @@ use App\Services\OtpService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 use Telegram\Bot\Api;
 use Telegram\Bot\Keyboard\Keyboard;
-use Telegram\Bot\Objects\InputMedia\InputMediaPhoto;
 
 class TelegramController extends Controller
 {
@@ -131,6 +129,9 @@ class TelegramController extends Controller
                 $user->save();
                 $this->sendSupportData($chatId, $user);
                 break;
+            case __('telegram.faq'):
+                $this->sendFaq($chatId);
+                break;
             case __('telegram.settings_in_menu'):
                 $this->sendSettings($chatId, $user);
                 break;
@@ -217,6 +218,24 @@ class TelegramController extends Controller
         ]);
 
         $this->sendMenu($chatId, $user);
+    }
+
+    protected function sendFaq($chatId){
+        $keyboard = [
+            [
+                ['text' => __('telegram.open'), 'url' => 'https://telegra.ph/CHasto-zadavaemye-voprosy---Findz-09-20'],
+            ]
+        ];
+
+        $reply_markup = Keyboard::make([
+            'inline_keyboard' => $keyboard
+        ]);
+
+        $this->telegram->sendMessage([
+            'chat_id' => $chatId,
+            'text' => __('telegram.faq'),
+            'reply_markup' => $reply_markup,
+        ]);
     }
 
     protected function backTo($chatId, $user)
@@ -417,13 +436,12 @@ class TelegramController extends Controller
                 __('telegram.settings_in_menu'),
                 __('telegram.my_order_btn')],
 
-            [__('telegram.support_connect'), ['text' => __('telegram.faq'), 'url' => 'https://telegra.ph/CHasto-zadavaemye-voprosy---Findz-09-20']]
+            [__('telegram.support_connect'), __('telegram.faq')]
         ];
 
         $reply_markup = Keyboard::make([
             'keyboard' => $keyboard,
             'resize_keyboard' => true,
-            'one_time_keyboard' => true
         ]);
 
         $this->telegram->sendMessage([
@@ -568,7 +586,6 @@ class TelegramController extends Controller
             }
         }
 
-        $this->sendMainMenu($chatId);
     }
 
 }
