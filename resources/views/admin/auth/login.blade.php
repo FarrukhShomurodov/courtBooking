@@ -58,7 +58,7 @@
                 <div class="card-body">
                     <!-- Logo -->
                     <div class="app-brand justify-content-center">
-                        <a href="index.blade.php">
+                        <a href="#">
                             <img src="{{ asset('img/icons/logo.svg') }}" width="100px" height="50px">
                         </a>
                     </div>
