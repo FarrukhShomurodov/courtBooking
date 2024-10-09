@@ -18,4 +18,5 @@ return [
     'metric' => 'O\'lchov',
     'value' => 'Qiymat',
     'book_not_found' => 'Bron topilmadi.',
+    'logout' => 'Chiqish',
 ];
