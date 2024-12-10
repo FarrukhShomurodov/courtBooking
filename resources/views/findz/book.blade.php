@@ -126,7 +126,7 @@
 @section('footer')
     <footer class="w-100 d-flex justify-content-around row">
         <button id="close-btn"
-                class="nav_active btn footer_btn book disabled">{{$isUpdate ? 'Готово' : __('findz/book.Оплатить через PayMe') }}</button>
+                class="nav_active btn footer_btn book disabled" style="width: 90%;">{{$isUpdate ? 'Готово' : __('findz/book.Оплатить через PayMe') }}</button>
     </footer>
 @endsection
 

@@ -176,6 +176,7 @@
 
 .slot_booked {
     background-color: #111115 !important;
+    color: #c8c8c8;
     cursor: not-allowed;
 }
 
@@ -227,6 +228,7 @@
     transform: translate(-50%, 0%) !important;
     margin: 0 auto !important;
     background-color: #252529 !important;
+    font-family: 'Inter', serif !important;
 }
 
 .flatpickr-innerContainer {
@@ -293,13 +295,16 @@
 }
 
 .flatpickr-weekdays {
+    text-transform: uppercase !important;
     padding: 10px !important;
+    color: #CED1DD!important;
 }
 
 .user-info-form {
     margin-top: 5px;
     margin-bottom: 5px;
-    padding: 7px 16px;
+    padding: 10px 16px;
+    font-size: 17px;
     background-color: transparent;
     color: white;
     border: 1px solid white;
@@ -353,4 +358,5 @@
     background-color: #111115;
     pointer-events: none;
     cursor: not-allowed;
+    color: #c8c8c8;
 }

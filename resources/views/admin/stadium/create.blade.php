@@ -215,7 +215,7 @@
 
                         const deleteBtn = $('<button>', {
                             class: 'btn btn-danger btn-sm delete-image',
-                            text: 'Удалить',
+                            text: `{{ __('stadium.delete') }}`,
                             click: function () {
                                 imgContainer.remove();
 

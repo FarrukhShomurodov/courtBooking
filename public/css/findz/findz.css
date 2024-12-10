@@ -12,7 +12,7 @@ body {
 .container_mobile {
     /*width: 342px;*/
     width: 100%;
-    padding: 10px;
+    padding: 15px;
     position: relative;
     min-height: 100vh;
     /*margin: 122px auto 0;*/
@@ -135,7 +135,7 @@ nav {
 /* Footer */
 footer {
     border-top: 1px solid #31303B;
-    background-color: rgba(17, 17, 21, 0.9);
+    background-color: rgba(17, 17, 21, 0.5);
     height: 90px;
     padding-bottom: 20px;
     position: fixed;
@@ -144,7 +144,10 @@ footer {
     z-index: 10000;
     color: #CED1DD;
     font-size: 14px;
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
 }
+
 
 .footer_active {
     color: #FFFFFF;

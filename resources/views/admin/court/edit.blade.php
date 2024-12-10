@@ -252,7 +252,7 @@
 
                         const deleteBtn = $('<button>', {
                             class: 'btn btn-danger btn-sm delete-image',
-                            text: 'Удалить',
+                            text: '{{ __('court.delete') }}',
                             click: function () {
                                 imgContainer.remove();
                                 const index = files.indexOf(file);

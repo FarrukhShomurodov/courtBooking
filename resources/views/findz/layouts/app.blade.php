@@ -12,6 +12,7 @@
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {
             let tg = window.Telegram.WebApp;
+            tg.disableVerticalSwipes()
             tg.expand();
             let userData = tg.initDataUnsafe;
 

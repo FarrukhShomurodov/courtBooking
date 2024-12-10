@@ -85,7 +85,7 @@
 
 @section('footer')
     <footer class="w-100 d-flex justify-content-around row">
-        <button id="close-btn" class="nav_active btn footer_btn"
+        <button id="close-btn" class="nav_active btn footer_btn" style="width: 90%;"
                 onclick="location.href='{{ route('findz.book', ['stadium' => $stadium->id,'sportType' => $currentSportTypeId,  'date' => request('date'), 'start_time' => request('start_time'), 'end_time' => request('end_time')]) }}'">
             {{ __('findz/book.book_now') }}
         </button>
