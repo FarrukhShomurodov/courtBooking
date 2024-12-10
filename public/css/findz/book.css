@@ -127,6 +127,12 @@
     border-spacing: 5px;
 }
 
+.slots-table thead{
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
 .slots-table th, .slots-table td {
     text-align: center;
     width: 80px;
